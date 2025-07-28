@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import brieflyLogo from "@assets/briefly-logo.png";
 
 export default function Landing() {
   const [, setLocation] = useLocation();
@@ -75,7 +76,11 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <i className="fas fa-brain text-ai-blue text-2xl mr-3"></i>
+              <img 
+                src={brieflyLogo} 
+                alt="Briefly.AI" 
+                className="h-8 w-auto mr-3"
+              />
               <span className="text-xl font-bold glow-text">Briefly.AI</span>
             </div>
             <div className="hidden md:flex space-x-8">

@@ -13,6 +13,7 @@ import TypingAnimation from "@/components/ui/typing-animation";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { apiRequest } from "@/lib/queryClient";
 import type { Note } from "@shared/schema";
+import brieflyLogo from "@assets/briefly-logo.png";
 
 export default function Workspace() {
   const [, setLocation] = useLocation();
@@ -122,7 +123,11 @@ export default function Workspace() {
               >
                 <i className="fas fa-arrow-left"></i>
               </Button>
-              <i className="fas fa-brain text-ai-blue text-xl mr-2"></i>
+              <img 
+                src={brieflyLogo} 
+                alt="Briefly.AI" 
+                className="h-6 w-auto mr-2"
+              />
               <span className="text-lg font-bold">Briefly.AI Workspace</span>
             </div>
             <div className="flex items-center space-x-4">

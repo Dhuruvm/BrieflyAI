@@ -117,26 +117,138 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
 }
 
 export async function extractVideoContent(videoUrl: string): Promise<string> {
-  const prompt = `
-Extract the main content and transcript from this video URL: ${videoUrl}
-
-Note: This is a placeholder implementation. In production, you would:
-1. Use YouTube Data API to get video details
-2. Use youtube-dl or similar to extract audio
-3. Transcribe the audio using Gemini
-4. Combine with video description and metadata
-
-For now, please provide guidance on implementing video content extraction.
-  `;
+  const YTDlpWrap = (await import('yt-dlp-wrap')).default;
+  const fs = await import('fs');
+  const path = await import('path');
+  const { promisify } = await import('util');
+  const writeFile = promisify(fs.writeFile);
+  const unlink = promisify(fs.unlink);
+  const exists = promisify(fs.exists);
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+    console.log(`🎥 Processing video URL: ${videoUrl}`);
+    
+    // Initialize yt-dlp
+    const ytDlp = new YTDlpWrap();
+    
+    // First, get video info and check for subtitles
+    console.log("📋 Fetching video metadata...");
+    const videoInfo = await ytDlp.getVideoInfo(videoUrl);
+    
+    let content = '';
+    
+    // Add video metadata
+    content += `# ${videoInfo.title || 'Video Content'}\n\n`;
+    if (videoInfo.description) {
+      content += `## Description\n${videoInfo.description}\n\n`;
+    }
+    if (videoInfo.uploader) {
+      content += `**Channel:** ${videoInfo.uploader}\n`;
+    }
+    if (videoInfo.duration) {
+      content += `**Duration:** ${Math.floor(videoInfo.duration / 60)}:${(videoInfo.duration % 60).toString().padStart(2, '0')}\n\n`;
+    }
 
-    return response.text || "Video content extraction not fully implemented yet.";
+    // Try to get automatic captions/subtitles first
+    console.log("📝 Checking for available subtitles...");
+    let transcript = '';
+    
+    try {
+      // Try to download auto-generated captions
+      const tempDir = '/tmp';
+      const captionFile = path.join(tempDir, `captions_${Date.now()}.vtt`);
+      
+      await ytDlp.exec([
+        videoUrl,
+        '--write-subs',
+        '--write-auto-subs',
+        '--sub-lang', 'en',
+        '--sub-format', 'vtt',
+        '--skip-download',
+        '-o', captionFile.replace('.vtt', '.%(ext)s')
+      ]);
+
+      // Check if caption file exists
+      const vttFile = captionFile.replace('.vtt', '.en.vtt');
+      if (await exists(vttFile)) {
+        console.log("✅ Found captions, extracting text...");
+        const captionContent = await fs.promises.readFile(vttFile, 'utf-8');
+        
+        // Parse VTT format and extract text
+        transcript = captionContent
+          .split('\n')
+          .filter(line => 
+            line.trim() && 
+            !line.startsWith('WEBVTT') && 
+            !line.includes('-->') &&
+            !line.match(/^\d+$/)
+          )
+          .join(' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        // Clean up
+        await unlink(vttFile).catch(() => {});
+        
+        if (transcript) {
+          content += `## Transcript\n${transcript}\n\n`;
+        }
+      }
+    } catch (captionError) {
+      console.log("⚠️ No captions available, will try audio transcription...");
+    }
+
+    // If no transcript from captions, try audio extraction and transcription
+    if (!transcript) {
+      try {
+        console.log("🎵 Extracting audio for transcription...");
+        const tempDir = '/tmp';
+        const audioFile = path.join(tempDir, `audio_${Date.now()}.mp3`);
+        
+        // Extract audio (limit to first 10 minutes to avoid large files)
+        await ytDlp.exec([
+          videoUrl,
+          '-f', 'bestaudio',
+          '--extract-audio',
+          '--audio-format', 'mp3',
+          '--audio-quality', '5',  // Lower quality for faster processing
+          '-o', audioFile,
+          '--postprocessor-args', '-t 600'  // Limit to 10 minutes
+        ]);
+        
+        if (await exists(audioFile)) {
+          console.log("🎤 Transcribing audio...");
+          const audioBuffer = await fs.promises.readFile(audioFile);
+          const audioTranscript = await transcribeAudio(audioBuffer);
+          
+          if (audioTranscript) {
+            content += `## Audio Transcript\n${audioTranscript}\n\n`;
+          }
+          
+          // Clean up
+          await unlink(audioFile).catch(() => {});
+        }
+      } catch (audioError) {
+        console.log("⚠️ Audio transcription failed:", audioError);
+        content += `## Note\nAudio transcription was not available for this video.\n\n`;
+      }
+    }
+
+    // If we have very little content, add a note
+    if (content.length < 200) {
+      content += `## Processing Note\nThis video content could not be fully extracted. The video may be private, age-restricted, or have limited metadata available.\n\n`;
+      content += `**Original URL:** ${videoUrl}\n`;
+    }
+
+    console.log(`✅ Video content extracted: ${content.length} characters`);
+    return content;
+
   } catch (error) {
-    throw new Error(`Failed to extract video content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error("❌ Video extraction error:", error);
+    
+    // Fallback: return basic video info
+    const fallbackContent = `# Video Content\n\n**URL:** ${videoUrl}\n\n**Note:** Unable to extract full video content. This may be due to:\n- Private or restricted video\n- Geographic restrictions\n- Network connectivity issues\n- Unsupported video platform\n\nPlease try with a different video or check if the URL is accessible.`;
+    
+    return fallbackContent;
   }
 }

@@ -94,9 +94,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Handle video URL processing
         if (contentType === "video_url") {
           try {
+            console.log(`🎥 Starting video processing for: ${content}`);
             content = await extractVideoContent(content);
+            console.log(`✅ Video content extracted successfully`);
           } catch (error) {
-            return res.status(400).json({ error: "Video content extraction not yet fully implemented." });
+            console.error("❌ Video processing error:", error);
+            return res.status(400).json({ 
+              error: `Failed to process video: ${error instanceof Error ? error.message : 'Unknown error'}. Please ensure the video URL is accessible and try again.` 
+            });
           }
         }
       } else {

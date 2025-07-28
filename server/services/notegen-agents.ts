@@ -324,8 +324,22 @@ export async function formatNotes(segmented: SegmentedContent, classification: C
               }
             },
             designLanguage: { type: "string" },
-            accessibility: { type: "object" },
-            responsiveness: { type: "object" }
+            accessibility: { 
+              type: "object",
+              properties: {
+                altText: { type: "string" },
+                contrast: { type: "string" },
+                fontSize: { type: "string" }
+              }
+            },
+            responsiveness: { 
+              type: "object",
+              properties: {
+                mobile: { type: "string" },
+                tablet: { type: "string" },
+                desktop: { type: "string" }
+              }
+            }
           },
           required: ["title", "emoji", "color_theme", "sections", "designLanguage"]
         }

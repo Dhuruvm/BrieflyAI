@@ -2,8 +2,10 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
 import { storage } from "./storage";
-import { processContentSchema, insertNoteSchema } from "@shared/schema";
+import { processContentSchema, insertNoteSchema, noteGenOptionsSchema } from "@shared/schema";
 import { processTextContent, transcribeAudio, extractTextFromPDF, extractVideoContent } from "./services/gemini";
+import { generateStudyNotesPDF } from "./services/notegen-agents";
+import { generatePDFFromHTML } from "./services/pdf-generator";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -137,6 +139,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete note" });
+    }
+  });
+
+  // Generate Study Notes PDF endpoint
+  app.post("/api/generate-study-notes", upload.single("file"), async (req, res) => {
+    try {
+      let content: string;
+      let noteGenOptions = noteGenOptionsSchema.parse(req.body.options || {});
+
+      if (req.file) {
+        // Handle file upload
+        const fileName = req.file.originalname;
+        const fileExtension = fileName.split('.').pop()?.toLowerCase();
+        
+        switch (fileExtension) {
+          case 'txt':
+            content = req.file.buffer.toString('utf-8');
+            break;
+          case 'pdf':
+            content = await extractTextFromPDF(req.file.buffer);
+            break;
+          case 'mp3':
+          case 'wav':
+          case 'm4a':
+            content = await transcribeAudio(req.file.buffer);
+            break;
+          default:
+            return res.status(400).json({ error: "Unsupported file type for study notes generation" });
+        }
+      } else if (req.body.content) {
+        content = req.body.content;
+      } else {
+        return res.status(400).json({ error: "No content provided" });
+      }
+
+      // Generate study notes using NoteGen agents
+      console.log("🚀 Starting NoteGen AI pipeline...");
+      const { html, filename } = await generateStudyNotesPDF(content);
+
+      if (noteGenOptions.generatePDF) {
+        // Generate PDF from HTML
+        const pdfBuffer = await generatePDFFromHTML(html, filename);
+        
+        // Set headers for PDF download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+        
+        return res.send(pdfBuffer);
+      } else {
+        // Return HTML for preview
+        return res.json({
+          success: true,
+          html: html,
+          filename: filename,
+          message: "Study notes generated successfully"
+        });
+      }
+    } catch (error) {
+      console.error('Study notes generation error:', error);
+      res.status(500).json({ 
+        error: `Failed to generate study notes: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      });
+    }
+  });
+
+  // Download PDF from existing note
+  app.get("/api/notes/:id/download-pdf", async (req, res) => {
+    try {
+      const note = await storage.getNote(req.params.id);
+      if (!note) {
+        return res.status(404).json({ error: "Note not found" });
+      }
+
+      // Generate study notes PDF from existing note content
+      const { html, filename } = await generateStudyNotesPDF(note.originalContent);
+      const pdfBuffer = await generatePDFFromHTML(html, filename);
+      
+      // Set headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Length', pdfBuffer.length);
+      
+      res.send(pdfBuffer);
+    } catch (error) {
+      console.error('PDF download error:', error);
+      res.status(500).json({ 
+        error: `Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      });
     }
   });
 

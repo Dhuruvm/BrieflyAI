@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a full-stack AI-powered note-taking application that processes various content types (text, PDFs, audio, video URLs) and generates structured notes using Google's Gemini AI model. The app features a modern dark-themed UI with real-time processing animations and comprehensive note organization.
+This is a full-stack AI-powered note-taking application with integrated NoteGen Agent Engine that processes various content types (text, PDFs, audio, video URLs) and generates both structured notes and beautiful handwritten-style study notes as PDFs. The app features a modern dark-themed UI with ChatGPT-style professional interface, real-time processing animations, and comprehensive note organization powered by Google's Gemini AI models.
 
 ## User Preferences
 
@@ -37,7 +37,13 @@ Preferred communication style: Simple, everyday language.
 1. **Input Handlers**: Support for text input, file uploads (PDF, audio), and video URL processing
 2. **AI Processing**: Google Gemini integration for content analysis and note generation
 3. **Structured Output**: Generates title, summary, key points, action items, and visual cards
-4. **Real-time Feedback**: Progress indicators and typing animations during processing
+4. **NoteGen AI Engine**: 5-agent pipeline for generating beautiful study notes:
+   - Agent 1: Topic Classifier (subject, tone, difficulty detection)
+   - Agent 2: Content Segmentor (break into structured sections)
+   - Agent 3: Structure Formatter (add emojis, colors, highlights)
+   - Agent 4: Aesthetic Designer (handwritten-style layout design)
+   - Agent 5: PDF Renderer (high-quality PDF generation)
+5. **Real-time Feedback**: Progress indicators and typing animations during processing
 
 ### UI Components
 - **Upload Zone**: Drag-and-drop file upload with visual feedback

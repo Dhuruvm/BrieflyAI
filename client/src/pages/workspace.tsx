@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
 import UploadZone from "@/components/upload-zone";
 import NoteCards from "@/components/note-cards";
+import NoteGenControls from "@/components/notegen-controls";
 import TypingAnimation from "@/components/ui/typing-animation";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { apiRequest } from "@/lib/queryClient";
@@ -279,9 +280,10 @@ export default function Workspace() {
                         variant="ghost" 
                         size="sm" 
                         className="text-ai-text-secondary hover:text-ai-blue hover:bg-ai-blue/10 p-3 rounded-xl transition-all"
+                        onClick={() => window.open(`/api/notes/${currentNote.id}/download-pdf`, '_blank')}
                       >
                         <i className="fas fa-download mr-2"></i>
-                        Export
+                        Download PDF
                       </Button>
                       <Button 
                         variant="ghost" 
@@ -325,10 +327,16 @@ export default function Workspace() {
                 </div>
 
                 {/* Notes Content */}
-                <div className="flex-1 overflow-y-auto">
+                <div className="flex-1 overflow-y-auto space-y-6">
                   {currentNote ? (
                     <div className="space-y-6">
                       <NoteCards note={currentNote} />
+                      
+                      {/* NoteGen AI Controls */}
+                      <NoteGenControls 
+                        content={currentNote.originalContent}
+                        disabled={processContentMutation.isPending}
+                      />
                     </div>
                   ) : (
                     <div className="flex items-center justify-center h-full min-h-[400px]">
@@ -340,6 +348,16 @@ export default function Workspace() {
                         <p className="text-ai-text-muted max-w-md mx-auto leading-relaxed">
                           Upload files, paste text, or share URLs to get AI-powered structured notes with summaries, key points, and actionable insights.
                         </p>
+                        
+                        {/* Show NoteGen preview when content is available */}
+                        {textContent && (
+                          <div className="mt-8 max-w-md mx-auto">
+                            <NoteGenControls 
+                              content={textContent}
+                              disabled={processContentMutation.isPending}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

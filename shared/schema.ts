@@ -46,3 +46,13 @@ export const aiNoteResponseSchema = z.object({
 });
 
 export type AiNoteResponse = z.infer<typeof aiNoteResponseSchema>;
+
+// NoteGen Agent Schemas
+export const noteGenOptionsSchema = z.object({
+  generatePDF: z.boolean().default(false),
+  pdfStyle: z.enum(['handwritten', 'minimal', 'dark']).default('handwritten'),
+  includeVisuals: z.boolean().default(true),
+  language: z.string().default('en'),
+});
+
+export type NoteGenOptions = z.infer<typeof noteGenOptionsSchema>;

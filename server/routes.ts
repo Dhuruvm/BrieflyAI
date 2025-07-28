@@ -118,6 +118,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         processingStatus: "completed",
       });
 
+  // Get NoteGen performance analytics
+  app.get("/api/notegen-analytics", async (req, res) => {
+    try {
+      const { getPerformanceAnalytics } = await import("./services/notegen-agents.js");
+      const analytics = getPerformanceAnalytics();
+      res.json(analytics);
+    } catch (error) {
+      console.error('Analytics error:', error);
+      res.status(500).json({ error: "Failed to get analytics" });
+    }
+  });
+
+
+
       const note = await storage.createNote(noteData);
       res.json(note);
 

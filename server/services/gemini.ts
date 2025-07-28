@@ -109,8 +109,9 @@ export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
   try {
     const pdfParse = await import("pdf-parse");
     const data = await pdfParse.default(pdfBuffer);
-    return data.text;
+    return data.text || "No text content found in PDF";
   } catch (error) {
+    console.error("PDF extraction error:", error);
     throw new Error(`Failed to extract text from PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

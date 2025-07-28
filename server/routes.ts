@@ -57,8 +57,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
             try {
               content = await extractTextFromPDF(req.file.buffer);
               contentType = "pdf";
+              if (!content || content.trim().length === 0) {
+                return res.status(400).json({ error: "Could not extract text from PDF. Please ensure the PDF contains readable text." });
+              }
             } catch (error) {
-              return res.status(400).json({ error: "PDF processing not yet implemented. Please try with text content." });
+              console.error("PDF processing error:", error);
+              return res.status(400).json({ error: `PDF processing failed: ${error instanceof Error ? error.message : 'Unknown error'}` });
             }
             break;
           case 'mp3':

@@ -126,7 +126,7 @@ export default function Workspace() {
               <img 
                 src={brieflyLogo} 
                 alt="Briefly.AI" 
-                className="h-8 w-auto"
+                className="h-12 w-auto"
               />
             </div>
             <div className="flex items-center space-x-4">
@@ -141,145 +141,211 @@ export default function Workspace() {
         </div>
       </nav>
 
-      <div className="pt-16 flex flex-col lg:flex-row min-h-screen">
-        {/* Upload Section */}
-        <div className="lg:w-1/2 p-6 lg:p-8 border-r border-ai-border">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 logo-text">Upload Your Content</h2>
+      <div className="pt-16 min-h-screen bg-gradient-to-br from-ai-black via-ai-darker to-ai-black">
+        {/* Main Content Container */}
+        <div className="max-w-7xl mx-auto p-6 lg:p-8">
+          <div className="grid lg:grid-cols-2 gap-8 h-full">
             
-            {/* Upload Zone */}
-            <UploadZone 
-              onFileSelect={handleFileUpload}
-              isUploading={isUploading || processContentMutation.isPending}
-            />
-
-            {/* Input Options */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <Button
-                onClick={startRecording}
-                variant="outline"
-                className="bg-ai-surface hover:bg-ai-border p-4 rounded-xl border-ai-border transition-all duration-300 flex items-center justify-center"
-              >
-                <i className="fas fa-microphone text-ai-green mr-2"></i>
-                Record Voice
-              </Button>
-              <Button
-                onClick={() => setShowTextInput(!showTextInput)}
-                variant="outline"
-                className="bg-ai-surface hover:bg-ai-border p-4 rounded-xl border-ai-border transition-all duration-300 flex items-center justify-center"
-              >
-                <i className="fas fa-keyboard text-ai-blue mr-2"></i>
-                Type Text
-              </Button>
-            </div>
-
-            {/* Text Input Area */}
-            {showTextInput && (
-              <div className="mb-6">
-                <Textarea
-                  placeholder="Paste your text here..."
-                  value={textContent}
-                  onChange={(e) => setTextContent(e.target.value)}
-                  className="w-full h-40 bg-ai-surface border-ai-border rounded-xl p-4 text-ai-text placeholder-ai-text-muted resize-none focus:border-ai-blue"
+            {/* Input Section */}
+            <div className="flex flex-col">
+              <div className="bg-ai-surface/50 backdrop-blur-xl border border-ai-border/50 rounded-2xl p-8 shadow-2xl">
+                <h2 className="text-3xl font-bold mb-8 logo-text text-center">Upload Your Content</h2>
+                
+                {/* Professional Upload Zone */}
+                <UploadZone 
+                  onFileSelect={handleFileUpload}
+                  isUploading={isUploading || processContentMutation.isPending}
+                  className="mb-8"
                 />
-                <div className="flex justify-end mt-4">
-                  <Button
-                    onClick={handleTextProcess}
-                    disabled={processContentMutation.isPending}
-                    className="bg-ai-blue hover:bg-ai-blue-dark px-6 py-2 rounded-lg"
-                  >
-                    {processContentMutation.isPending ? "Processing..." : "Process Text"}
-                  </Button>
-                </div>
-              </div>
-            )}
 
-            {/* URL Input for Videos */}
-            <div className="mb-6">
-              <Input
-                type="url"
-                placeholder="Or paste YouTube/Vimeo URL here..."
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                className="w-full bg-ai-surface border-ai-border rounded-xl p-4 text-ai-text placeholder-ai-text-muted focus:border-ai-blue"
-              />
-              {videoUrl && (
-                <div className="flex justify-end mt-4">
-                  <Button
-                    onClick={handleVideoUrlProcess}
-                    disabled={processContentMutation.isPending}
-                    className="bg-ai-blue hover:bg-ai-blue-dark px-6 py-2 rounded-lg"
-                  >
-                    {processContentMutation.isPending ? "Processing..." : "Process Video"}
-                  </Button>
+                {/* ChatGPT-style Input Container */}
+                <div className="space-y-6">
+                  {/* Text Input with ChatGPT styling */}
+                  <div className="relative">
+                    <div className="bg-ai-dark/80 border border-ai-border rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <Textarea
+                        placeholder="Message Briefly.AI... Describe what you want to analyze or paste your content here"
+                        value={textContent}
+                        onChange={(e) => setTextContent(e.target.value)}
+                        className="w-full min-h-[120px] bg-transparent border-0 text-ai-text placeholder-ai-text-muted resize-none focus:ring-0 focus:outline-none text-lg leading-relaxed"
+                      />
+                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-ai-border/30">
+                        <div className="flex items-center space-x-4">
+                          <Button
+                            onClick={startRecording}
+                            variant="ghost"
+                            size="sm"
+                            className="text-ai-text-secondary hover:text-ai-green hover:bg-ai-green/10 p-2 rounded-lg transition-all"
+                          >
+                            <i className="fas fa-microphone"></i>
+                          </Button>
+                          <span className="text-xs text-ai-text-muted">Press / for commands</span>
+                        </div>
+                        <Button
+                          onClick={handleTextProcess}
+                          disabled={!textContent.trim() || processContentMutation.isPending}
+                          className="bg-ai-blue hover:bg-ai-blue-dark disabled:bg-ai-border disabled:cursor-not-allowed px-6 py-2 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                          {processContentMutation.isPending ? (
+                            <div className="flex items-center">
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                              Processing...
+                            </div>
+                          ) : (
+                            <div className="flex items-center">
+                              <span>Send</span>
+                              <i className="fas fa-paper-plane ml-2"></i>
+                            </div>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* URL Input */}
+                  <div className="relative">
+                    <div className="bg-ai-dark/80 border border-ai-border rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+                      <Input
+                        type="url"
+                        placeholder="🔗 Paste YouTube/Vimeo URL here..."
+                        value={videoUrl}
+                        onChange={(e) => setVideoUrl(e.target.value)}
+                        className="w-full bg-transparent border-0 text-ai-text placeholder-ai-text-muted focus:ring-0 focus:outline-none text-lg"
+                      />
+                      {videoUrl && (
+                        <div className="flex justify-end mt-3 pt-3 border-t border-ai-border/30">
+                          <Button
+                            onClick={handleVideoUrlProcess}
+                            disabled={processContentMutation.isPending}
+                            className="bg-ai-green hover:bg-ai-green/80 px-6 py-2 rounded-xl font-medium transition-all duration-300"
+                          >
+                            {processContentMutation.isPending ? "Processing..." : "Process Video"}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button
+                      onClick={startRecording}
+                      variant="outline"
+                      className="bg-ai-dark/50 hover:bg-ai-green/10 border-ai-border hover:border-ai-green p-4 rounded-xl transition-all duration-300 flex items-center justify-center group"
+                    >
+                      <i className="fas fa-microphone text-ai-green mr-3 group-hover:scale-110 transition-transform"></i>
+                      <span>Voice Record</span>
+                    </Button>
+                    <Button
+                      onClick={() => setShowTextInput(!showTextInput)}
+                      variant="outline"
+                      className="bg-ai-dark/50 hover:bg-ai-blue/10 border-ai-border hover:border-ai-blue p-4 rounded-xl transition-all duration-300 flex items-center justify-center group"
+                    >
+                      <i className="fas fa-keyboard text-ai-blue mr-3 group-hover:scale-110 transition-transform"></i>
+                      <span>Type Text</span>
+                    </Button>
+                  </div>
                 </div>
-              )}
+
+                {/* Processing Status */}
+                {(isUploading || processContentMutation.isPending) && (
+                  <div className="mt-8 bg-ai-blue/10 border border-ai-blue/30 rounded-2xl p-6 backdrop-blur-lg">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 bg-ai-blue/20 rounded-full flex items-center justify-center mr-3">
+                          <i className="fas fa-robot text-ai-blue"></i>
+                        </div>
+                        <span className="font-medium text-ai-blue">AI is analyzing your content</span>
+                      </div>
+                      <TypingAnimation />
+                    </div>
+                    <div className="w-full bg-ai-blue/20 rounded-full h-2 overflow-hidden">
+                      <div className="bg-ai-blue h-2 rounded-full animate-pulse w-3/4 transition-all duration-500"></div>
+                    </div>
+                    <p className="text-sm text-ai-text-secondary mt-3">This may take a few moments...</p>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Upload Progress */}
-            {(isUploading || processContentMutation.isPending) && (
-              <Card className="bg-ai-surface border-ai-border">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-medium">Processing...</span>
-                    <TypingAnimation />
-                  </div>
-                  <div className="w-full bg-ai-border rounded-full h-2">
-                    <div className="bg-ai-blue h-2 rounded-full animate-pulse w-3/4"></div>
-                  </div>
-                  <p className="text-sm text-ai-text-secondary mt-2">Analyzing content with AI...</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-
-        {/* Output Section */}
-        <div className="lg:w-1/2 p-6 lg:p-8">
-          <div className="max-w-2xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold logo-text">Generated Notes</h2>
-              {currentNote && (
-                <div className="flex space-x-2">
-                  <Button variant="ghost" size="sm" className="text-ai-text-secondary hover:text-ai-text p-2">
-                    <i className="fas fa-download"></i>
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-ai-text-secondary hover:text-ai-text p-2">
-                    <i className="fas fa-share"></i>
-                  </Button>
+            {/* Output Section */}
+            <div className="flex flex-col">
+              <div className="bg-ai-surface/50 backdrop-blur-xl border border-ai-border/50 rounded-2xl p-8 shadow-2xl h-full">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-3xl font-bold logo-text">Generated Notes</h2>
+                  {currentNote && (
+                    <div className="flex space-x-3">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-ai-text-secondary hover:text-ai-blue hover:bg-ai-blue/10 p-3 rounded-xl transition-all"
+                      >
+                        <i className="fas fa-download mr-2"></i>
+                        Export
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-ai-text-secondary hover:text-ai-green hover:bg-ai-green/10 p-3 rounded-xl transition-all"
+                      >
+                        <i className="fas fa-share mr-2"></i>
+                        Share
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              )}
+
+                {/* AI Status Indicator */}
+                <div className="mb-8">
+                  {processContentMutation.isPending ? (
+                    <div className="flex items-center p-4 bg-ai-blue/10 border border-ai-blue/30 rounded-xl">
+                      <div className="w-8 h-8 bg-ai-blue/20 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-robot text-ai-blue animate-pulse"></i>
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-medium text-ai-blue">AI Assistant is thinking</span>
+                        <TypingAnimation />
+                      </div>
+                    </div>
+                  ) : currentNote ? (
+                    <div className="flex items-center p-4 bg-ai-green/10 border border-ai-green/30 rounded-xl">
+                      <div className="w-8 h-8 bg-ai-green/20 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-check-circle text-ai-green"></i>
+                      </div>
+                      <span className="font-medium text-ai-green">Notes generated successfully!</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center p-4 bg-ai-surface/30 border border-ai-border/30 rounded-xl">
+                      <div className="w-8 h-8 bg-ai-border/20 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-robot text-ai-text-muted"></i>
+                      </div>
+                      <span className="text-ai-text-muted">Ready to analyze your content</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Notes Content */}
+                <div className="flex-1 overflow-y-auto">
+                  {currentNote ? (
+                    <div className="space-y-6">
+                      <NoteCards note={currentNote} />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full min-h-[400px]">
+                      <div className="text-center">
+                        <div className="w-24 h-24 bg-ai-surface/50 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                          <i className="fas fa-brain text-ai-blue text-3xl"></i>
+                        </div>
+                        <h3 className="text-2xl font-bold mb-3 text-ai-text-secondary">Ready to Generate Notes</h3>
+                        <p className="text-ai-text-muted max-w-md mx-auto leading-relaxed">
+                          Upload files, paste text, or share URLs to get AI-powered structured notes with summaries, key points, and actionable insights.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-
-            {/* AI Assistant Status */}
-            {processContentMutation.isPending ? (
-              <div className="flex items-center mb-6 text-ai-text-secondary">
-                <i className="fas fa-robot text-ai-blue mr-2"></i>
-                <span>AI Assistant is thinking</span>
-                <TypingAnimation />
-              </div>
-            ) : currentNote ? (
-              <div className="flex items-center mb-6 text-ai-green">
-                <i className="fas fa-check-circle text-ai-green mr-2"></i>
-                <span>Notes generated successfully!</span>
-              </div>
-            ) : (
-              <div className="flex items-center mb-6 text-ai-text-muted">
-                <i className="fas fa-robot text-ai-text-muted mr-2"></i>
-                <span>Upload content to generate notes</span>
-              </div>
-            )}
-
-            {/* Generated Note Cards */}
-            {currentNote ? (
-              <NoteCards note={currentNote} />
-            ) : (
-              <div className="text-center py-12">
-                <i className="fas fa-file-text text-ai-text-muted text-6xl mb-4"></i>
-                <h3 className="text-xl font-semibold mb-2 text-ai-text-muted">No notes yet</h3>
-                <p className="text-ai-text-muted">Upload content to start generating AI-powered notes</p>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -106,8 +106,13 @@ export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
 }
 
 export async function extractTextFromPDF(pdfBuffer: Buffer): Promise<string> {
-  // For now, return a placeholder - in production, you'd use a PDF parsing library
-  throw new Error("PDF processing not implemented - would use pdf-parse or similar library");
+  try {
+    const pdfParse = await import("pdf-parse");
+    const data = await pdfParse.default(pdfBuffer);
+    return data.text;
+  } catch (error) {
+    throw new Error(`Failed to extract text from PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 }
 
 export async function extractVideoContent(videoUrl: string): Promise<string> {

@@ -126,9 +126,8 @@ export default function Workspace() {
               <img 
                 src={brieflyLogo} 
                 alt="Briefly.AI" 
-                className="h-6 w-auto mr-2"
+                className="h-8 w-auto"
               />
-              <span className="text-lg font-bold">Briefly.AI Workspace</span>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" className="text-ai-text-secondary hover:text-ai-text p-2">
@@ -146,7 +145,7 @@ export default function Workspace() {
         {/* Upload Section */}
         <div className="lg:w-1/2 p-6 lg:p-8 border-r border-ai-border">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 glow-text">Upload Your Content</h2>
+            <h2 className="text-3xl font-bold mb-6 logo-text">Upload Your Content</h2>
             
             {/* Upload Zone */}
             <UploadZone 
@@ -239,7 +238,7 @@ export default function Workspace() {
         <div className="lg:w-1/2 p-6 lg:p-8">
           <div className="max-w-2xl mx-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold glow-text">Generated Notes</h2>
+              <h2 className="text-3xl font-bold logo-text">Generated Notes</h2>
               {currentNote && (
                 <div className="flex space-x-2">
                   <Button variant="ghost" size="sm" className="text-ai-text-secondary hover:text-ai-text p-2">

@@ -79,9 +79,8 @@ export default function Landing() {
               <img 
                 src={brieflyLogo} 
                 alt="Briefly.AI" 
-                className="h-8 w-auto mr-3"
+                className="h-10 w-auto"
               />
-              <span className="text-xl font-bold glow-text">Briefly.AI</span>
             </div>
             <div className="hidden md:flex space-x-8">
               <a href="#features" className="text-ai-text-secondary hover:text-ai-text transition-colors">Features</a>
@@ -106,7 +105,7 @@ export default function Landing() {
             transition={{ duration: 0.5 }}
             className="animate-fadeIn"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 glow-text">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 logo-text">
               AI-Powered
               <span className="text-ai-blue"> Briefing</span>
             </h1>
@@ -148,7 +147,7 @@ export default function Landing() {
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-ai-dark">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 glow-text">Powerful Features</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 logo-text">Powerful Features</h2>
             <p className="text-xl text-ai-text-secondary max-w-2xl mx-auto">
               Everything you need to transform any content into structured, actionable insights
             </p>
@@ -178,7 +177,7 @@ export default function Landing() {
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 glow-text">How It Works</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 logo-text">How It Works</h2>
             <p className="text-xl text-ai-text-secondary max-w-2xl mx-auto">
               Three simple steps to transform any content into structured notes
             </p>
@@ -217,7 +216,7 @@ export default function Landing() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 glow-text">Ready to Transform Your Content?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 logo-text">Ready to Transform Your Content?</h2>
             <p className="text-xl text-ai-text-secondary mb-8">
               Join thousands of professionals who use Briefly.AI to create better notes faster.
             </p>

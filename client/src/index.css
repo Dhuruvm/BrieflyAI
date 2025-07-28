@@ -82,6 +82,14 @@
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
   }
   
+  .logo-text {
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.1);
+    font-weight: 900;
+  }
+  
   .upload-zone {
     transition: all 0.3s ease;
   }

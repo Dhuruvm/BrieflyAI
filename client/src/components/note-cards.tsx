@@ -176,7 +176,10 @@ export default function NoteCards({ note }: NoteCardsProps) {
         variants={cardVariants}
         className="flex flex-col sm:flex-row gap-4"
       >
-        <Button className="flex-1 bg-ai-blue hover:bg-ai-blue-dark px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center">
+        <Button 
+          className="flex-1 bg-ai-blue hover:bg-ai-blue-dark px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center"
+          onClick={() => window.open(`/api/notes/${note.id}/download-pdf`, '_blank')}
+        >
           <i className="fas fa-download mr-2"></i>
           Export PDF
         </Button>

@@ -2,7 +2,21 @@
 
 ## Overview
 
-This is a full-stack AI-powered note-taking application with integrated NoteGen Agent Engine that processes various content types (text, PDFs, audio, video URLs) and generates both structured notes and beautiful handwritten-style study notes as PDFs. The app features a modern dark-themed UI with ChatGPT-style professional interface, real-time processing animations, and comprehensive note organization powered by Google's Gemini AI models.
+This is a full-stack AI-powered note-taking application with an advanced NoteGen Agent Engine featuring a sophisticated 4-agent pipeline that processes various content types (text, PDFs, audio, video URLs) and generates both structured notes and beautiful handwritten-style study notes as PDFs. The app features a modern dark-themed UI with ChatGPT-style professional interface, real-time processing animations, comprehensive note organization, and self-learning capabilities powered by Google's Gemini AI models.
+
+## Recent Changes (January 29, 2025)
+
+### Enhanced NoteGen Architecture
+- Redesigned with 4 specialized AI agents for superior note generation
+- Added self-learning system with user feedback integration
+- Implemented advanced styling options and visual density controls
+- Enhanced PDF generation with multiple design templates
+
+### Advanced Agent Pipeline
+- **Agent 1**: Layout Designer - Converts raw text into structured layouts
+- **Agent 2**: Styling Designer - Applies intelligent highlighting and visual enhancements  
+- **Agent 3**: Diagram Generator - Creates flowcharts, cycles, and visual aids using Mermaid.js
+- **Agent 4**: PDF Designer - Renders final handwritten-style PDFs with custom fonts
 
 ## User Preferences
 
@@ -33,17 +47,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Key Components
 
-### Content Processing Pipeline
+### Advanced Content Processing Pipeline
 1. **Input Handlers**: Support for text input, file uploads (PDF, audio), and video URL processing
-2. **AI Processing**: Google Gemini integration for content analysis and note generation
+2. **Legacy AI Processing**: Google Gemini integration for basic content analysis and note generation
 3. **Structured Output**: Generates title, summary, key points, action items, and visual cards
-4. **NoteGen AI Engine**: 5-agent pipeline for generating beautiful study notes:
-   - Agent 1: Topic Classifier (subject, tone, difficulty detection)
-   - Agent 2: Content Segmentor (break into structured sections)
-   - Agent 3: Structure Formatter (add emojis, colors, highlights)
-   - Agent 4: Aesthetic Designer (handwritten-style layout design)
-   - Agent 5: PDF Renderer (high-quality PDF generation)
-5. **Real-time Feedback**: Progress indicators and typing animations during processing
+4. **Advanced NoteGen Engine**: 4-agent pipeline with self-learning capabilities:
+   - **Agent 1**: Layout Designer - Intelligent structure extraction using BART-equivalent logic
+   - **Agent 2**: Styling Designer - NER-based highlighting with rule-based color mapping
+   - **Agent 3**: Diagram Generator - Mermaid.js integration for visual aids and flowcharts
+   - **Agent 4**: PDF Designer - Handwritten-style rendering with Google Fonts integration
+5. **Self-Learning System**: Performance tracking, user feedback integration, and template optimization
+6. **Real-time Feedback**: Progress indicators, agent pipeline status, and processing metrics
 
 ### UI Components
 - **Upload Zone**: Drag-and-drop file upload with visual feedback

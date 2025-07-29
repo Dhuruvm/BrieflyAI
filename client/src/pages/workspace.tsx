@@ -10,6 +10,7 @@ import { queryClient } from "@/lib/queryClient";
 import UploadZone from "@/components/upload-zone";
 import NoteCards from "@/components/note-cards";
 import NoteGenControls from "@/components/notegen-controls";
+import { AdvancedNoteGenPanel } from "@/components/advanced-notegen-panel";
 import TypingAnimation from "@/components/ui/typing-animation";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { apiRequest } from "@/lib/queryClient";
@@ -27,6 +28,8 @@ export default function Workspace() {
   
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAdvancedPanel, setShowAdvancedPanel] = useState(false);
+  const [processingMetrics, setProcessingMetrics] = useState<any>(null);
 
   // Get all notes
   const { data: notes } = useQuery<Note[]>({
@@ -101,6 +104,62 @@ export default function Workspace() {
   const handleFileUpload = (file: File) => {
     setIsProcessing(true);
     processContentMutation.mutate({ file });
+  };
+
+  // Advanced NoteGen mutation
+  const advancedNoteGenMutation = useMutation({
+    mutationFn: async ({ content, options }: { content: string; options: any }) => {
+      const formData = new FormData();
+      formData.append('content', content);
+      formData.append('options', JSON.stringify(options));
+      
+      const response = await fetch('/api/generate-advanced-notes', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      if (options.generatePDF) {
+        // Handle PDF download
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `advanced-notes-${Date.now()}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        return { success: true, message: "PDF downloaded successfully" };
+      } else {
+        return response.json();
+      }
+    },
+    onSuccess: (data) => {
+      setProcessingMetrics(data.processingMetrics);
+      setIsProcessing(false);
+      toast({
+        title: "Advanced Notes Generated!",
+        description: data.message || "Your advanced study notes are ready.",
+      });
+    },
+    onError: (error: Error) => {
+      setIsProcessing(false);
+      toast({
+        title: "Generation Failed",
+        description: error.message || "Failed to generate advanced notes",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleAdvancedGenerate = (content: string, options: any) => {
+    setIsProcessing(true);
+    setProcessingMetrics(null);
+    advancedNoteGenMutation.mutate({ content, options });
   };
 
   const startRecording = () => {
@@ -246,6 +305,20 @@ export default function Workspace() {
                       <span>Type Text</span>
                     </Button>
                   </div>
+
+                  {/* Advanced NoteGen Toggle */}
+                  <div className="mt-6 pt-6 border-t border-ai-border/30">
+                    <Button
+                      onClick={() => setShowAdvancedPanel(!showAdvancedPanel)}
+                      variant="outline"
+                      className="w-full bg-gradient-to-r from-purple-600/10 to-blue-600/10 hover:from-purple-600/20 hover:to-blue-600/20 border-purple-400/30 hover:border-purple-400/50 p-4 rounded-xl transition-all duration-300 flex items-center justify-center group"
+                    >
+                      <i className="fas fa-brain text-purple-400 mr-3 group-hover:scale-110 transition-transform"></i>
+                      <span className="font-medium">
+                        {showAdvancedPanel ? 'Hide Advanced NoteGen' : 'Show Advanced NoteGen Engine'}
+                      </span>
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Processing Status */}
@@ -355,6 +428,17 @@ export default function Workspace() {
                             <NoteGenControls 
                               content={textContent}
                               disabled={processContentMutation.isPending}
+                            />
+                          </div>
+                        )}
+
+                        {/* Advanced NoteGen Panel */}
+                        {showAdvancedPanel && (
+                          <div className="mt-8 w-full">
+                            <AdvancedNoteGenPanel
+                              onGenerate={handleAdvancedGenerate}
+                              isProcessing={isProcessing}
+                              processingMetrics={processingMetrics}
                             />
                           </div>
                         )}

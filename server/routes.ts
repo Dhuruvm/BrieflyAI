@@ -6,6 +6,7 @@ import { processContentSchema, insertNoteSchema, noteGenOptionsSchema } from "@s
 import { processTextContent, transcribeAudio, extractTextFromPDF, extractVideoContent } from "./services/gemini";
 import { generateStudyNotesPDF } from "./services/notegen-agents";
 import { generatePDFFromHTML } from "./services/pdf-generator";
+import { noteGenEngine } from "./services/advanced-notegen-engine";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -161,7 +162,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate Study Notes PDF endpoint
+  // Generate Study Notes PDF endpoint (Legacy)
   app.post("/api/generate-study-notes", upload.single("file"), async (req, res) => {
     try {
       let content: string;
@@ -224,6 +225,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Advanced NoteGen Engine endpoint
+  app.post("/api/generate-advanced-notes", upload.single("file"), async (req, res) => {
+    try {
+      let content: string;
+      let title: string = "Study Notes";
+      let contentType: string = "text";
+      let noteGenOptions = noteGenOptionsSchema.parse(req.body.options || {});
+
+      if (req.file) {
+        // Handle file upload
+        title = req.file.originalname.split('.')[0];
+        const fileName = req.file.originalname;
+        const fileExtension = fileName.split('.').pop()?.toLowerCase();
+        
+        switch (fileExtension) {
+          case 'txt':
+            content = req.file.buffer.toString('utf-8');
+            contentType = "text";
+            break;
+          case 'pdf':
+            content = await extractTextFromPDF(req.file.buffer);
+            contentType = "pdf";
+            break;
+          case 'mp3':
+          case 'wav':
+          case 'm4a':
+            content = await transcribeAudio(req.file.buffer);
+            contentType = "audio";
+            break;
+          default:
+            return res.status(400).json({ error: "Unsupported file type for advanced notes generation" });
+        }
+      } else if (req.body.content) {
+        content = req.body.content;
+        title = req.body.title || "Study Notes";
+        contentType = req.body.contentType || "text";
+      } else {
+        return res.status(400).json({ error: "No content provided" });
+      }
+
+      // Generate advanced notes using the new 4-agent pipeline
+      console.log("🚀 Starting Advanced NoteGen Engine Pipeline...");
+      const { pdfBuffer, processingMetrics } = await noteGenEngine.generateAdvancedNotes(
+        content, 
+        contentType, 
+        noteGenOptions,
+        title
+      );
+
+      if (noteGenOptions.generatePDF) {
+        // Return PDF
+        const filename = `advanced-notes-${Date.now()}.pdf`;
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+        
+        return res.send(pdfBuffer);
+      } else {
+        // Return processing metrics and success info
+        return res.json({
+          success: true,
+          message: "Advanced study notes generated successfully",
+          processingMetrics,
+          pdfSize: pdfBuffer.length,
+          agentsPipeline: [
+            "Layout Designer - Structure extraction",
+            "Styling Designer - Visual enhancement",
+            "Diagram Generator - Visual aids",
+            "PDF Designer - Final rendering"
+          ]
+        });
+      }
+    } catch (error) {
+      console.error('Advanced notes generation error:', error);
+      res.status(500).json({ 
+        error: `Failed to generate advanced notes: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      });
+    }
+  });
+
   // Download PDF from existing note
   app.get("/api/notes/:id/download-pdf", async (req, res) => {
     try {
@@ -246,6 +327,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('PDF download error:', error);
       res.status(500).json({ 
         error: `Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      });
+    }
+  });
+
+  // User feedback endpoint for self-learning system
+  app.post("/api/notegen-feedback", async (req, res) => {
+    try {
+      const { rating, features } = req.body;
+      
+      if (typeof rating !== 'number' || rating < 0 || rating > 10) {
+        return res.status(400).json({ error: "Rating must be a number between 0 and 10" });
+      }
+      
+      if (!Array.isArray(features)) {
+        return res.status(400).json({ error: "Features must be an array" });
+      }
+      
+      await noteGenEngine.updateUserFeedback(rating, features);
+      
+      res.json({ 
+        success: true, 
+        message: "Feedback received and learning system updated" 
+      });
+    } catch (error) {
+      console.error('Feedback processing error:', error);
+      res.status(500).json({ 
+        error: `Failed to process feedback: ${error instanceof Error ? error.message : 'Unknown error'}` 
       });
     }
   });

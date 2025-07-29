@@ -575,17 +575,20 @@ export async function designLayout(formatted: FormattedNotes): Promise<DesignedL
                 required: ["element", "action", "effect"]
               }
             },
-            responsive_breakpoints: {
+            responsive_settings: {
               type: "object",
               properties: {
-                mobile: { type: "object" },
-                tablet: { type: "object" },
-                desktop: { type: "object" }
+                mobile_font_scale: { type: "number" },
+                tablet_font_scale: { type: "number" },
+                desktop_font_scale: { type: "number" },
+                mobile_spacing_scale: { type: "number" },
+                tablet_spacing_scale: { type: "number" },
+                desktop_spacing_scale: { type: "number" }
               },
-              required: ["mobile", "tablet", "desktop"]
+              required: ["mobile_font_scale", "tablet_font_scale", "desktop_font_scale", "mobile_spacing_scale", "tablet_spacing_scale", "desktop_spacing_scale"]
             }
           },
-          required: ["title", "theme", "layout_blocks", "style_config", "animations", "interactions", "responsive_breakpoints"]
+          required: ["title", "theme", "layout_blocks", "style_config", "animations", "interactions", "responsive_settings"]
         }
       },
       contents: prompt
@@ -598,8 +601,27 @@ export async function designLayout(formatted: FormattedNotes): Promise<DesignedL
 }
 
 // Agent 5: Premium PDF Renderer with Advanced Styling
-export function generatePDFHTML(design: DesignedLayout): string {
-  const { style_config, layout_blocks, title, animations = [], interactions = [] } = design;
+export function generatePDFHTML(design: any): string {
+  const { style_config, layout_blocks, title, animations = [], interactions = [], responsive_settings } = design;
+  
+  // Safe responsive breakpoints with defaults
+  const responsive = {
+    mobile: { 
+      max_width: '768px', 
+      font_scale: responsive_settings?.mobile_font_scale || 0.9, 
+      spacing_scale: responsive_settings?.mobile_spacing_scale || 0.8 
+    },
+    tablet: { 
+      max_width: '1024px', 
+      font_scale: responsive_settings?.tablet_font_scale || 0.95, 
+      spacing_scale: responsive_settings?.tablet_spacing_scale || 0.9 
+    },
+    desktop: { 
+      min_width: '1025px', 
+      font_scale: responsive_settings?.desktop_font_scale || 1.0, 
+      spacing_scale: responsive_settings?.desktop_spacing_scale || 1.0 
+    }
+  };
   
   // Generate advanced CSS with modern features
   const css = `
@@ -683,6 +705,43 @@ export function generatePDFHTML(design: DesignedLayout): string {
     
     .section:hover {
       transform: translateY(-2px);
+    }
+
+    /* Responsive breakpoints */
+    @media (max-width: ${responsive.mobile.max_width}) {
+      body { font-size: ${Math.round(14 * responsive.mobile.font_scale)}px; }
+      .title { font-size: ${Math.round(24 * responsive.mobile.font_scale)}px; }
+      :root {
+        --spacing-xs: ${Math.round(responsive.mobile.spacing_scale * 4)}px;
+        --spacing-sm: ${Math.round(responsive.mobile.spacing_scale * 8)}px;
+        --spacing-md: ${Math.round(responsive.mobile.spacing_scale * 16)}px;
+        --spacing-lg: ${Math.round(responsive.mobile.spacing_scale * 24)}px;
+        --spacing-xl: ${Math.round(responsive.mobile.spacing_scale * 32)}px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: ${responsive.tablet.max_width}) {
+      body { font-size: ${Math.round(15 * responsive.tablet.font_scale)}px; }
+      .title { font-size: ${Math.round(28 * responsive.tablet.font_scale)}px; }
+      :root {
+        --spacing-xs: ${Math.round(responsive.tablet.spacing_scale * 4)}px;
+        --spacing-sm: ${Math.round(responsive.tablet.spacing_scale * 8)}px;
+        --spacing-md: ${Math.round(responsive.tablet.spacing_scale * 16)}px;
+        --spacing-lg: ${Math.round(responsive.tablet.spacing_scale * 24)}px;
+        --spacing-xl: ${Math.round(responsive.tablet.spacing_scale * 32)}px;
+      }
+    }
+
+    @media (min-width: ${responsive.desktop.min_width}) {
+      body { font-size: ${Math.round(16 * responsive.desktop.font_scale)}px; }
+      .title { font-size: ${Math.round(32 * responsive.desktop.font_scale)}px; }
+      :root {
+        --spacing-xs: ${Math.round(responsive.desktop.spacing_scale * 4)}px;
+        --spacing-sm: ${Math.round(responsive.desktop.spacing_scale * 8)}px;
+        --spacing-md: ${Math.round(responsive.desktop.spacing_scale * 16)}px;
+        --spacing-lg: ${Math.round(responsive.desktop.spacing_scale * 24)}px;
+        --spacing-xl: ${Math.round(responsive.desktop.spacing_scale * 32)}px;
+      }
     }
     
     .heading {
@@ -886,7 +945,7 @@ export function generatePDFHTML(design: DesignedLayout): string {
   // Generate enhanced HTML content with semantic structure
   let htmlContent = '';
   
-  layout_blocks.forEach((block, index) => {
+  layout_blocks.forEach((block: any, index: number) => {
     const emoji = block.content.match(/^[^\w\s]+/)?.[0] || '';
     const content = block.content.replace(/^[^\w\s]+\s*/, '');
     const animationClass = block.animation ? `style="animation: ${block.animation} 0.6s ease-out ${index * 0.1}s both"` : '';

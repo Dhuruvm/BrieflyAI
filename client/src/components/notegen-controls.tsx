@@ -24,7 +24,12 @@ export default function NoteGenControls({ content, onGenerate, disabled = false 
     generatePDF: false,
     pdfStyle: 'handwritten',
     includeVisuals: true,
-    language: 'en'
+    includeDiagrams: true,
+    language: 'en',
+    complexityLevel: 'moderate',
+    visualDensity: 'balanced', 
+    colorScheme: 'warm',
+    fontStyle: 'handwritten'
   });
   const { toast } = useToast();
 

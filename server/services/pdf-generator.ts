@@ -121,7 +121,12 @@ export async function generatePDFAlternative(html: string, filename: string): Pr
     const file = { content: html };
     const pdfBuffer = await htmlPdf.generatePdf(file, options);
     
-    return Buffer.from(pdfBuffer);
+    // Handle the returned buffer properly
+    if (Buffer.isBuffer(pdfBuffer)) {
+      return pdfBuffer;
+    } else {
+      return Buffer.from(pdfBuffer as any);
+    }
   } catch (error) {
     console.error('Alternative PDF generation error:', error);
     throw new Error(`Failed to generate PDF with alternative method: ${error instanceof Error ? error.message : 'Unknown error'}`);

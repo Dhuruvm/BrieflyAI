@@ -166,7 +166,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/generate-study-notes", upload.single("file"), async (req, res) => {
     try {
       let content: string;
-      let noteGenOptions = noteGenOptionsSchema.parse(req.body.options || {});
+      let noteGenOptions;
+      try {
+        noteGenOptions = noteGenOptionsSchema.parse(
+          typeof req.body.options === 'string' 
+            ? JSON.parse(req.body.options) 
+            : (req.body.options || {})
+        );
+      } catch (error) {
+        console.log('Options parsing error:', error);
+        noteGenOptions = noteGenOptionsSchema.parse({});
+      }
 
       if (req.file) {
         // Handle file upload
@@ -231,7 +241,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let content: string;
       let title: string = "Study Notes";
       let contentType: string = "text";
-      let noteGenOptions = noteGenOptionsSchema.parse(req.body.options || {});
+      let noteGenOptions;
+      try {
+        noteGenOptions = noteGenOptionsSchema.parse(
+          typeof req.body.options === 'string' 
+            ? JSON.parse(req.body.options) 
+            : (req.body.options || {})
+        );
+      } catch (error) {
+        console.log('Advanced options parsing error:', error);
+        noteGenOptions = noteGenOptionsSchema.parse({});
+      }
 
       if (req.file) {
         // Handle file upload
@@ -355,6 +375,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         error: `Failed to process feedback: ${error instanceof Error ? error.message : 'Unknown error'}` 
       });
+    }
+  });
+
+  // NoteGen Analytics endpoint
+  app.get("/api/notegen-analytics", async (req, res) => {
+    try {
+      // Return analytics data from the engine
+      const analytics = await noteGenEngine.getAnalytics();
+      res.json(analytics);
+    } catch (error) {
+      console.error('Analytics error:', error);
+      res.status(500).json({ error: "Failed to fetch analytics" });
     }
   });
 

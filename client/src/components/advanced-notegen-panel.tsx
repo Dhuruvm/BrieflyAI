@@ -70,11 +70,12 @@ export function AdvancedNoteGenPanel({ onGenerate, isProcessing, processingMetri
   // Feedback mutation
   const feedbackMutation = useMutation({
     mutationFn: async (feedback: { rating: number; features: string[] }) => {
-      return apiRequest('/api/notegen-feedback', {
+      const response = await fetch('/api/notegen-feedback', {
         method: 'POST',
         body: JSON.stringify(feedback),
         headers: { 'Content-Type': 'application/json' }
       });
+      return response.json();
     },
     onSuccess: () => {
       toast({

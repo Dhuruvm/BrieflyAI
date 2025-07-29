@@ -97,16 +97,29 @@ export default function NoteGenControls({ content, onGenerate, disabled = false 
           throw new Error(error.error || "Failed to generate study notes PDF");
         }
 
-        // Download the PDF
+        // Download the PDF automatically
         const blob = await response.blob();
+        
+        // Check if the response is actually a PDF
+        if (blob.type !== 'application/pdf' && blob.size > 0) {
+          // If it's not a PDF, it might be an error response
+          const text = await blob.text();
+          throw new Error(text || 'Invalid PDF response');
+        }
+        
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `study_notes_${Date.now()}.pdf`;
+        a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        
+        // Clean up
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        }, 100);
 
         setGenerationProgress(100);
         setCurrentStep('✅ Download complete!');

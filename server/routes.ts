@@ -212,10 +212,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Generate PDF from HTML
         const pdfBuffer = await generatePDFFromHTML(html, filename);
         
-        // Set headers for PDF download
+        // Set headers for PDF download with proper filename encoding
+        const encodedFilename = encodeURIComponent(filename);
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"; filename*=UTF-8''${encodedFilename}`);
         res.setHeader('Content-Length', pdfBuffer.length);
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         
         return res.send(pdfBuffer);
       } else {
@@ -295,11 +299,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       if (noteGenOptions.generatePDF) {
-        // Return PDF
+        // Return PDF with proper download headers
         const filename = `advanced-notes-${Date.now()}.pdf`;
+        const encodedFilename = encodeURIComponent(filename);
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"; filename*=UTF-8''${encodedFilename}`);
         res.setHeader('Content-Length', pdfBuffer.length);
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         
         return res.send(pdfBuffer);
       } else {
@@ -337,10 +345,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { html, filename } = await generateStudyNotesPDF(note.originalContent);
       const pdfBuffer = await generatePDFFromHTML(html, filename);
       
-      // Set headers for PDF download
+      // Set headers for PDF download with proper encoding
+      const encodedFilename = encodeURIComponent(filename);
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"; filename*=UTF-8''${encodedFilename}`);
       res.setHeader('Content-Length', pdfBuffer.length);
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       
       res.send(pdfBuffer);
     } catch (error) {

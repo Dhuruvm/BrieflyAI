@@ -123,16 +123,29 @@ export default function Workspace() {
       }
 
       if (options.generatePDF) {
-        // Handle PDF download
+        // Handle automatic PDF download
         const blob = await response.blob();
+        
+        // Validate PDF response
+        if (blob.type !== 'application/pdf' && blob.size > 0) {
+          const text = await blob.text();
+          throw new Error(text || 'Invalid PDF response received');
+        }
+        
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = `advanced-notes-${Date.now()}.pdf`;
+        a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        
+        // Clean up after download
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        }, 100);
+        
         return { success: true, message: "PDF downloaded successfully" };
       } else {
         return response.json();

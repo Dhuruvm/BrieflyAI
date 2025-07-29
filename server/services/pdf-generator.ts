@@ -2,6 +2,33 @@ import puppeteer from 'puppeteer';
 import { writeFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
+// Fallback PDF generation using html-pdf for environments where Puppeteer fails
+async function generatePDFWithHtmlPdf(html: string): Promise<Buffer> {
+  try {
+    const pdf = await import('html-pdf');
+    
+    return new Promise((resolve, reject) => {
+      const options = {
+        format: 'A4',
+        border: {
+          top: '15mm',
+          right: '15mm',
+          bottom: '15mm',
+          left: '15mm'
+        },
+        timeout: 30000
+      };
+
+      pdf.create(html, options).toBuffer((err: any, buffer: Buffer) => {
+        if (err) reject(err);
+        else resolve(buffer);
+      });
+    });
+  } catch (error) {
+    throw new Error(`Fallback PDF generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
 export interface PDFOptions {
   format?: 'A4' | 'Letter' | 'A3' | 'A5';
   orientation?: 'portrait' | 'landscape';
@@ -24,7 +51,7 @@ export async function generatePDFFromHTML(
   let browser;
   
   try {
-    // Launch puppeteer with optimized settings
+    // Launch puppeteer with optimized settings for Replit
     browser = await puppeteer.launch({
       headless: true,
       args: [
@@ -34,8 +61,15 @@ export async function generatePDFFromHTML(
         '--disable-accelerated-2d-canvas',
         '--no-first-run',
         '--no-zygote',
-        '--disable-gpu'
-      ]
+        '--disable-gpu',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--disable-features=TranslateUI',
+        '--disable-ipc-flooding-protection',
+        '--single-process'
+      ],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
     });
 
     const page = await browser.newPage();
@@ -68,11 +102,23 @@ export async function generatePDFFromHTML(
 
     return Buffer.from(pdfUint8Array);
   } catch (error) {
-    console.error('PDF generation error:', error);
-    throw new Error(`Failed to generate PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Puppeteer PDF generation failed, trying fallback method:', error);
+    
+    try {
+      // Try fallback PDF generation
+      console.log('🔄 Attempting fallback PDF generation...');
+      return await generatePDFWithHtmlPdf(html);
+    } catch (fallbackError) {
+      console.error('Fallback PDF generation also failed:', fallbackError);
+      throw new Error(`All PDF generation methods failed. Puppeteer: ${error instanceof Error ? error.message : 'Unknown error'}. Fallback: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`);
+    }
   } finally {
     if (browser) {
-      await browser.close();
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.warn('Failed to close browser:', closeError);
+      }
     }
   }
 }

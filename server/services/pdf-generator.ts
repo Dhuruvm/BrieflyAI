@@ -1,33 +1,6 @@
-import puppeteer from 'puppeteer';
-import { writeFileSync, unlinkSync } from 'fs';
+
+import { readFileSync } from 'fs';
 import { join } from 'path';
-
-// Fallback PDF generation using html-pdf for environments where Puppeteer fails
-async function generatePDFWithHtmlPdf(html: string): Promise<Buffer> {
-  try {
-    const pdf = await import('html-pdf');
-    
-    return new Promise((resolve, reject) => {
-      const options = {
-        format: 'A4',
-        border: {
-          top: '15mm',
-          right: '15mm',
-          bottom: '15mm',
-          left: '15mm'
-        },
-        timeout: 30000
-      };
-
-      pdf.create(html, options).toBuffer((err: any, buffer: Buffer) => {
-        if (err) reject(err);
-        else resolve(buffer);
-      });
-    });
-  } catch (error) {
-    throw new Error(`Fallback PDF generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-  }
-}
 
 export interface PDFOptions {
   format?: 'A4' | 'Letter' | 'A3' | 'A5';
@@ -43,84 +16,178 @@ export interface PDFOptions {
   footerTemplate?: string;
 }
 
+// Fast PDF generation using simple HTML to text conversion
 export async function generatePDFFromHTML(
   html: string, 
   filename: string,
   options: PDFOptions = {}
 ): Promise<Buffer> {
-  let browser;
-  
   try {
-    // Launch puppeteer with optimized settings for Replit
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-        '--disable-background-timer-throttling',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding',
-        '--disable-features=TranslateUI',
-        '--disable-ipc-flooding-protection',
-        '--single-process'
-      ],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
-    });
-
-    const page = await browser.newPage();
+    // Dynamic import to avoid module loading issues
+    const { jsPDF } = await import('jspdf');
     
-    // Set content with proper encoding
-    await page.setContent(html, {
-      waitUntil: ['networkidle0', 'domcontentloaded']
+    // Create new PDF document
+    const doc = new jsPDF({
+      orientation: options.orientation === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: options.format?.toLowerCase() || 'a4'
     });
 
-    // Wait for fonts to load
-    await page.evaluateHandle('document.fonts.ready');
-
-    // Generate PDF with high quality settings
-    const pdfUint8Array = await page.pdf({
-      format: options.format || 'A4',
-      landscape: options.orientation === 'landscape',
-      margin: options.margin || {
-        top: '20mm',
-        right: '15mm',
-        bottom: '20mm',
-        left: '15mm'
-      },
-      displayHeaderFooter: options.displayHeaderFooter || false,
-      headerTemplate: options.headerTemplate || '',
-      footerTemplate: options.footerTemplate || '',
-      printBackground: true,
-      preferCSSPageSize: true,
-      scale: 1
-    });
-
-    return Buffer.from(pdfUint8Array);
-  } catch (error) {
-    console.error('Puppeteer PDF generation failed, trying fallback method:', error);
+    // Extract text content from HTML
+    const textContent = extractTextFromHTML(html);
     
-    try {
-      // Try fallback PDF generation
-      console.log('🔄 Attempting fallback PDF generation...');
-      return await generatePDFWithHtmlPdf(html);
-    } catch (fallbackError) {
-      console.error('Fallback PDF generation also failed:', fallbackError);
-      throw new Error(`All PDF generation methods failed. Puppeteer: ${error instanceof Error ? error.message : 'Unknown error'}. Fallback: ${fallbackError instanceof Error ? fallbackError.message : 'Unknown error'}`);
-    }
-  } finally {
-    if (browser) {
-      try {
-        await browser.close();
-      } catch (closeError) {
-        console.warn('Failed to close browser:', closeError);
+    // Set up margins
+    const margin = {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 20
+    };
+
+    // Get page dimensions
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const contentWidth = pageWidth - margin.left - margin.right;
+    const contentHeight = pageHeight - margin.top - margin.bottom;
+
+    // Set font
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(12);
+
+    // Split text into lines that fit the page width
+    const lines = doc.splitTextToSize(textContent, contentWidth);
+    
+    let currentY = margin.top;
+    const lineHeight = 7;
+
+    // Add text to PDF, handling page breaks
+    for (let i = 0; i < lines.length; i++) {
+      if (currentY + lineHeight > contentHeight + margin.top) {
+        doc.addPage();
+        currentY = margin.top;
       }
+      
+      doc.text(lines[i], margin.left, currentY);
+      currentY += lineHeight;
     }
+
+    // Convert to buffer
+    const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
+    return pdfBuffer;
+
+  } catch (error) {
+    console.error('jsPDF generation error:', error);
+    
+    // Ultimate fallback - create a simple text-based PDF response
+    return createSimplePDFBuffer(html, filename);
   }
+}
+
+// Extract readable text from HTML
+function extractTextFromHTML(html: string): string {
+  // Remove script and style elements
+  let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  
+  // Convert common HTML elements to readable text
+  text = text.replace(/<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi, '\n\n$1\n' + '='.repeat(50) + '\n');
+  text = text.replace(/<p[^>]*>(.*?)<\/p>/gi, '\n$1\n');
+  text = text.replace(/<br[^>]*>/gi, '\n');
+  text = text.replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n');
+  text = text.replace(/<div[^>]*>(.*?)<\/div>/gi, '\n$1\n');
+  text = text.replace(/<span[^>]*>(.*?)<\/span>/gi, '$1');
+  
+  // Remove all remaining HTML tags
+  text = text.replace(/<[^>]*>/g, '');
+  
+  // Clean up whitespace
+  text = text.replace(/&nbsp;/g, ' ');
+  text = text.replace(/&amp;/g, '&');
+  text = text.replace(/&lt;/g, '<');
+  text = text.replace(/&gt;/g, '>');
+  text = text.replace(/&quot;/g, '"');
+  
+  // Normalize whitespace
+  text = text.replace(/\n\s*\n\s*\n/g, '\n\n');
+  text = text.replace(/^\s+|\s+$/g, '');
+  
+  return text;
+}
+
+// Create a minimal PDF buffer as ultimate fallback
+function createSimplePDFBuffer(html: string, filename: string): Buffer {
+  const textContent = extractTextFromHTML(html);
+  
+  // Create a minimal PDF structure
+  const pdfHeader = '%PDF-1.4\n';
+  const pdfContent = `1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
+>>
+endobj
+
+4 0 obj
+<<
+/Length ${Buffer.byteLength(textContent, 'utf8') + 100}
+>>
+stream
+BT
+/F1 12 Tf
+50 750 Td
+(${textContent.replace(/\n/g, ') Tj 0 -14 Td (').substring(0, 1000)}) Tj
+ET
+endstream
+endobj
+
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000274 00000 n 
+0000000424 00000 n 
+trailer
+<<
+/Size 6
+/Root 1 0 R
+>>
+startxref
+521
+%%EOF`;
+
+  return Buffer.from(pdfHeader + pdfContent, 'utf8');
 }
 
 export async function generateStudyNotesPDF(html: string, filename: string): Promise<Buffer> {
@@ -137,44 +204,7 @@ export async function generateStudyNotesPDF(html: string, filename: string): Pro
   });
 }
 
-// Alternative lightweight PDF generation
-// Note: html-pdf-node types not available, using any
-
+// Alternative lightweight PDF generation - now using jsPDF
 export async function generatePDFAlternative(html: string, filename: string): Promise<Buffer> {
-  try {
-    // Using dynamic import to handle missing types
-    const htmlPdf = await import('html-pdf-node');
-    
-    const options = {
-      format: 'A4',
-      landscape: false,
-      border: {
-        top: '15mm',
-        right: '15mm',
-        bottom: '15mm',
-        left: '15mm'
-      },
-      paginationOffset: 0,
-      type: 'pdf',
-      timeout: 30000,
-      renderDelay: 2000,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox'
-      ]
-    };
-
-    const file = { content: html };
-    const pdfBuffer = await htmlPdf.generatePdf(file, options);
-    
-    // Handle the returned buffer properly
-    if (Buffer.isBuffer(pdfBuffer)) {
-      return pdfBuffer;
-    } else {
-      return Buffer.from(pdfBuffer as any);
-    }
-  } catch (error) {
-    console.error('Alternative PDF generation error:', error);
-    throw new Error(`Failed to generate PDF with alternative method: ${error instanceof Error ? error.message : 'Unknown error'}`);
-  }
+  return generatePDFFromHTML(html, filename);
 }

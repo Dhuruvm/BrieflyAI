@@ -1,23 +1,32 @@
 {
-  "contentPatterns": {},
-  "successfulDesigns": {},
-  "userPreferences": {
-    "default": {
-      "preferredColors": [],
-      "favoriteLayouts": [],
-      "complexityLevel": "moderate",
-      "visualDensity": "balanced",
-      "feedbackHistory": [
-        {
-          "rating": 9,
-          "features": [
-            "Visual Highlights",
-            "PDF Export"
-          ],
-          "timestamp": 1753761254694
-        }
-      ]
+  "contentPatterns": {
+    "V2hhdCBpcyBlY29ub215IA==": {
+      "confidence": 0.95,
+      "contentType": "academic",
+      "difficulty": "beginner",
+      "language": "English (US)",
+      "subject": "Economics: Basic Concepts",
+      "tags": [
+        "economics",
+        "definition",
+        "basic concepts",
+        "economic principles",
+        "financial literacy",
+        "introduction to economics"
+      ],
+      "tone": "Informative",
+      "visualComplexity": "simple"
     }
   },
-  "timestamp": 1753761254694
+  "successfulDesigns": {
+    "Economics: Basic Concepts_beginner": {
+      "subject": "Economics: Basic Concepts",
+      "colorScheme": "Professional Modern: Navy, Silver, Gold Accent",
+      "fontCombination": "Clean & Adaptive Professional",
+      "layoutStyle": "linear",
+      "successScore": 0.8,
+      "usageCount": 1
+    }
+  },
+  "timestamp": 1753761765612
 }

@@ -92,7 +92,7 @@ export function AdvancedNoteGenPanel({ onGenerate, isProcessing, processingMetri
     }
   });
 
-  const handleGenerate = () => {
+  const handleGenerate = (forcePDF = false) => {
     if (!content.trim()) {
       toast({
         title: "No Content",
@@ -101,7 +101,8 @@ export function AdvancedNoteGenPanel({ onGenerate, isProcessing, processingMetri
       });
       return;
     }
-    onGenerate(content, options);
+    const finalOptions = forcePDF ? { ...options, generatePDF: true } : options;
+    onGenerate(content, finalOptions);
   };
 
   const handleFeedbackSubmit = () => {
@@ -372,9 +373,9 @@ export function AdvancedNoteGenPanel({ onGenerate, isProcessing, processingMetri
       )}
 
       {/* Generate Button */}
-      <div className="flex justify-center">
+      <div className="flex flex-col sm:flex-row justify-center gap-4">
         <Button
-          onClick={handleGenerate}
+          onClick={() => handleGenerate(false)}
           disabled={isProcessing || !content.trim()}
           size="lg"
           className="px-8 py-3 text-lg"
@@ -396,6 +397,18 @@ export function AdvancedNoteGenPanel({ onGenerate, isProcessing, processingMetri
               Generate Advanced Notes
             </>
           )}
+        </Button>
+
+        {/* Professional PDF Download Button */}
+        <Button
+          onClick={() => handleGenerate(true)}
+          disabled={isProcessing || !content.trim()}
+          size="lg"
+          variant="outline"
+          className="px-8 py-3 text-lg border-red-400 text-red-600 hover:bg-red-50 hover:border-red-500"
+        >
+          <FileText className="mr-2 h-5 w-5" />
+          Generate Professional PDF
         </Button>
       </div>
     </div>

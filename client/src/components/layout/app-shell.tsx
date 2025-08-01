@@ -26,28 +26,16 @@ export function AppShell({ children }: AppShellProps) {
   }, []); // Remove handleKeyDown dependency to prevent infinite loop
 
   return (
-    <div className={cn(
-      "min-h-screen bg-brevia-primary text-brevia-primary transition-colors duration-300",
-      theme === 'light' && "light"
-    )}>
-      {/* Top Navigation */}
-      <Topbar />
-      
-      <div className="flex h-[calc(100vh-4rem)]">
-        {/* Sidebar */}
-        <Sidebar />
-        
-        {/* Main Content Area */}
-        <main 
-          className={cn(
-            "flex-1 transition-all duration-300 ease-in-out",
-            sidebarCollapsed ? "ml-16" : "ml-[280px]"
-          )}
-        >
-          <div className="h-full overflow-hidden">
-            {children}
-          </div>
-        </main>
+    <div className="dark">
+      <div className="min-h-screen bg-zinc-950 text-zinc-100">
+        <div className="flex">
+          <Sidebar />
+          <main className="flex-1 flex flex-col min-h-screen">
+            <div className="flex-1">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

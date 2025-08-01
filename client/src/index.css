@@ -2,461 +2,205 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: hsl(222, 84%, 4.9%);
-  --foreground: hsl(210, 40%, 98%);
-  --card: hsl(222, 84%, 4.9%);
-  --card-foreground: hsl(210, 40%, 98%);
-  --popover: hsl(222, 84%, 4.9%);
-  --popover-foreground: hsl(210, 40%, 98%);
-  --primary: hsl(210, 40%, 98%);
-  --primary-foreground: hsl(222, 84%, 4.9%);
-  --secondary: hsl(217, 32%, 17%);
-  --secondary-foreground: hsl(210, 40%, 98%);
-  --muted: hsl(217, 32%, 17%);
-  --muted-foreground: hsl(215, 20%, 65%);
-  --accent: hsl(217, 32%, 17%);
-  --accent-foreground: hsl(210, 40%, 98%);
-  --destructive: hsl(0, 62%, 30%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(217, 32%, 17%);
-  --input: hsl(217, 32%, 17%);
-  --ring: hsl(212, 72%, 59%);
-  --radius: 0.75rem;
-  
-  /* Brevia AI Design System */
-  --brevia-primary: hsl(212, 72%, 59%);
-  --brevia-primary-dark: hsl(217, 77%, 44%);
-  --brevia-secondary: hsl(142, 72%, 45%);
-  --brevia-accent: hsl(45, 93%, 47%);
-  --brevia-danger: hsl(0, 73%, 55%);
-  --brevia-warning: hsl(38, 92%, 50%);
-  --brevia-success: hsl(142, 72%, 45%);
-  
-  /* Surface Colors */
-  --brevia-bg-primary: hsl(222, 84%, 4.9%);
-  --brevia-bg-secondary: hsl(217, 32%, 17%);
-  --brevia-bg-tertiary: hsl(215, 28%, 25%);
-  --brevia-bg-elevated: hsl(215, 30%, 30%);
-  
-  /* Text Colors */
-  --brevia-text-primary: hsl(210, 40%, 98%);
-  --brevia-text-secondary: hsl(215, 20%, 80%);
-  --brevia-text-muted: hsl(215, 20%, 65%);
-  --brevia-text-disabled: hsl(215, 20%, 45%);
-  
-  /* Border & Divider */
-  --brevia-border-subtle: hsl(217, 32%, 20%);
-  --brevia-border-default: hsl(217, 32%, 25%);
-  --brevia-border-strong: hsl(217, 32%, 35%);
-  
-  /* Semantic Colors */
-  --brevia-info: hsl(212, 72%, 59%);
-  --brevia-info-bg: hsl(212, 72%, 15%);
-  --brevia-success-bg: hsl(142, 72%, 15%);
-  --brevia-warning-bg: hsl(45, 93%, 15%);
-  --brevia-danger-bg: hsl(0, 73%, 15%);
-  
-  /* Shadows */
-  --brevia-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --brevia-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px 0 rgb(0 0 0 / 0.06);
-  --brevia-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
-  --brevia-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
-  --brevia-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
-  --brevia-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  
-  /* Glass Effect */
-  --brevia-glass-bg: rgba(255, 255, 255, 0.05);
-  --brevia-glass-border: rgba(255, 255, 255, 0.1);
-  
-  /* Animations */
-  --brevia-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --brevia-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --brevia-transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-}
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.75rem;
+  }
 
-.light {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(222, 84%, 4.9%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(222, 84%, 4.9%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(222, 84%, 4.9%);
-  --primary: hsl(222, 84%, 4.9%);
-  --primary-foreground: hsl(210, 40%, 98%);
-  --secondary: hsl(210, 40%, 96%);
-  --secondary-foreground: hsl(222, 84%, 4.9%);
-  --muted: hsl(210, 40%, 96%);
-  --muted-foreground: hsl(215, 16%, 47%);
-  --accent: hsl(210, 40%, 96%);
-  --accent-foreground: hsl(222, 84%, 4.9%);
-  --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(214, 32%, 91%);
-  --input: hsl(214, 32%, 91%);
-  --ring: hsl(212, 72%, 59%);
-  
-  /* Brevia AI Light Mode */
-  --brevia-bg-primary: hsl(0, 0%, 100%);
-  --brevia-bg-secondary: hsl(210, 40%, 96%);
-  --brevia-bg-tertiary: hsl(210, 40%, 92%);
-  --brevia-bg-elevated: hsl(0, 0%, 98%);
-  
-  --brevia-text-primary: hsl(222, 84%, 4.9%);
-  --brevia-text-secondary: hsl(215, 16%, 35%);
-  --brevia-text-muted: hsl(215, 16%, 47%);
-  --brevia-text-disabled: hsl(215, 16%, 65%);
-  
-  --brevia-border-subtle: hsl(214, 32%, 91%);
-  --brevia-border-default: hsl(214, 32%, 85%);
-  --brevia-border-strong: hsl(214, 32%, 75%);
-  
-  --brevia-glass-bg: rgba(255, 255, 255, 0.8);
-  --brevia-glass-border: rgba(0, 0, 0, 0.1);
+  .dark {
+    /* Professional Dark Theme - Bold & Modern like Delv AI */
+    --background: 220 13% 9%;
+    --foreground: 220 9% 96%;
+    --card: 220 13% 11%;
+    --card-foreground: 220 9% 96%;
+    --popover: 220 13% 11%;
+    --popover-foreground: 220 9% 96%;
+    --primary: 142 86% 28%;
+    --primary-foreground: 355 7% 97%;
+    --secondary: 220 13% 14%;
+    --secondary-foreground: 220 9% 96%;
+    --muted: 215 13.8% 34%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 25% 27%;
+    --accent-foreground: 220 9% 96%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 142 86% 28%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-
   body {
-    @apply font-sans antialiased bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
-  }
-
-  html {
-    scroll-behavior: smooth;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
 
+/* Bold Professional Design System */
 @layer components {
-  /* Brevia AI Components */
-  .brevia-glass {
-    background: var(--brevia-glass-bg);
-    border: 1px solid var(--brevia-glass-border);
-    backdrop-filter: blur(20px) saturate(1.8);
-    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  .delv-workbench {
+    @apply bg-gradient-to-br from-zinc-900 via-slate-900 to-zinc-800;
+    @apply border border-zinc-700/50 rounded-xl shadow-2xl;
+    @apply backdrop-blur-lg;
   }
-  
-  .brevia-neumorphic {
-    background: var(--brevia-bg-secondary);
-    box-shadow: 
-      8px 8px 16px rgba(0, 0, 0, 0.3),
-      -8px -8px 16px rgba(255, 255, 255, 0.05);
-    border-radius: 1.5rem;
+
+  .delv-sidebar {
+    @apply bg-zinc-900/90 border-r border-zinc-700/50;
+    @apply backdrop-blur-lg;
   }
-  
-  .brevia-neumorphic-inset {
-    background: var(--brevia-bg-secondary);
-    box-shadow: 
-      inset 4px 4px 8px rgba(0, 0, 0, 0.3),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.05);
-    border-radius: 1rem;
+
+  .delv-header {
+    @apply bg-zinc-800/80 border-b border-zinc-700/50;
+    @apply backdrop-blur-lg;
   }
-  
-  .brevia-gradient-primary {
-    background: linear-gradient(135deg, var(--brevia-primary), var(--brevia-primary-dark));
+
+  .delv-card {
+    @apply bg-zinc-800/50 border border-zinc-700/50 rounded-lg;
+    @apply hover:bg-zinc-800/70 transition-all duration-200;
+    @apply shadow-lg hover:shadow-xl;
   }
-  
-  .brevia-gradient-surface {
-    background: linear-gradient(145deg, var(--brevia-bg-secondary), var(--brevia-bg-tertiary));
+
+  .delv-button-primary {
+    @apply bg-emerald-600 hover:bg-emerald-700 text-white;
+    @apply font-semibold px-4 py-2 rounded-lg;
+    @apply shadow-lg hover:shadow-xl transition-all duration-200;
+    @apply border border-emerald-500/50;
   }
-  
-  .brevia-sidebar {
-    width: 280px;
-    transition: width var(--brevia-transition-base);
+
+  .delv-button-secondary {
+    @apply bg-zinc-700 hover:bg-zinc-600 text-zinc-100;
+    @apply font-medium px-4 py-2 rounded-lg;
+    @apply border border-zinc-600/50;
+    @apply transition-all duration-200;
   }
-  
-  .brevia-sidebar-collapsed {
-    width: 64px;
+
+  .delv-input {
+    @apply bg-zinc-800/50 border border-zinc-600/50 rounded-lg;
+    @apply text-zinc-100 placeholder-zinc-400;
+    @apply focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20;
+    @apply px-4 py-3 text-sm;
   }
-  
-  .brevia-panel-slide-in {
-    animation: slideInRight var(--brevia-transition-base);
+
+  .delv-select {
+    @apply bg-zinc-800/70 border border-zinc-600/50 rounded-lg;
+    @apply text-zinc-100;
+    @apply focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/20;
   }
-  
-  .brevia-panel-slide-out {
-    animation: slideOutRight var(--brevia-transition-base);
+
+  .delv-stats-card {
+    @apply bg-gradient-to-br from-zinc-800 to-zinc-900;
+    @apply border border-zinc-700/50 rounded-xl p-6;
+    @apply shadow-xl;
   }
-  
-  .brevia-workbench-card {
-    background: var(--brevia-bg-secondary);
-    border: 1px solid var(--brevia-border-default);
-    border-radius: 1.5rem;
-    transition: all var(--brevia-transition-base);
+
+  .delv-viz-container {
+    @apply bg-zinc-900/60 border border-zinc-700/30 rounded-xl;
+    @apply backdrop-blur-sm p-6;
   }
-  
-  .brevia-workbench-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--brevia-shadow-lg);
-    border-color: var(--brevia-primary);
-  }
-  
-  .brevia-clustering-sunburst {
-    transition: all var(--brevia-transition-slow);
-  }
-  
-  .brevia-clustering-sunburst:hover {
-    transform: scale(1.02);
-  }
-  
-  .brevia-chat-message {
-    border-radius: 1rem;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    transition: all var(--brevia-transition-fast);
-  }
-  
-  .brevia-chat-message-user {
-    background: var(--brevia-primary);
-    color: var(--primary-foreground);
-    margin-left: 2rem;
-  }
-  
-  .brevia-chat-message-assistant {
-    background: var(--brevia-bg-secondary);
-    color: var(--brevia-text-primary);
-    margin-right: 2rem;
-  }
-  
-  .brevia-pdf-viewer {
-    background: var(--brevia-bg-primary);
-    border: 1px solid var(--brevia-border-default);
-    border-radius: 1rem;
-    overflow: hidden;
-  }
-  
-  .brevia-highlight-annotation {
-    position: absolute;
-    pointer-events: none;
-    border-radius: 0.25rem;
-    transition: opacity var(--brevia-transition-fast);
-  }
-  
-  .brevia-highlight-yellow {
-    background: rgba(255, 235, 59, 0.3);
-    border: 1px solid rgba(255, 235, 59, 0.6);
-  }
-  
-  .brevia-highlight-blue {
-    background: rgba(33, 150, 243, 0.3);
-    border: 1px solid rgba(33, 150, 243, 0.6);
-  }
-  
-  .brevia-highlight-green {
-    background: rgba(76, 175, 80, 0.3);
-    border: 1px solid rgba(76, 175, 80, 0.6);
-  }
-  
-  .brevia-planner-timeline {
-    position: relative;
-  }
-  
-  .brevia-planner-timeline::before {
-    content: '';
-    position: absolute;
-    left: 1rem;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--brevia-border-default);
-  }
-  
-  .brevia-planner-step {
-    position: relative;
-    padding-left: 3rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .brevia-planner-step::before {
-    content: '';
-    position: absolute;
-    left: 0.75rem;
-    top: 0.5rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--brevia-primary);
-  }
-  
-  .brevia-planner-step-completed::before {
-    background: var(--brevia-success);
-  }
-  
-  .brevia-planner-step-failed::before {
-    background: var(--brevia-danger);
-  }
-  
-  .glow-text {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-  }
-  
-  .logo-text {
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 0.05em;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--brevia-primary), var(--brevia-secondary));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+
+  .delv-sunburst {
+    @apply w-full h-full flex items-center justify-center;
+    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
   }
 }
 
+/* Typography System */
+@layer components {
+  .delv-title {
+    @apply text-2xl font-bold text-zinc-100 tracking-tight;
+  }
+
+  .delv-subtitle {
+    @apply text-lg font-semibold text-zinc-200;
+  }
+
+  .delv-body {
+    @apply text-sm text-zinc-300 leading-relaxed;
+  }
+
+  .delv-caption {
+    @apply text-xs text-zinc-400 font-medium;
+  }
+
+  .delv-metric {
+    @apply text-3xl font-bold text-emerald-400;
+  }
+
+  .delv-metric-label {
+    @apply text-xs font-medium text-zinc-400 uppercase tracking-wide;
+  }
+}
+
+/* Animation & Effects */
 @layer utilities {
-  /* Brevia AI Animations */
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
-  }
-  
-  .animate-typing {
-    animation: typing 1.5s infinite;
-  }
-  
-  .animate-fadeIn {
-    animation: fadeIn 0.5s ease-in;
-  }
-  
-  .animate-slideUp {
-    animation: slideUp 0.3s ease-out;
-  }
-  
-  .animate-slideInRight {
-    animation: slideInRight var(--brevia-transition-base);
-  }
-  
-  .animate-slideOutRight {
-    animation: slideOutRight var(--brevia-transition-base);
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
-  .animate-cluster-grow {
-    animation: clusterGrow 0.6s ease-out;
-  }
-  
-  .animate-sunburst-rotate {
-    animation: sunburstRotate 20s linear infinite;
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  /* Utility classes for Brevia colors */
-  .text-brevia-primary { color: var(--brevia-primary); }
-  .text-brevia-secondary { color: var(--brevia-secondary); }
-  .text-brevia-accent { color: var(--brevia-accent); }
-  .text-brevia-muted { color: var(--brevia-text-muted); }
-  .text-brevia-disabled { color: var(--brevia-text-disabled); }
-  
-  .bg-brevia-primary { background-color: var(--brevia-bg-primary); }
-  .bg-brevia-secondary { background-color: var(--brevia-bg-secondary); }
-  .bg-brevia-tertiary { background-color: var(--brevia-bg-tertiary); }
-  .bg-brevia-elevated { background-color: var(--brevia-bg-elevated); }
-  
-  .border-brevia-subtle { border-color: var(--brevia-border-subtle); }
-  .border-brevia-default { border-color: var(--brevia-border-default); }
-  .border-brevia-strong { border-color: var(--brevia-border-strong); }
-  
-  .shadow-brevia-sm { box-shadow: var(--brevia-shadow-sm); }
-  .shadow-brevia { box-shadow: var(--brevia-shadow); }
-  .shadow-brevia-md { box-shadow: var(--brevia-shadow-md); }
-  .shadow-brevia-lg { box-shadow: var(--brevia-shadow-lg); }
-  .shadow-brevia-xl { box-shadow: var(--brevia-shadow-xl); }
-  .shadow-brevia-2xl { box-shadow: var(--brevia-shadow-2xl); }
-
-  @keyframes glow {
-    0% {
-      box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
-    }
-    100% {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-    }
+  .delv-glow {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
   }
 
-  @keyframes typing {
-    0%, 50% {
-      opacity: 1;
-    }
-    51%, 100% {
-      opacity: 0;
-    }
+  .delv-glow-hover:hover {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.25);
   }
 
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+  .delv-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  @keyframes slideUp {
-    0% {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  .delv-fade-in {
+    animation: fadeIn 0.5s ease-out;
   }
-  
-  @keyframes slideInRight {
-    0% {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(0);
-      opacity: 1;
-    }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  @keyframes slideOutRight {
-    0% {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(100%);
-      opacity: 0;
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  @keyframes clusterGrow {
-    0% {
-      transform: scale(0);
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes sunburstRotate {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
+}
+
+/* Chart & Visualization Styles */
+.recharts-wrapper {
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.1));
+}
+
+.recharts-tooltip-wrapper {
+  @apply rounded-lg border border-zinc-700/50 !important;
+  background: rgb(39 39 42 / 0.95) !important;
+  backdrop-filter: blur(8px) !important;
 }

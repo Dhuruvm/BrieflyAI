@@ -4,6 +4,20 @@ import { clusteringUtils } from '@/hooks/use-clustering';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Maximize2, 
+  Download, 
+  Settings, 
+  BarChart3, 
+  Target, 
+  Network, 
+  List,
+  Info,
+  Zap,
+  TrendingUp
+} from 'lucide-react';
 
 interface ClusteringVisualizationProps {
   analysis: any;
@@ -85,46 +99,135 @@ export function ClusteringVisualization({ analysis, visualizationType }: Cluster
     </ResponsiveContainer>
   );
 
+  // Professional Sunburst like Delv AI
   const renderSunburst = () => {
-    const pieData = analysis.clusters.map((cluster: any, index: number) => ({
-      name: cluster.label,
-      value: cluster.documents.length,
-      fill: colors[index % colors.length],
-    }));
-
+    const totalDocs = analysis.clusters.reduce((sum: number, cluster: any) => sum + cluster.documents.length, 0);
+    
     return (
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="50%"
-            outerRadius={150}
-            innerRadius={60}
-            paddingAngle={2}
-            dataKey="value"
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
-            ))}
-          </Pie>
-          <Tooltip 
-            content={({ active, payload }) => {
-              if (active && payload && payload.length) {
-                const data = payload[0];
-                return (
-                  <div className="bg-brevia-secondary border border-brevia-default rounded-lg p-3 shadow-lg">
-                    <p className="font-medium">{data.name}</p>
-                    <p className="text-sm text-brevia-muted">{data.value} documents</p>
-                  </div>
-                );
-              }
-              return null;
-            }}
-          />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
+      <div className="delv-viz-container h-full">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <Target className="h-5 w-5 text-emerald-400" />
+            <h3 className="delv-subtitle">Research Clusters</h3>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-100">
+              <Maximize2 className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-100">
+              <Settings className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="relative">
+          <ResponsiveContainer width="100%" height={500}>
+            <PieChart>
+              {/* Inner ring - Main categories */}
+              <Pie
+                data={analysis.clusters.map((cluster: any, index: number) => ({
+                  name: cluster.label,
+                  value: cluster.documents.length,
+                  fill: cluster.color || colors[index % colors.length],
+                  percentage: ((cluster.documents.length / totalDocs) * 100).toFixed(1)
+                }))}
+                cx="50%"
+                cy="50%"
+                innerRadius={80}
+                outerRadius={140}
+                paddingAngle={3}
+                dataKey="value"
+                stroke="#27272a"
+                strokeWidth={2}
+              >
+                {analysis.clusters.map((cluster: any, index: number) => (
+                  <Cell 
+                    key={`inner-${index}`} 
+                    fill={cluster.color || colors[index % colors.length]}
+                  />
+                ))}
+              </Pie>
+              
+              {/* Outer ring - Documents */}
+              <Pie
+                data={analysis.clusters.flatMap((cluster: any, clusterIndex: number) =>
+                  cluster.documents.map((doc: any, docIndex: number) => ({
+                    name: doc.title,
+                    value: doc.relevance * 100,
+                    fill: cluster.color || colors[clusterIndex % colors.length],
+                    cluster: cluster.label,
+                    opacity: 0.7 + (doc.relevance * 0.3)
+                  }))
+                )}
+                cx="50%"
+                cy="50%"
+                innerRadius={150}
+                outerRadius={200}
+                paddingAngle={1}
+                dataKey="value"
+                stroke="#27272a"
+                strokeWidth={1}
+              >
+                {analysis.clusters.flatMap((cluster: any, clusterIndex: number) =>
+                  cluster.documents.map((doc: any, docIndex: number) => (
+                    <Cell 
+                      key={`outer-${clusterIndex}-${docIndex}`}
+                      fill={cluster.color || colors[clusterIndex % colors.length]}
+                      fillOpacity={0.7 + (doc.relevance * 0.3)}
+                    />
+                  ))
+                )}
+              </Pie>
+
+              <Tooltip 
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-zinc-800/95 border border-zinc-700/50 rounded-lg p-4 shadow-xl backdrop-blur-sm max-w-xs">
+                        <div className="font-semibold text-zinc-100 mb-1">{data.name}</div>
+                        {data.cluster && (
+                          <div className="text-xs text-zinc-400 mb-2">{data.cluster}</div>
+                        )}
+                        <div className="text-sm text-zinc-300">
+                          {data.value.toFixed(1)}{data.cluster ? '% relevance' : ' documents'}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+
+          {/* Center label */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="text-center">
+              <div className="delv-metric text-4xl mb-1">{totalDocs}</div>
+              <div className="delv-caption">Papers</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          {analysis.clusters.map((cluster: any, index: number) => (
+            <div key={cluster.id} className="flex items-center space-x-3 delv-card p-3">
+              <div 
+                className="w-4 h-4 rounded-full flex-shrink-0"
+                style={{ backgroundColor: cluster.color || colors[index % colors.length] }}
+              />
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm text-zinc-200 truncate">{cluster.label}</div>
+                <div className="delv-caption">
+                  {cluster.documents.length} papers • {((cluster.documents.length / totalDocs) * 100).toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     );
   };
 
@@ -184,34 +287,46 @@ export function ClusteringVisualization({ analysis, visualizationType }: Cluster
   );
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col bg-zinc-950 p-6">
+      {visualizationType === 'sunburst' && renderSunburst()}
+      
       {visualizationType === 'treemap' && (
-        <div className="flex-1 p-6">
-          {renderTreemap()}
+        <div className="delv-viz-container">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <BarChart3 className="h-5 w-5 text-emerald-400" />
+              <h3 className="delv-subtitle">Treemap View</h3>
+            </div>
+          </div>
+          <div className="h-96">
+            {renderTreemap()}
+          </div>
         </div>
       )}
       
-      {visualizationType === 'sunburst' && (
-        <div className="flex-1 p-6">
-          {renderSunburst()}
+      {visualizationType === 'network' && (
+        <div className="delv-viz-container">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <Network className="h-5 w-5 text-emerald-400" />
+              <h3 className="delv-subtitle">Network Analysis</h3>
+            </div>
+          </div>
+          {renderNetwork()}
         </div>
       )}
       
-      {visualizationType === 'network' && renderNetwork()}
-      
-      {visualizationType === 'list' && renderList()}
-      
-      {/* Statistics Footer */}
-      <div className="border-t border-brevia-default p-4 bg-brevia-secondary">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-brevia-muted">
-            {analysis.clusters.length} clusters • {analysis.metadata?.totalDocuments || 0} documents
-          </span>
-          <span className="text-brevia-muted">
-            Processed in {analysis.metadata?.processingTime || 0}s
-          </span>
+      {visualizationType === 'list' && (
+        <div className="delv-viz-container">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <List className="h-5 w-5 text-emerald-400" />
+              <h3 className="delv-subtitle">Detailed List</h3>
+            </div>
+          </div>
+          {renderList()}
         </div>
-      </div>
+      )}
     </div>
   );
 }

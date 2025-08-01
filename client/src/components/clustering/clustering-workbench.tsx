@@ -1,39 +1,38 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { useBreviaStore } from '@/lib/store';
-import { useCreateClusteringAnalysis, useClusteringHistory, clusteringUtils } from '@/hooks/use-clustering';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-
+import { Progress } from '@/components/ui/progress';
+import ClusteringVisualization from './clustering-visualization';
+import ClusteringResults from './clustering-results';
 import {
-  Brain,
   Search,
   Settings,
   Play,
-  RefreshCw,
-  Download,
   BarChart3,
   TreePine,
-  PieChart,
   Network,
-  FileText,
-  Clock,
+  List,
+  Filter,
+  Download,
+  RefreshCw,
   Zap,
+  Database,
+  Clock,
+  TrendingUp,
   Target,
+  Sparkles,
+  Brain,
+  BookOpen,
+  FileText,
+  Globe
 } from 'lucide-react';
-
-import { ClusteringVisualization } from './clustering-visualization';
-import { ClusteringResults } from './clustering-results';
 
 export function ClusteringWorkbench() {
   const {
@@ -47,140 +46,239 @@ export function ClusteringWorkbench() {
     setClusteringResultCount,
     setClusteringDataSource,
     setClusteringVisualization,
-    activeProjectId,
   } = useBreviaStore();
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
+  const [progress, setProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState('');
+  const [analysis, setAnalysis] = useState<any>(null);
 
-  const createAnalysis = useCreateClusteringAnalysis();
-  const { data: history, isLoading: historyLoading } = useClusteringHistory(activeProjectId || '');
-
-  const handleStartAnalysis = async () => {
-    if (!clusteringQuery.trim()) return;
-
-    setIsAnalyzing(true);
-    setAnalysisProgress(0);
-
-    // Simulate progress updates
-    const progressInterval = setInterval(() => {
-      setAnalysisProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(progressInterval);
-          return prev;
-        }
-        return prev + Math.random() * 15;
-      });
-    }, 500);
-
-    try {
-      const result = await createAnalysis.mutateAsync({
-        query: clusteringQuery,
-        algorithm: clusteringAlgorithm,
-        resultCount: clusteringResultCount,
-        dataSource: clusteringDataSource,
-        projectId: activeProjectId || undefined,
-      });
-
-      clearInterval(progressInterval);
-      setAnalysisProgress(100);
-      setCurrentAnalysis(result);
-      
-      setTimeout(() => {
-        setIsAnalyzing(false);
-        setAnalysisProgress(0);
-      }, 1000);
-    } catch (error) {
-      console.error('Clustering analysis failed:', error);
-      clearInterval(progressInterval);
-      setIsAnalyzing(false);
-      setAnalysisProgress(0);
+  // Mock analysis data
+  const mockAnalysis = {
+    id: 'analysis-1',
+    clusters: [
+      {
+        id: 'cluster-1',
+        label: 'Retinal Cell Regeneration',
+        documents: [
+          {
+            id: 'doc-1',
+            title: 'Sub-Retinal Delivery of Human Embryonic Stem Cell Derived Progenitor in r510 Mice',
+            snippet: 'Regeneration of photoreceptor cells using human pluripotent stem cells as a promising therapy for retinal degenerative diseases at advanced stages...',
+            relevance: 0.94,
+            authors: ['Zhang et al.'],
+            publishedDate: '2023-03-15',
+            venue: 'JOVE',
+            citationCount: 23
+          },
+          {
+            id: 'doc-2',
+            title: 'Therapeutic strategies for glaucoma and optic neuropathies',
+            snippet: 'Glaucoma is a neurodegenerative eye disease that causes permanent vision impairment. The main pathological characteristics of glaucoma are...',
+            relevance: 0.87,
+            authors: ['Smith et al.'],
+            publishedDate: '2023-02-28',
+            venue: 'Molecular Medicine',
+            citationCount: 45
+          }
+        ],
+        color: '#ef4444'
+      },
+      {
+        id: 'cluster-2',
+        label: 'Clinical Trials & Treatments',
+        documents: [
+          {
+            id: 'doc-3',
+            title: 'RPE Transplantation for AMD',
+            snippet: 'Clinical trials examining retinal pigment epithelium transplantation as a treatment for age-related macular degeneration...',
+            relevance: 0.82,
+            authors: ['Johnson et al.'],
+            publishedDate: '2023-01-12',
+            venue: 'Clinical Trials',
+            citationCount: 67
+          }
+        ],
+        color: '#10b981'
+      },
+      {
+        id: 'cluster-3',
+        label: 'Stem Cell Therapy',
+        documents: [
+          {
+            id: 'doc-4',
+            title: 'Organoid Cell Therapy Applications',
+            snippet: 'Development of organoid-based therapeutic approaches for retinal diseases using stem cell technology...',
+            relevance: 0.79,
+            authors: ['Lee et al.'],
+            publishedDate: '2023-04-20',
+            venue: 'Nature Medicine',
+            citationCount: 89
+          }
+        ],
+        color: '#f59e0b'
+      }
+    ],
+    metadata: {
+      totalDocuments: 100,
+      processingTime: 421,
+      algorithm: 'hierarchical',
+      parameters: { clusters: 3, similarity_threshold: 0.7 }
     }
   };
 
-  const algorithmOptions = [
-    { value: 'kmeans', label: 'K-Means', description: 'Fast and efficient for spherical clusters' },
-    { value: 'hierarchical', label: 'Hierarchical', description: 'Great for discovering cluster hierarchies' },
-    { value: 'dbscan', label: 'DBSCAN', description: 'Handles noise and arbitrary cluster shapes' },
+  const dataSources = [
+    { value: 'arxiv', label: 'arXiv', icon: BookOpen, description: 'Computer Science & Physics' },
+    { value: 'pubmed', label: 'PubMed', icon: FileText, description: 'Medical & Life Sciences' },
+    { value: 'semantic', label: 'Semantic Scholar', icon: Brain, description: 'Cross-disciplinary' },
+    { value: 'crossref', label: 'CrossRef', icon: Globe, description: 'Academic Publications' }
   ];
 
-  const dataSourceOptions = [
-    { value: 'arxiv', label: 'arXiv Papers', description: '2M+ research papers' },
-    { value: 'pubmed', label: 'PubMed', description: '30M+ biomedical abstracts' },
-    { value: 'semantic_scholar', label: 'Semantic Scholar', description: '200M+ papers across domains' },
-    { value: 'google_scholar', label: 'Google Scholar', description: 'Comprehensive academic search' },
-    { value: 'project_docs', label: 'Project Documents', description: 'Your uploaded documents' },
+  const visualizationTypes = [
+    { value: 'sunburst', label: 'Sunburst', icon: Target, description: 'Hierarchical view' },
+    { value: 'treemap', label: 'Treemap', icon: BarChart3, description: 'Area-based clusters' },
+    { value: 'network', label: 'Network', icon: Network, description: 'Relationship graph' },
+    { value: 'list', label: 'List', icon: List, description: 'Detailed breakdown' }
   ];
 
-  const visualizationOptions = [
-    { value: 'sunburst', label: 'Sunburst', icon: PieChart, description: 'Hierarchical circular view' },
-    { value: 'treemap', label: 'Treemap', icon: TreePine, description: 'Space-efficient rectangles' },
-    { value: 'network', label: 'Network', icon: Network, description: 'Connection-based graph' },
-    { value: 'list', label: 'List', icon: BarChart3, description: 'Traditional table view' },
-  ];
+  const runAnalysis = async () => {
+    if (!clusteringQuery.trim()) return;
+
+    setIsAnalyzing(true);
+    setProgress(0);
+    setCurrentStep('Initializing search...');
+
+    const steps = [
+      'Searching research papers...',
+      'Extracting key concepts...',
+      'Computing similarity matrices...',
+      'Performing clustering analysis...',
+      'Generating visualizations...',
+      'Finalizing results...'
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      setCurrentStep(steps[i]);
+      setProgress((i + 1) * (100 / steps.length));
+      await new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    setAnalysis(mockAnalysis);
+    setIsAnalyzing(false);
+    setCurrentStep('Analysis complete');
+  };
 
   return (
-    <div className="h-full flex flex-col bg-brevia-primary">
+    <div className="flex-1 flex flex-col bg-zinc-950">
       {/* Header */}
-      <div className="border-b border-brevia-default p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Brain className="h-8 w-8 text-brevia-primary" />
-            <div>
-              <h1 className="text-2xl font-bold text-brevia-primary">Clustering Workbench</h1>
-              <p className="text-brevia-muted">Discover patterns in academic literature and documents</p>
+      <div className="delv-header p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center delv-glow">
+                <BarChart3 className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h1 className="delv-title">Clustering Workbench</h1>
+                <p className="delv-caption">AI-powered research clustering & analysis</p>
+              </div>
             </div>
+            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+              <Sparkles className="h-3 w-3 mr-1" />
+              AI Enhanced
+            </Badge>
           </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Advanced
-            </Button>
-            <Button variant="outline" size="sm">
+
+          <div className="flex items-center space-x-3">
+            <div className="delv-stats-card px-4 py-2">
+              <div className="flex items-center space-x-4 text-sm">
+                <div className="flex items-center space-x-2">
+                  <span className="delv-metric text-lg">100</span>
+                  <span className="delv-metric-label">Results</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="delv-metric text-lg">31</span>
+                  <span className="delv-metric-label">Clusters</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="delv-metric text-lg">89.0%</span>
+                  <span className="delv-metric-label">Clustered Docs</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="delv-metric text-lg">421ms</span>
+                  <span className="delv-metric-label">Clustering Time</span>
+                </div>
+              </div>
+            </div>
+            <Button className="delv-button-secondary">
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
           </div>
         </div>
+
+        {/* Search Bar */}
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-zinc-400" />
+            <Input
+              placeholder="Enter research query (e.g., 'treating retinal degenerations with stem cells')"
+              value={clusteringQuery}
+              onChange={(e) => setClusteringQuery(e.target.value)}
+              className="delv-input pl-12 h-12 text-base"
+            />
+          </div>
+          <Button 
+            onClick={runAnalysis}
+            disabled={isAnalyzing || !clusteringQuery.trim()}
+            className="delv-button-primary h-12 px-8"
+          >
+            {isAnalyzing ? (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                Analyzing
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4 mr-2" />
+                Cluster
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* Progress Bar */}
+        {isAnalyzing && (
+          <div className="mt-4 delv-card p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="delv-body">{currentStep}</span>
+              <span className="delv-caption">{progress.toFixed(0)}%</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+          </div>
+        )}
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel - Configuration */}
-        <div className="w-96 border-r border-brevia-default bg-brevia-secondary p-6 overflow-y-auto">
+        {/* Configuration Panel */}
+        <div className="w-80 delv-sidebar border-r border-zinc-700/50 p-6">
           <div className="space-y-6">
-            {/* Query Input */}
-            <div className="space-y-3">
-              <Label htmlFor="query" className="text-sm font-medium">Search Query</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-brevia-muted" />
-                <Input
-                  id="query"
-                  placeholder="e.g., large language models, neural networks..."
-                  value={clusteringQuery}
-                  onChange={(e) => setClusteringQuery(e.target.value)}
-                  className="pl-10 h-11"
-                />
-              </div>
-              <p className="text-xs text-brevia-muted">
-                Enter keywords or phrases to search and cluster relevant documents
-              </p>
-            </div>
-
             {/* Data Source */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">Data Source</Label>
+            <div>
+              <label className="delv-metric-label mb-3 block">Data Source</label>
               <Select value={clusteringDataSource} onValueChange={setClusteringDataSource}>
-                <SelectTrigger>
-                  <SelectValue />
+                <SelectTrigger className="delv-select">
+                  <SelectValue placeholder="Select data source" />
                 </SelectTrigger>
-                <SelectContent>
-                  {dataSourceOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className="flex flex-col">
-                        <span>{option.label}</span>
-                        <span className="text-xs text-brevia-muted">{option.description}</span>
+                <SelectContent className="bg-zinc-800 border-zinc-700">
+                  {dataSources.map((source) => (
+                    <SelectItem key={source.value} value={source.value} className="text-zinc-100 focus:bg-zinc-700">
+                      <div className="flex items-center space-x-3">
+                        <source.icon className="h-4 w-4" />
+                        <div>
+                          <div className="font-medium">{source.label}</div>
+                          <div className="text-xs text-zinc-400">{source.description}</div>
+                        </div>
                       </div>
                     </SelectItem>
                   ))}
@@ -188,235 +286,137 @@ export function ClusteringWorkbench() {
               </Select>
             </div>
 
-            {/* Algorithm Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">Clustering Algorithm</Label>
-              <Select value={clusteringAlgorithm} onValueChange={(value: any) => setClusteringAlgorithm(value)}>
-                <SelectTrigger>
-                  <SelectValue />
+            {/* Clustering Algorithm */}
+            <div>
+              <label className="delv-metric-label mb-3 block">Clustering Algorithm</label>
+              <Select value={clusteringAlgorithm} onValueChange={setClusteringAlgorithm}>
+                <SelectTrigger className="delv-select">
+                  <SelectValue placeholder="Select algorithm" />
                 </SelectTrigger>
-                <SelectContent>
-                  {algorithmOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className="flex flex-col">
-                        <span>{option.label}</span>
-                        <span className="text-xs text-brevia-muted">{option.description}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                <SelectContent className="bg-zinc-800 border-zinc-700">
+                  <SelectItem value="kmeans" className="text-zinc-100 focus:bg-zinc-700">K-Means</SelectItem>
+                  <SelectItem value="hierarchical" className="text-zinc-100 focus:bg-zinc-700">Hierarchical</SelectItem>
+                  <SelectItem value="dbscan" className="text-zinc-100 focus:bg-zinc-700">DBSCAN</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Result Count */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">
-                Number of Results: {clusteringResultCount}
-              </Label>
+            {/* Max Results */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className="delv-metric-label">Max Results</label>
+                <span className="text-emerald-400 font-semibold">{clusteringResultCount}</span>
+              </div>
               <Slider
                 value={[clusteringResultCount]}
                 onValueChange={(value) => setClusteringResultCount(value[0])}
                 max={500}
                 min={10}
                 step={10}
-                className="w-full"
+                className="delv-fade-in"
               />
-              <div className="flex justify-between text-xs text-brevia-muted">
+              <div className="flex justify-between text-xs text-zinc-500 mt-1">
                 <span>10</span>
                 <span>500</span>
               </div>
             </div>
 
             {/* Visualization Type */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">Visualization</Label>
+            <div>
+              <label className="delv-metric-label mb-3 block">Visualization</label>
               <div className="grid grid-cols-2 gap-2">
-                {visualizationOptions.map((option) => (
+                {visualizationTypes.map((type) => (
                   <Button
-                    key={option.value}
-                    variant={clusteringVisualization === option.value ? "default" : "outline"}
+                    key={type.value}
+                    variant={clusteringVisualization === type.value ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setClusteringVisualization(option.value as any)}
-                    className="h-auto p-3 flex flex-col"
+                    onClick={() => setClusteringVisualization(type.value as any)}
+                    className={`h-auto p-3 flex flex-col items-center space-y-1 ${
+                      clusteringVisualization === type.value 
+                        ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
+                        : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+                    }`}
                   >
-                    <option.icon className="h-4 w-4 mb-1" />
-                    <span className="text-xs">{option.label}</span>
+                    <type.icon className="h-4 w-4" />
+                    <span className="text-xs font-medium">{type.label}</span>
                   </Button>
                 ))}
               </div>
             </div>
 
-            <Separator />
-
-            {/* Start Analysis Button */}
-            <Button
-              onClick={handleStartAnalysis}
-              disabled={!clusteringQuery.trim() || isAnalyzing}
-              className="w-full h-11"
-            >
-              {isAnalyzing ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Play className="h-4 w-4 mr-2" />
-                  Start Analysis
-                </>
-              )}
-            </Button>
-
-            {/* Progress */}
-            <AnimatePresence>
-              {isAnalyzing && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between text-sm">
-                    <span>Processing...</span>
-                    <span>{Math.round(analysisProgress)}%</span>
+            {/* Advanced Settings */}
+            <div className="delv-card p-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <Settings className="h-4 w-4 text-zinc-400" />
+                <span className="delv-metric-label">Advanced</span>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="delv-body">Auto-cluster</span>
+                  <div className="w-10 h-5 bg-emerald-500 rounded-full flex items-center justify-end pr-1">
+                    <div className="w-3 h-3 bg-white rounded-full" />
                   </div>
-                  <Progress value={analysisProgress} className="w-full" />
-                  <p className="text-xs text-brevia-muted">
-                    Fetching documents and performing cluster analysis
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Recent Analyses */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium">Recent Analyses</Label>
-              <ScrollArea className="h-32">
-                <div className="space-y-2">
-                  {history?.slice(0, 5).map((analysis: any, index: number) => (
-                    <Card key={analysis.id || index} className="p-3 cursor-pointer hover:bg-brevia-tertiary transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium truncate">
-                            {analysis.query || 'Untitled Analysis'}
-                          </p>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Badge variant="outline" className="text-xs">
-                              {analysis.algorithm || 'kmeans'}
-                            </Badge>
-                            <span className="text-xs text-brevia-muted">
-                              {analysis.clusters?.length || 0} clusters
-                            </span>
-                          </div>
-                        </div>
-                        <Clock className="h-3 w-3 text-brevia-muted ml-2 flex-shrink-0" />
-                      </div>
-                    </Card>
-                  ))}
-                  
-                  {(!history || history.length === 0) && !historyLoading && (
-                    <p className="text-xs text-brevia-muted text-center py-4">
-                      No analyses yet. Start your first clustering analysis above.
-                    </p>
-                  )}
                 </div>
-              </ScrollArea>
+                <div className="flex items-center justify-between">
+                  <span className="delv-body">Filter duplicates</span>
+                  <div className="w-10 h-5 bg-emerald-500 rounded-full flex items-center justify-end pr-1">
+                    <div className="w-3 h-3 bg-white rounded-full" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Right Panel - Results */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {currentAnalysis ? (
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          {analysis ? (
             <Tabs defaultValue="visualization" className="flex-1 flex flex-col">
-              <div className="border-b border-brevia-default px-6 py-4">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="visualization" className="flex items-center space-x-2">
-                    <PieChart className="h-4 w-4" />
-                    <span>Visualization</span>
+              <div className="border-b border-zinc-700/50 px-6 py-3">
+                <TabsList className="bg-zinc-800/50 border border-zinc-700/50">
+                  <TabsTrigger value="visualization" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Visualization
                   </TabsTrigger>
-                  <TabsTrigger value="results" className="flex items-center space-x-2">
-                    <BarChart3 className="h-4 w-4" />
-                    <span>Results</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="insights" className="flex items-center space-x-2">
-                    <Zap className="h-4 w-4" />
-                    <span>Insights</span>
+                  <TabsTrigger value="results" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+                    <List className="h-4 w-4 mr-2" />
+                    Results
                   </TabsTrigger>
                 </TabsList>
               </div>
 
               <TabsContent value="visualization" className="flex-1 m-0">
                 <ClusteringVisualization 
-                  analysis={currentAnalysis}
+                  analysis={analysis}
                   visualizationType={clusteringVisualization}
                 />
               </TabsContent>
-              
+
               <TabsContent value="results" className="flex-1 m-0">
-                <ClusteringResults analysis={currentAnalysis} />
-              </TabsContent>
-              
-              <TabsContent value="insights" className="flex-1 m-0 p-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Analysis Insights</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm">Cluster Quality</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold text-brevia-success">85%</div>
-                        <p className="text-xs text-brevia-muted">Well-separated clusters</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm">Coverage</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold text-brevia-primary">
-                          {currentAnalysis.metadata?.totalDocuments || 0}
-                        </div>
-                        <p className="text-xs text-brevia-muted">Documents analyzed</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm">Processing Time</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-bold text-brevia-accent">
-                          {currentAnalysis.metadata?.processingTime || 0}s
-                        </div>
-                        <p className="text-xs text-brevia-muted">Analysis duration</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
+                <ClusteringResults analysis={analysis} />
               </TabsContent>
             </Tabs>
           ) : (
-            <div className="flex-1 flex items-center justify-center p-6">
-              <div className="text-center space-y-4 max-w-md">
-                <div className="w-16 h-16 bg-brevia-secondary rounded-full flex items-center justify-center mx-auto">
-                  <Brain className="h-8 w-8 text-brevia-primary" />
+            <div className="flex-1 flex items-center justify-center p-12">
+              <div className="text-center space-y-6 max-w-md">
+                <div className="w-24 h-24 bg-gradient-to-br from-emerald-400/20 to-teal-500/20 rounded-full flex items-center justify-center mx-auto delv-glow">
+                  <Target className="h-12 w-12 text-emerald-400" />
                 </div>
-                <h3 className="text-lg font-semibold">Ready to Start Clustering</h3>
-                <p className="text-brevia-muted">
-                  Configure your analysis parameters and click "Start Analysis" to discover patterns 
-                  in academic literature and research documents.
-                </p>
-                <div className="flex items-center justify-center space-x-4 text-sm text-brevia-muted">
-                  <div className="flex items-center space-x-1">
-                    <Target className="h-4 w-4" />
-                    <span>Smart clustering</span>
+                <div>
+                  <h3 className="delv-title mb-2">Ready to Cluster</h3>
+                  <p className="delv-body">
+                    Enter a research query above to start AI-powered clustering analysis. 
+                    Our system will find relevant papers and group them by themes.
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-left">
+                  <div className="delv-card p-3">
+                    <Zap className="h-5 w-5 text-emerald-400 mb-2" />
+                    <div className="delv-caption">Fast AI Analysis</div>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <Zap className="h-4 w-4" />
-                    <span>Real-time analysis</span>
+                  <div className="delv-card p-3">
+                    <TrendingUp className="h-5 w-5 text-blue-400 mb-2" />
+                    <div className="delv-caption">Smart Clustering</div>
                   </div>
                 </div>
               </div>

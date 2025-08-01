@@ -123,6 +123,29 @@
   .delv-stats-card {
     @apply bg-gradient-to-br from-zinc-800 to-zinc-900;
     @apply border border-zinc-700/50 rounded-xl p-6;
+  }
+
+  /* Modern Sidebar Design System */
+  .modern-sidebar {
+    @apply bg-gradient-to-b from-gray-900/95 via-gray-900/90 to-black/95;
+    @apply border-r border-gray-700/30 backdrop-blur-xl;
+    @apply shadow-2xl shadow-black/30;
+  }
+
+  .sidebar-header {
+    @apply border-b border-gray-700/20;
+  }
+
+  .modern-project-card {
+    @apply bg-gradient-to-br from-gray-800/40 via-gray-800/30 to-gray-900/40;
+    @apply border border-gray-700/30 rounded-xl backdrop-blur-sm;
+    @apply hover:border-gray-600/40 hover:shadow-lg hover:shadow-black/20;
+  }
+
+  .modern-stats-card {
+    @apply bg-gradient-to-br from-gray-800/30 via-gray-800/20 to-gray-900/30;
+    @apply border border-gray-700/20 rounded-xl;
+    @apply shadow-inner shadow-black/10;
     @apply shadow-xl;
   }
 

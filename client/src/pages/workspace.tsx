@@ -43,7 +43,7 @@ export default function Workspace() {
     {
       id: '1',
       type: 'system',
-      content: 'Welcome to your AI Research Workbench. I can help you analyze documents, generate notes, perform clustering analysis, and much more. What would you like to work on today?',
+      content: 'Welcome to your Research Agent. I can analyze documents, generate insights, perform clustering analysis, and help with complex research tasks. How can I assist you today?',
       timestamp: new Date()
     }
   ]);
@@ -101,19 +101,19 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
       setIsProcessing(false);
     },
     onError: (error: Error) => {
-      setMessages(prev => prev.map(msg => 
-        msg.processing ? { 
-          ...msg, 
-          processing: false, 
-          content: "I encountered an error processing your request. Please try again."
-        } : msg
-      ));
-      setIsProcessing(false);
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive"
+      // Remove processing message and add error message
+      setMessages(prev => {
+        const newMessages = prev.filter(msg => !msg.processing);
+        const errorMessage: Message = {
+          id: Date.now().toString() + '-error',
+          type: 'assistant',
+          content: 'I encountered an issue processing your request. This might be due to API configuration or network connectivity. Please check that your API keys are properly configured and try again.',
+          timestamp: new Date()
+        };
+        return [...newMessages, errorMessage];
       });
+      setIsProcessing(false);
+      console.error('Processing error:', error);
     }
   });
 
@@ -155,24 +155,24 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
   const quickActions = [
     {
       icon: Brain,
-      label: "Clustering Analysis",
-      description: "Analyze document relationships",
+      label: "Document Analysis",
+      description: "Analyze and extract insights from documents",
       color: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700",
+      action: () => setInputValue("Help me analyze a document and extract key insights")
+    },
+    {
+      icon: BarChart3,
+      label: "Clustering Analysis",
+      description: "Perform data clustering and relationship analysis",
+      color: "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700",
       action: () => setLocation('/clustering')
     },
     {
-      icon: FileText,
-      label: "Generate Notes",
-      description: "Create structured summaries",
-      color: "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700",
-      action: () => setInputValue("Please generate structured notes from my content")
-    },
-    {
       icon: Sparkles,
-      label: "Smart Analysis",
-      description: "Advanced AI insights",
+      label: "Research Assistant",
+      description: "Get help with complex research tasks",
       color: "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-700",
-      action: () => setInputValue("Perform a comprehensive analysis with insights and recommendations")
+      action: () => setInputValue("I need help with a research project. Can you assist me?")
     }
   ];
 
@@ -194,11 +194,11 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
               <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
                 <Brain className="h-4 w-4 text-white" />
               </div>
-              <h1 className="text-lg font-semibold text-foreground">Brevia Assistant</h1>
+              <h1 className="text-lg font-semibold text-foreground">Research Agent</h1>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Badge variant="outline" className="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700">
+            <Badge className="status-pill status-pill-online">
               <Zap className="h-3 w-3 mr-1" />
               Online
             </Badge>
@@ -222,15 +222,15 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex w-full ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`${
                     message.type === 'user' 
-                      ? 'chat-bubble-user' 
+                      ? 'chat-message chat-message-user' 
                       : message.type === 'system'
-                      ? 'chat-bubble-system'
-                      : 'chat-bubble-assistant'
-                  }`}>
+                      ? 'chat-message chat-message-system'
+                      : 'chat-message chat-message-assistant'
+                  } animate-fade-in`}>
                       {message.processing && (
                         <div className="flex items-center space-x-2 sm:space-x-3 mb-3 p-2 sm:p-3 bg-muted opacity-20 rounded-xl sm:rounded-2xl">
                           <div className="flex space-x-1">
@@ -291,7 +291,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                     whileTap={{ scale: 0.98 }}
                   >
                     <Card 
-                      className={`modern-card cursor-pointer ${action.color} border-0`}
+                      className={`professional-card cursor-pointer ${action.color} border-0 animate-scale-in`}
                       onClick={action.action}
                     >
                       <CardContent className="p-5">
@@ -317,7 +317,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
           {/* ChatGPT-Style Input Area */}
           <div className="p-4 pb-6 border-t border-border bg-background">
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-end space-x-3 bg-card rounded-2xl border border-border p-3">
+              <div className="chat-input-container flex items-end space-x-3">
                 <div className="flex space-x-2">
                   <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
                     <Paperclip className="h-4 w-4" />

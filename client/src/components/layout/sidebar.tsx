@@ -20,32 +20,32 @@ export function Sidebar() {
 
   const navigationItems = [
     {
-      id: 'clustering',
-      label: 'Clustering Workbench',
-      icon: BarChart3,
-      path: '/clustering',
-      description: 'Research clustering & analysis'
-    },
-    {
-      id: 'chat',
-      label: 'Chat & Planner',
+      id: 'workspace',
+      label: 'Research Agent',
       icon: MessageSquare,
-      path: '/chat',
+      path: '/workspace',
       description: 'AI research assistant'
     },
     {
+      id: 'clustering',
+      label: 'Clustering Analysis',
+      icon: BarChart3,
+      path: '/clustering',
+      description: 'Data clustering & insights'
+    },
+    {
       id: 'pdf',
-      label: 'PDF Viewer',
+      label: 'Document Analyzer',
       icon: FileText,
       path: '/pdf',
-      description: 'Smart PDF analysis'
+      description: 'PDF analysis & extraction'
     },
     {
       id: 'notebook',
-      label: 'Research Notebook',
+      label: 'Research Notes',
       icon: Notebook,
       path: '/notebook',
-      description: 'Notes & insights'
+      description: 'Knowledge management'
     }
   ];
 
@@ -101,7 +101,7 @@ export function Sidebar() {
             onClick={() => setLocation('/workspace')}
           >
             <Plus className="h-4 w-4 mr-2" />
-            New Chat
+            New Research Session
           </Button>
         </div>
 
@@ -111,10 +111,10 @@ export function Sidebar() {
               <Link key={item.id} href={item.path}>
                 <Button
                   variant="ghost"
-                  className={`w-full justify-start h-10 text-left ${
+                  className={`sidebar-item ${
                     location === item.path
-                      ? 'bg-muted text-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                      ? 'active'
+                      : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <item.icon className="h-4 w-4 mr-2" />

@@ -43,6 +43,85 @@ export function ClusteringWorkbench() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const { toast } = useToast();
 
+  // Initialize with sample data for demo
+  useEffect(() => {
+    // Load sample clustering analysis after a delay
+    setTimeout(() => {
+      setAnalysis({
+        id: 'demo-analysis',
+        clusters: [
+          {
+            id: 'cluster-1',
+            label: 'Machine Learning Research',
+            documents: [
+              {
+                id: 'doc-1',
+                title: 'Deep Learning Approaches in Medical Diagnosis',
+                snippet: 'Comprehensive review of deep learning methodologies applied to medical imaging and diagnosis...',
+                relevance: 0.95,
+                authors: ['Smith et al.'],
+                publishedDate: '2024-01-15',
+                venue: 'Nature Medicine',
+                citationCount: 245
+              },
+              {
+                id: 'doc-2',
+                title: 'Neural Networks for Predictive Healthcare Analytics',
+                snippet: 'Analysis of neural network architectures for predicting patient outcomes in healthcare settings...',
+                relevance: 0.92,
+                authors: ['Johnson et al.'],
+                publishedDate: '2023-11-20',
+                venue: 'Journal of Medical Internet Research',
+                citationCount: 178
+              }
+            ],
+            color: '#3b82f6'
+          },
+          {
+            id: 'cluster-2',
+            label: 'Clinical Applications',
+            documents: [
+              {
+                id: 'doc-3',
+                title: 'AI-Powered Clinical Decision Support Systems',
+                snippet: 'Implementation and evaluation of artificial intelligence systems in clinical workflows...',
+                relevance: 0.88,
+                authors: ['Brown et al.'],
+                publishedDate: '2023-12-10',
+                venue: 'The Lancet Digital Health',
+                citationCount: 156
+              }
+            ],
+            color: '#10b981'
+          },
+          {
+            id: 'cluster-3',
+            label: 'Data Processing & Ethics',
+            documents: [
+              {
+                id: 'doc-4',
+                title: 'Privacy-Preserving Medical Data Processing',
+                snippet: 'Techniques for processing sensitive medical data while maintaining patient privacy...',
+                relevance: 0.85,
+                authors: ['Lee et al.'],
+                publishedDate: '2023-09-20',
+                venue: 'Science',
+                citationCount: 134
+              }
+            ],
+            color: '#f59e0b'
+          }
+        ],
+        metadata: {
+          totalDocuments: 847,
+          processingTime: 2.3,
+          algorithm: 'hierarchical',
+          parameters: { clusters: 3, similarity_threshold: 0.75 }
+        }
+      });
+    }, 1500);
+  }, []);
+
   // Mock analysis data with ChatGPT-style structure
   const mockAnalysis = {
     id: 'analysis-1',
@@ -172,76 +251,122 @@ export function ClusteringWorkbench() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Modern Header */}
-      <div className="border-b border-border/20 bg-card/50 backdrop-blur-xl sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-6">
+      {/* Professional Header - ChatGPT Style */}
+      <div className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 onClick={() => window.history.back()}
-                className="text-muted-foreground hover:text-foreground p-3 rounded-2xl hover:bg-muted/50"
+                className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-4 w-4" />
               </Button>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Document Clustering</h1>
-                <p className="text-sm text-muted-foreground mt-1 hidden sm:block">AI-powered content analysis</p>
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <BarChart3 className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-foreground">Clustering Analysis</h1>
+                  <p className="text-xs text-muted-foreground hidden sm:block">AI-powered data clustering</p>
+                </div>
               </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <Badge className="status-pill-success">
-                <Brain className="h-3 w-3 mr-2" />
+            <div className="flex items-center space-x-3">
+              <Badge className="status-pill status-pill-online">
+                <Brain className="h-3 w-3 mr-1" />
                 <span className="hidden sm:inline">AI Powered</span>
                 <span className="sm:hidden">AI</span>
               </Badge>
+              <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-6 lg:p-8">
-        {/* Search Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
-          <Card className="modern-card">
-            <CardContent className="p-8">
-              <h2 className="text-xl font-semibold text-foreground mb-6">Research Query</h2>
+      {/* Professional Main Content */}
+      <div className="max-w-7xl mx-auto px-4 lg:px-6 py-6">
+        {/* Professional Search and Input Section */}
+        <div className="space-y-6">
+          <div className="chat-input-container p-4">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <h3 className="font-medium text-foreground">Search & Configure Analysis</h3>
+              </div>
               
-              {/* Search Input */}
-              <div className="flex flex-col sm:flex-row gap-6">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Search Query</label>
                   <Input
-                    placeholder="Enter research query (e.g., 'machine learning in healthcare')"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="input-modern pl-12 h-14 text-base"
+                    placeholder="Enter your research topic..."
+                    className="w-full"
                     onKeyPress={(e) => e.key === 'Enter' && runAnalysis()}
                   />
                 </div>
-                <Button 
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Algorithm</label>
+                  <Select value={algorithm} onValueChange={setAlgorithm}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hierarchical">Hierarchical</SelectItem>
+                      <SelectItem value="kmeans">K-Means</SelectItem>
+                      <SelectItem value="dbscan">DBSCAN</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Data Source</label>
+                  <Select value={dataSource} onValueChange={setDataSource}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pubmed">PubMed</SelectItem>
+                      <SelectItem value="arxiv">arXiv</SelectItem>
+                      <SelectItem value="custom">Custom Dataset</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between pt-2">
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-muted-foreground">Results: {resultCount}</span>
+                  <Slider
+                    value={[resultCount]}
+                    onValueChange={(value) => setResultCount(value[0])}
+                    max={1000}
+                    min={10}
+                    step={10}
+                    className="w-32"
+                  />
+                </div>
+                
+                <Button
                   onClick={runAnalysis}
-                  disabled={isAnalyzing || !query.trim()}
-                  className="btn-modern-primary h-14 px-8 text-base font-semibold"
+                  disabled={!query.trim() || isAnalyzing}
+                  className="px-6 bg-primary hover:bg-primary/90"
                 >
                   {isAnalyzing ? (
                     <>
-                      <RefreshCw className="h-5 w-5 mr-3 animate-spin" />
-                      <span className="hidden sm:inline">Analyzing</span>
-                      <span className="sm:hidden">...</span>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Analyzing...
                     </>
                   ) : (
                     <>
-                      <Play className="h-5 w-5 mr-3" />
-                      <span className="hidden sm:inline">Analyze</span>
-                      <span className="sm:hidden">Go</span>
+                      <Play className="h-4 w-4 mr-2" />
+                      Start Analysis
                     </>
                   )}
                 </Button>
@@ -249,19 +374,76 @@ export function ClusteringWorkbench() {
 
               {/* Progress Bar */}
               {isAnalyzing && (
-                <div className="mt-8">
-                  <div className="modern-embed">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-foreground font-medium">{currentStep}</span>
-                      <span className="text-sm text-muted-foreground">{progress.toFixed(0)}%</span>
-                    </div>
-                    <Progress value={progress} className="h-3 bg-muted/30" />
+                <div className="mt-4 p-3 bg-muted/50 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-foreground font-medium">{currentStep}</span>
+                    <span className="text-sm text-muted-foreground">{progress.toFixed(0)}%</span>
                   </div>
+                  <Progress value={progress} className="h-2" />
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </motion.div>
+            </div>
+          </div>
+
+          {/* Results Display */}
+          {analysis ? (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-foreground">Analysis Results</h3>
+                <Button variant="outline" size="sm" className="text-muted-foreground">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+              </div>
+              
+              {analysis.clusters.map((cluster: any, index: number) => (
+                <Card key={cluster.id} className="professional-card animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <CardHeader>
+                    <div className="flex items-center space-x-3">
+                      <div 
+                        className="w-4 h-4 rounded-full"
+                        style={{ backgroundColor: cluster.color }}
+                      />
+                      <CardTitle className="text-lg text-foreground">{cluster.label}</CardTitle>
+                      <Badge variant="secondary" className="bg-muted">
+                        {cluster.documents.length} docs
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {cluster.documents.map((doc: any) => (
+                        <div key={doc.id} className="p-4 bg-muted/30 rounded-lg">
+                          <h4 className="font-semibold text-foreground mb-2">{doc.title}</h4>
+                          <p className="text-sm text-muted-foreground mb-2">{doc.snippet}</p>
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                            <span>{doc.authors.join(', ')}</span>
+                            <span>•</span>
+                            <span>{doc.venue}</span>
+                            <span>•</span>
+                            <span>{doc.citationCount} citations</span>
+                            <span>•</span>
+                            <span className="font-medium text-primary">{(doc.relevance * 100).toFixed(1)}% relevant</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : !isAnalyzing && (
+            <div className="text-center py-12 animate-fade-in">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                <Network className="h-12 w-12 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">Ready for Analysis</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Enter a research query above to discover clusters and relationships in academic literature using AI-powered analysis.
+              </p>
+            </div>
+          )}
+        </div>
 
         {/* Configuration Panel - Mobile Collapsible */}
         <motion.div

@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { type AiNoteResponse, aiNoteResponseSchema } from "@shared/schema";
 
 // Note that the newest Gemini model series is "gemini-2.5-flash" or "gemini-2.5-pro"
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const ai = new GoogleGenAI(process.env.GOOGLE_GEMINI_API_KEY || "");
 
 export async function processTextContent(content: string, contentType: string): Promise<AiNoteResponse> {
   const systemPrompt = `You are an expert content analyst. Analyze content and provide structured notes in JSON format. Focus on extracting actionable insights and key information.
@@ -29,55 +29,33 @@ For visualCards, use relevant FontAwesome icons and colors (blue, green, amber, 
 Provide the response as valid JSON only.`;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      config: {
-        systemInstruction: systemPrompt,
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: "object",
-          properties: {
-            title: { type: "string" },
-            summary: { type: "string" },
-            keyPoints: { 
-              type: "array",
-              items: { type: "string" }
-            },
-            actionItems: {
-              type: "array", 
-              items: { type: "string" }
-            },
-            visualCards: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  icon: { type: "string" },
-                  label: { type: "string" },
-                  value: { type: "string" },
-                  color: { type: "string" }
-                },
-                required: ["icon", "label", "value", "color"]
-              }
-            }
-          },
-          required: ["title", "summary", "keyPoints", "actionItems", "visualCards"]
-        }
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json"
       },
-      contents: `Content to analyze:\n${content}`,
+      systemInstruction: systemPrompt
     });
 
-    const rawJson = response.text;
-    console.log(`Raw JSON from Gemini: ${rawJson}`);
-
-    if (rawJson) {
-      const result = JSON.parse(rawJson);
-      return aiNoteResponseSchema.parse(result);
-    } else {
-      throw new Error("Empty response from Gemini model");
+    const response = await model.generateContent(content);
+    
+    const result = response.response.text();
+    
+    // Parse and validate the JSON response
+    let parsedResult;
+    try {
+      parsedResult = JSON.parse(result);
+    } catch (parseError) {
+      console.error('Failed to parse JSON response:', result);
+      throw new Error('Invalid JSON response from AI model');
     }
-  } catch (error) {
-    throw new Error(`Failed to process content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    
+    // Validate against schema
+    const validatedResult = aiNoteResponseSchema.parse(parsedResult);
+    return validatedResult;
+  } catch (error: any) {
+    console.error('Processing error:', error);
+    throw new Error(`Failed to process content: ${JSON.stringify(error)}`);
   }
 }
 

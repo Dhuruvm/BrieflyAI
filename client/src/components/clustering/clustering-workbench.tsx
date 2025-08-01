@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -170,28 +171,28 @@ export function ClusteringWorkbench() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Header */}
-      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
+    <div className="min-h-screen bg-background">
+      {/* Modern Header */}
+      <div className="border-b border-border/20 bg-card/50 backdrop-blur-xl sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center space-x-6">
               <Button
                 variant="ghost"
                 onClick={() => window.history.back()}
-                className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2"
+                className="text-muted-foreground hover:text-foreground p-3 rounded-2xl hover:bg-muted/50"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white animate-fade-in">Document Clustering</h1>
-                <p className="text-sm text-slate-600 dark:text-slate-400 animate-fade-in-delay hidden sm:block">AI-powered content analysis</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Document Clustering</h1>
+                <p className="text-sm text-muted-foreground mt-1 hidden sm:block">AI-powered content analysis</p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-2 md:space-x-4">
-              <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700 animate-slide-up">
-                <Brain className="h-3 w-3 mr-1" />
+            <div className="flex items-center space-x-4">
+              <Badge className="status-pill-success">
+                <Brain className="h-3 w-3 mr-2" />
                 <span className="hidden sm:inline">AI Powered</span>
                 <span className="sm:hidden">AI</span>
               </Badge>
@@ -201,39 +202,44 @@ export function ClusteringWorkbench() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto p-6 lg:p-8">
         {/* Search Section */}
-        <div className="mb-8 animate-slide-up">
-          <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Research Query</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <Card className="modern-card">
+            <CardContent className="p-8">
+              <h2 className="text-xl font-semibold text-foreground mb-6">Research Query</h2>
               
               {/* Search Input */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-6">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     placeholder="Enter research query (e.g., 'machine learning in healthcare')"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="pl-10 h-12 text-base border-gray-300 dark:border-gray-600"
+                    className="input-modern pl-12 h-14 text-base"
                     onKeyPress={(e) => e.key === 'Enter' && runAnalysis()}
                   />
                 </div>
                 <Button 
                   onClick={runAnalysis}
                   disabled={isAnalyzing || !query.trim()}
-                  className="h-12 px-6 bg-blue-600 hover:bg-blue-700 text-white"
+                  className="btn-modern-primary h-14 px-8 text-base font-semibold"
                 >
                   {isAnalyzing ? (
                     <>
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      <RefreshCw className="h-5 w-5 mr-3 animate-spin" />
                       <span className="hidden sm:inline">Analyzing</span>
                       <span className="sm:hidden">...</span>
                     </>
                   ) : (
                     <>
-                      <Play className="h-4 w-4 mr-2" />
+                      <Play className="h-5 w-5 mr-3" />
                       <span className="hidden sm:inline">Analyze</span>
                       <span className="sm:hidden">Go</span>
                     </>
@@ -243,41 +249,48 @@ export function ClusteringWorkbench() {
 
               {/* Progress Bar */}
               {isAnalyzing && (
-                <div className="mt-6 animate-fade-in">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-700 dark:text-gray-300">{currentStep}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{progress.toFixed(0)}%</span>
+                <div className="mt-8">
+                  <div className="modern-embed">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm text-foreground font-medium">{currentStep}</span>
+                      <span className="text-sm text-muted-foreground">{progress.toFixed(0)}%</span>
+                    </div>
+                    <Progress value={progress} className="h-3 bg-muted/30" />
                   </div>
-                  <Progress value={progress} className="h-2" />
                 </div>
               )}
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
 
         {/* Configuration Panel - Mobile Collapsible */}
-        <div className="mb-8 animate-slide-up-delay">
-          <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
-            <CardHeader>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-12"
+        >
+          <Card className="modern-card">
+            <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Configuration</CardTitle>
+                <CardTitle className="text-xl font-semibold text-foreground">Configuration</CardTitle>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="md:hidden"
+                  className="md:hidden rounded-2xl h-10 w-10 p-0 hover:bg-muted/50"
                 >
                   {showAdvanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className={`${showAdvanced ? 'block' : 'hidden md:block'}`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <CardContent className={`${showAdvanced ? 'block' : 'hidden md:block'} pt-0`}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {/* Data Source */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Data Source</label>
+                  <label className="block text-sm font-medium text-foreground mb-3">Data Source</label>
                   <Select value={dataSource} onValueChange={setDataSource}>
-                    <SelectTrigger className="border-slate-300 dark:border-slate-600">
+                    <SelectTrigger className="modern-surface h-12">
                       <SelectValue placeholder="Select source" />
                     </SelectTrigger>
                     <SelectContent>
@@ -350,7 +363,7 @@ export function ClusteringWorkbench() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
 
         {/* Results Section */}
         {analysis ? (

@@ -174,23 +174,23 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Header */}
-      <div className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50 flex items-center justify-between p-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-sm">
-            <Brain className="h-5 w-5 text-primary-foreground" />
+      {/* Modern Header */}
+      <div className="bg-card/50 backdrop-blur-xl border-b border-border/20 sticky top-0 z-50 flex items-center justify-between p-6">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
+            <Brain className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-foreground">Brevia Research Assistant</h1>
+            <h1 className="text-xl font-semibold text-foreground">Brevia Research Assistant</h1>
             <p className="text-sm text-muted-foreground">Powered by advanced AI models</p>
           </div>
         </div>
-        <div className="flex items-center space-x-3">
-          <Badge className="bg-green-100 dark:bg-green-900 dark:bg-opacity-20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700">
-            <Zap className="h-3 w-3 mr-1" />
+        <div className="flex items-center space-x-4">
+          <Badge className="status-pill-success">
+            <Zap className="h-3 w-3 mr-2" />
             Online
           </Badge>
-          <Button variant="ghost" size="sm" className="rounded-xl">
+          <Button variant="ghost" size="sm" className="rounded-2xl h-10 w-10 p-0 hover:bg-muted/50">
             <Settings className="h-4 w-4" />
           </Button>
         </div>
@@ -211,8 +211,8 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                   transition={{ duration: 0.3 }}
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-3xl ${message.type === 'user' ? 'ml-12' : 'mr-12'}`}>
-                    <div className={`p-4 ${
+                  <div className={`max-w-4xl ${message.type === 'user' ? 'ml-12' : 'mr-12'}`}>
+                    <div className={`${
                       message.type === 'user' 
                         ? 'chat-bubble-user' 
                         : message.type === 'system'

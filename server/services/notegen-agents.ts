@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import type { Note } from "@shared/schema";
 import * as fs from 'fs';
@@ -95,11 +94,11 @@ export interface ClassificationResult {
 
 export async function classifyContent(content: string): Promise<ClassificationResult> {
   const startTime = Date.now();
-  
+
   // Check cache first for performance
   const contentHash = Buffer.from(content.substring(0, 500)).toString('base64');
   const cached = learningCache.contentPatterns.get(contentHash);
-  
+
   if (cached && cached.confidence > 0.8) {
     console.log('🚀 Using cached classification (fast path)');
     return cached;
@@ -120,7 +119,22 @@ export async function classifyContent(content: string): Promise<ClassificationRe
   Content: ${content}`;
 
   try {
-    const response = await ai.models.generateContent({
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    const response = await model.generateContent(enhancedPrompt);
+    const result = JSON.parse(response.response.text() || '{}');
+
+    // Validate the result structure
+    if (!result.subject || !result.confidence) {
+      throw new Error('Invalid response structure from AI model');
+    }
+
+    /*const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config: {
         responseMimeType: "application/json",
@@ -140,15 +154,15 @@ export async function classifyContent(content: string): Promise<ClassificationRe
         }
       },
       contents: enhancedPrompt
-    });
+    });*/
 
-    const result = JSON.parse(response.text || "{}");
-    
+    // const result = JSON.parse(response.text || "{}");
+
     // Cache for future use
     if (result.confidence > 0.7) {
       learningCache.contentPatterns.set(contentHash, result);
     }
-    
+
     // Record performance metrics
     const processingTime = Date.now() - startTime;
     learningCache.performanceMetrics.set(`classify_${Date.now()}`, {
@@ -183,7 +197,7 @@ export interface SegmentedContent {
 
 export async function segmentContent(content: string, classification: ClassificationResult): Promise<SegmentedContent> {
   const prompt = `Create advanced segmented notes for ${classification.subject} content with ${classification.visualComplexity} complexity.
-  
+
   Based on successful patterns from similar content, create optimal segments with:
   - title: Engaging, memorable title
   - sections: Enhanced section objects with:
@@ -198,11 +212,21 @@ export async function segmentContent(content: string, classification: Classifica
 
   Optimize for ${classification.difficulty} level learners in ${classification.contentType} context.
   Use successful design patterns: ${Array.from(learningCache.successfulDesigns.values()).slice(-2).map(d => d.layoutStyle).join(', ')}
-  
+
   Content: ${content}`;
 
   try {
-    const response = await ai.models.generateContent({
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    const response = await model.generateContent(prompt);
+    return JSON.parse(response.response.text() || '{}');
+
+    /*const response = await ai.models.generateContent({
       model: "gemini-2.5-pro",
       config: {
         responseMimeType: "application/json",
@@ -232,9 +256,7 @@ export async function segmentContent(content: string, classification: Classifica
         }
       },
       contents: prompt
-    });
-
-    return JSON.parse(response.text || "{}");
+    }); */
   } catch (error) {
     throw new Error(`Enhanced segmentation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
@@ -295,7 +317,17 @@ export async function formatNotes(segmented: SegmentedContent, classification: C
   Input: ${JSON.stringify(segmented)}`;
 
   try {
-    const response = await ai.models.generateContent({
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      generationConfig: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    const response = await model.generateContent(prompt);
+    const result = JSON.parse(response.response.text() || '{}');
+
+    /*const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       config: {
         responseMimeType: "application/json",
@@ -345,14 +377,14 @@ export async function formatNotes(segmented: SegmentedContent, classification: C
         }
       },
       contents: prompt
-    });
+    });*/
 
-    const result = JSON.parse(response.text || "{}");
-    
+    // const result = JSON.parse(response.text || "{}");
+
     // Learn from successful formatting
     const designKey = `${classification.subject}_${classification.difficulty}`;
     const existingTemplate = learningCache.successfulDesigns.get(designKey);
-    
+
     if (existingTemplate) {
       existingTemplate.usageCount++;
     } else {
@@ -464,7 +496,17 @@ export async function designLayout(formatted: FormattedNotes): Promise<DesignedL
   Content: ${JSON.stringify(formatted).substring(0, 1000)}...`;
 
   try {
-    const response = await ai.models.generateContent({
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    const response = await model.generateContent(prompt);
+    return JSON.parse(response.response.text() || '{}');
+
+    /*const response = await ai.models.generateContent({
       model: "gemini-2.5-pro",
       config: {
         responseMimeType: "application/json",
@@ -592,9 +634,7 @@ export async function designLayout(formatted: FormattedNotes): Promise<DesignedL
         }
       },
       contents: prompt
-    });
-
-    return JSON.parse(response.text || "{}");
+    }); */
   } catch (error) {
     throw new Error(`Enhanced design failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
@@ -603,7 +643,7 @@ export async function designLayout(formatted: FormattedNotes): Promise<DesignedL
 // Agent 5: Premium PDF Renderer with Advanced Styling
 export function generatePDFHTML(design: any): string {
   const { style_config, layout_blocks, title, animations = [], interactions = [], responsive_settings } = design;
-  
+
   // Safe responsive breakpoints with defaults
   const responsive = {
     mobile: { 
@@ -622,11 +662,11 @@ export function generatePDFHTML(design: any): string {
       spacing_scale: responsive_settings?.desktop_spacing_scale || 1.0 
     }
   };
-  
+
   // Generate advanced CSS with modern features
   const css = `
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Source+Sans+Pro:wght@300;400;600&family=Nunito:wght@300;400;600;700&family=Ubuntu+Mono:wght@400;700&family=Merriweather:wght@300;400;700&display=swap');
-    
+
     :root {
       --primary: ${style_config.color_palette.primary};
       --secondary: ${style_config.color_palette.secondary};
@@ -643,13 +683,13 @@ export function generatePDFHTML(design: any): string {
       --spacing-lg: ${style_config.spacing_system[3] || 24}px;
       --spacing-xl: ${style_config.spacing_system[4] || 32}px;
     }
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: '${style_config.font_families.body}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--background);
@@ -660,7 +700,7 @@ export function generatePDFHTML(design: any): string {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    
+
     .page {
       width: 100%;
       min-height: 100vh;
@@ -670,7 +710,7 @@ export function generatePDFHTML(design: any): string {
       border-radius: var(--radius);
       overflow: hidden;
     }
-    
+
     .title {
       font-family: '${style_config.font_families.heading}', serif;
       font-size: clamp(2rem, 5vw, 3.5rem);
@@ -684,7 +724,7 @@ export function generatePDFHTML(design: any): string {
       position: relative;
       letter-spacing: -0.02em;
     }
-    
+
     .title::after {
       content: '';
       position: absolute;
@@ -696,13 +736,13 @@ export function generatePDFHTML(design: any): string {
       background: var(--gradient);
       border-radius: 2px;
     }
-    
+
     .section {
       margin-bottom: var(--spacing-lg);
       position: relative;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .section:hover {
       transform: translateY(-2px);
     }
@@ -743,7 +783,7 @@ export function generatePDFHTML(design: any): string {
         --spacing-xl: ${Math.round(responsive.desktop.spacing_scale * 32)}px;
       }
     }
-    
+
     .heading {
       font-family: '${style_config.font_families.heading}', serif;
       font-size: clamp(1.25rem, 3vw, 2rem);
@@ -755,7 +795,7 @@ export function generatePDFHTML(design: any): string {
       align-items: center;
       gap: var(--spacing-sm);
     }
-    
+
     .heading::before {
       content: '';
       width: 4px;
@@ -763,7 +803,7 @@ export function generatePDFHTML(design: any): string {
       background: var(--gradient);
       border-radius: 2px;
     }
-    
+
     .bullet {
       font-family: '${style_config.font_families.body}', sans-serif;
       font-size: 1.1rem;
@@ -772,7 +812,7 @@ export function generatePDFHTML(design: any): string {
       position: relative;
       line-height: 1.6;
     }
-    
+
     .bullet::before {
       content: "";
       position: absolute;
@@ -784,7 +824,7 @@ export function generatePDFHTML(design: any): string {
       border-radius: 50%;
       box-shadow: var(--shadow-sm);
     }
-    
+
     .definition {
       background: linear-gradient(135deg, var(--secondary)15, var(--secondary)08);
       border-left: 4px solid var(--accent);
@@ -796,7 +836,7 @@ export function generatePDFHTML(design: any): string {
       position: relative;
       overflow: hidden;
     }
-    
+
     .definition::before {
       content: '';
       position: absolute;
@@ -806,7 +846,7 @@ export function generatePDFHTML(design: any): string {
       height: 2px;
       background: var(--gradient);
     }
-    
+
     .example {
       background: linear-gradient(135deg, #e3f2fd, #bbdefb);
       border: 2px solid var(--primary);
@@ -817,7 +857,7 @@ export function generatePDFHTML(design: any): string {
       position: relative;
       box-shadow: var(--shadow-md);
     }
-    
+
     .formula {
       background: linear-gradient(135deg, #f3e5f5, #e1bee7);
       border: 2px solid var(--accent);
@@ -830,7 +870,7 @@ export function generatePDFHTML(design: any): string {
       box-shadow: var(--shadow-md);
       letter-spacing: 0.02em;
     }
-    
+
     .callout {
       background: linear-gradient(135deg, #fff3e0, #ffe0b2);
       border: 2px solid #ff9800;
@@ -841,7 +881,7 @@ export function generatePDFHTML(design: any): string {
       position: relative;
       box-shadow: var(--shadow-md);
     }
-    
+
     .callout::before {
       content: "💡";
       position: absolute;
@@ -853,7 +893,7 @@ export function generatePDFHTML(design: any): string {
       padding: 6px;
       box-shadow: var(--shadow-sm);
     }
-    
+
     .diagram {
       background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
       border: 2px dashed var(--primary);
@@ -868,7 +908,7 @@ export function generatePDFHTML(design: any): string {
       justify-content: center;
       position: relative;
     }
-    
+
     .summary {
       background: var(--gradient);
       color: white;
@@ -879,7 +919,7 @@ export function generatePDFHTML(design: any): string {
       box-shadow: var(--shadow-lg);
       position: relative;
     }
-    
+
     .highlight {
       background: linear-gradient(135deg, #ffeb3b, #fff59d);
       padding: 3px 8px;
@@ -887,13 +927,13 @@ export function generatePDFHTML(design: any): string {
       font-weight: 600;
       box-shadow: var(--shadow-sm);
     }
-    
+
     .emoji {
       font-size: 1.4em;
       margin-right: var(--spacing-sm);
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
-    
+
     .footer {
       position: fixed;
       bottom: var(--spacing-md);
@@ -906,23 +946,23 @@ export function generatePDFHTML(design: any): string {
       border-radius: 6px;
       backdrop-filter: blur(10px);
     }
-    
+
     /* Animation keyframes */
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    
+
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.8; }
     }
-    
+
     /* Responsive design */
     @media (max-width: 768px) {
       body { font-size: 14px; padding: var(--spacing-md); }
@@ -930,7 +970,7 @@ export function generatePDFHTML(design: any): string {
       .heading { font-size: 1.5rem; }
       .section { margin-bottom: var(--spacing-md); }
     }
-    
+
     @media print {
       body { 
         background: white;
@@ -944,12 +984,12 @@ export function generatePDFHTML(design: any): string {
 
   // Generate enhanced HTML content with semantic structure
   let htmlContent = '';
-  
+
   layout_blocks.forEach((block: any, index: number) => {
     const emoji = block.content.match(/^[^\w\s]+/)?.[0] || '';
     const content = block.content.replace(/^[^\w\s]+\s*/, '');
     const animationClass = block.animation ? `style="animation: ${block.animation} 0.6s ease-out ${index * 0.1}s both"` : '';
-    
+
     switch (block.type) {
       case 'heading':
         const level = block.style.font_size > 20 ? '2' : '3';
@@ -1006,28 +1046,28 @@ export function generatePDFHTML(design: any): string {
 export async function generateStudyNotesPDF(content: string): Promise<{ html: string; filename: string }> {
   const startTime = Date.now();
   console.log("🚀 Enhanced NoteGen AI Engine starting...");
-  
+
   try {
     console.log("🔍 Step 1: Advanced content classification...");
     const classification = await classifyContent(content);
     console.log(`📊 Classification confidence: ${classification.confidence}`);
-    
+
     console.log("✂️ Step 2: Intelligent content segmentation...");
     const segmented = await segmentContent(content, classification);
     console.log(`📖 Estimated read time: ${segmented.estimatedReadTime} minutes`);
-    
+
     console.log("🎨 Step 3: Adaptive formatting with learning...");
     const formatted = await formatNotes(segmented, classification);
-    
+
     console.log("🖼️ Step 4: Next-gen aesthetic design...");
     const designed = await designLayout(formatted);
-    
+
     console.log("📄 Step 5: Premium PDF generation...");
     const html = generatePDFHTML(designed);
-    
+
     const processingTime = Date.now() - startTime;
     console.log(`⚡ Total processing time: ${processingTime}ms`);
-    
+
     // Update learning metrics
     learningCache.performanceMetrics.set(`full_pipeline_${Date.now()}`, {
       processingTime,
@@ -1035,14 +1075,14 @@ export async function generateStudyNotesPDF(content: string): Promise<{ html: st
       errorRate: 0,
       timestamp: Date.now()
     });
-    
+
     // Save learning data periodically
     if (Math.random() < 0.1) { // 10% chance to save
       saveLearningData();
     }
-    
+
     const filename = `${formatted.title.replace(/[^a-zA-Z0-9]/g, '_')}_premium_notes.pdf`;
-    
+
     return { html, filename };
   } catch (error) {
     console.error("❌ NoteGen Engine error:", error);
@@ -1056,7 +1096,7 @@ export function updateLearningFeedback(contentHash: string, satisfactionScore: n
   if (metric) {
     metric.userSatisfaction = satisfactionScore;
   }
-  
+
   // Update user preferences
   const userId = 'default'; // In real app, get from user session
   const existing = learningCache.userPreferences.get(userId) || {
@@ -1065,7 +1105,7 @@ export function updateLearningFeedback(contentHash: string, satisfactionScore: n
     complexityLevel: 'moderate',
     visualDensity: 'balanced'
   };
-  
+
   learningCache.userPreferences.set(userId, { ...existing, ...designPreferences });
   saveLearningData();
 }
@@ -1076,7 +1116,7 @@ export function getPerformanceAnalytics() {
   const avgProcessingTime = metrics.reduce((sum, m) => sum + m.processingTime, 0) / metrics.length;
   const avgSatisfaction = metrics.reduce((sum, m) => sum + m.userSatisfaction, 0) / metrics.length;
   const totalProcessed = metrics.length;
-  
+
   return {
     averageProcessingTime: Math.round(avgProcessingTime),
     averageSatisfaction: Math.round(avgSatisfaction * 100),

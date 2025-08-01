@@ -1,6 +1,3 @@
-The code changes add the missing `BarChart3` import from the `lucide-react` library, resolving the "BarChart3 is not defined" error.
-```
-```replit_final_file
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";

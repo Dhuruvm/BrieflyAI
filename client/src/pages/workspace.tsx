@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { motion, AnimatePresence } from "framer-motion";
+import { useBreviaStore } from "@/lib/store";
 import { 
   Send, 
   Paperclip, 
@@ -21,7 +22,9 @@ import {
   Zap,
   MessageSquare,
   Settings,
-  MoreHorizontal
+  MoreHorizontal,
+  Menu,
+  Sidebar
 } from "lucide-react";
 
 interface Message {
@@ -35,6 +38,7 @@ interface Message {
 
 export default function Workspace() {
   const [, setLocation] = useLocation();
+  const { sidebarCollapsed, setSidebarCollapsed } = useBreviaStore();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -174,36 +178,42 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Mobile-First Header */}
-      <div className="bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-50">
-        <div className="flex items-center justify-between p-4 sm:p-6">
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
-              <Brain className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-lg sm:text-xl font-semibold text-foreground truncate">Brevia Assistant</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Powered by advanced AI models</p>
+      {/* ChatGPT-Style Header */}
+      <div className="bg-background border-b border-border sticky top-0 z-50">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            >
+              <Menu className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                <Brain className="h-4 w-4 text-white" />
+              </div>
+              <h1 className="text-lg font-semibold text-foreground">Brevia Assistant</h1>
             </div>
           </div>
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <Badge className="status-pill-success text-xs px-2 py-1 sm:px-3 sm:py-1">
-              <Zap className="h-3 w-3 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Online</span>
-              <span className="sm:hidden">●</span>
+          <div className="flex items-center space-x-3">
+            <Badge variant="outline" className="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700">
+              <Zap className="h-3 w-3 mr-1" />
+              Online
             </Badge>
-            <Button variant="ghost" size="sm" className="rounded-2xl h-8 w-8 sm:h-10 sm:w-10 p-0 hover:bg-muted hover:opacity-50">
-              <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+            <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted">
+              <Settings className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Mobile-Optimized Chat Container */}
+      {/* Chat Container - Full Screen */}
       <div className="flex-1 overflow-hidden flex">
-        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+        <div className="flex-1 flex flex-col w-full max-w-4xl mx-auto">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto py-4 sm:py-6 lg:py-8 px-4 sm:px-6 space-y-4 sm:space-y-6">
+          <div className="flex-1 overflow-y-auto py-6 px-4 space-y-6">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -304,16 +314,16 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Mobile-Optimized Input Area */}
-          <div className="p-4 sm:p-6 bg-card backdrop-blur-sm border-t border-border">
-            <div className="modern-surface">
-              <div className="flex items-end space-x-2 sm:space-x-3">
-                <div className="flex space-x-1 sm:space-x-2">
-                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground h-8 w-8 sm:h-10 sm:w-10 p-0">
-                    <Paperclip className="h-3 w-3 sm:h-4 sm:w-4" />
+          {/* ChatGPT-Style Input Area */}
+          <div className="p-4 pb-6 border-t border-border bg-background">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-end space-x-3 bg-card rounded-2xl border border-border p-3">
+                <div className="flex space-x-2">
+                  <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
+                    <Paperclip className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground h-8 w-8 sm:h-10 sm:w-10 p-0">
-                    <Mic className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
+                    <Mic className="h-4 w-4" />
                   </Button>
                 </div>
                 
@@ -324,7 +334,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Ask me anything..."
-                    className="input-modern min-h-[40px] sm:min-h-[44px] max-h-24 sm:max-h-32 resize-none text-sm sm:text-base"
+                    className="resize-none border-0 bg-transparent text-sm min-h-[40px] max-h-32 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     disabled={isProcessing}
                   />
                 </div>
@@ -332,24 +342,19 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isProcessing}
-                  className="btn-modern-primary rounded-xl p-2 sm:p-3 h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0"
+                  size="sm"
+                  className="p-2 h-8 w-8 bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   {isProcessing ? (
-                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent" />
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
                   ) : (
-                    <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <Send className="h-4 w-4" />
                   )}
                 </Button>
               </div>
               
-              <div className="flex items-center justify-between mt-2 sm:mt-3 text-xs text-muted-foreground">
-                <span className="hidden sm:inline">Use Shift+Enter for new lines</span>
-                <span className="sm:hidden">Shift+Enter for lines</span>
-                <div className="flex items-center space-x-1">
-                  <Sparkles className="h-3 w-3" />
-                  <span className="hidden sm:inline">Powered by AI</span>
-                  <span className="sm:hidden">AI</span>
-                </div>
+              <div className="flex items-center justify-center mt-3 text-xs text-muted-foreground">
+                <span>Shift+Enter for new lines</span>
               </div>
             </div>
           </div>

@@ -33,9 +33,7 @@ function Router() {
       </Route>
       <Route path="/chat">
         <AppShell>
-          <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-foreground">Chat & Planner Coming Soon</h1>
-          </div>
+          <Workspace />
         </AppShell>
       </Route>
       <Route path="/pdf">

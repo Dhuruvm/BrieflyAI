@@ -27,12 +27,13 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="flex">
+      <div className="flex h-screen overflow-hidden">
         <Sidebar />
-        <main className="flex-1 flex flex-col min-h-screen">
-          <div className="flex-1">
-            {children}
-          </div>
+        <main className={cn(
+          "flex-1 flex flex-col transition-all duration-300 ease-in-out",
+          sidebarCollapsed ? "ml-0" : "ml-0" // Ensure proper spacing
+        )}>
+          {children}
         </main>
       </div>
     </div>

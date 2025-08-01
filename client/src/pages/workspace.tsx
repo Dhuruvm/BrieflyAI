@@ -173,24 +173,24 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="flex flex-col h-screen bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+      <div className="header-modern flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center shadow-sm">
             <Brain className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-slate-900 dark:text-white">AI Research Assistant</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Powered by advanced AI models</p>
+            <h1 className="text-lg font-semibold text-foreground">Brevia Research Assistant</h1>
+            <p className="text-sm text-muted-foreground">Powered by advanced AI models</p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700">
+        <div className="flex items-center space-x-3">
+          <Badge className="status-pill-success">
             <Zap className="h-3 w-3 mr-1" />
             Online
           </Badge>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" className="rounded-xl">
             <Settings className="h-4 w-4" />
           </Button>
         </div>
@@ -200,7 +200,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
       <div className="flex-1 overflow-hidden flex">
         <div className="flex-1 flex flex-col">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -212,27 +212,39 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`max-w-3xl ${message.type === 'user' ? 'ml-12' : 'mr-12'}`}>
-                    <div className={`rounded-2xl p-4 ${
+                    <div className={`p-4 ${
                       message.type === 'user' 
-                        ? 'bg-blue-500 text-white' 
+                        ? 'chat-bubble-user' 
                         : message.type === 'system'
-                        ? 'bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700'
-                        : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700'
+                        ? 'chat-bubble-system'
+                        : 'chat-bubble-assistant'
                     }`}>
                       {message.processing && (
-                        <div className="flex items-center space-x-2 mb-2">
+                        <div className="flex items-center space-x-2 mb-3">
                           <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                              className="w-2 h-2 bg-primary rounded-full"
+                            />
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                              className="w-2 h-2 bg-primary rounded-full"
+                            />
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                              className="w-2 h-2 bg-primary rounded-full"
+                            />
                           </div>
-                          <span className="text-sm text-slate-500 dark:text-slate-400">AI is thinking...</span>
+                          <span className="text-sm text-muted-foreground">AI is thinking...</span>
                         </div>
                       )}
                       <div className={`${
                         message.type === 'user' 
-                          ? 'text-white' 
-                          : 'text-slate-900 dark:text-slate-100'
+                          ? 'text-primary-foreground' 
+                          : 'text-card-foreground'
                       }`}>
                         {message.content.split('\n').map((line, index) => (
                           <div key={index} className={line.startsWith('**') ? 'font-semibold mt-2' : ''}>
@@ -240,10 +252,10 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                           </div>
                         ))}
                       </div>
-                      <div className={`text-xs mt-2 ${
+                      <div className={`text-xs mt-3 ${
                         message.type === 'user' 
-                          ? 'text-blue-100' 
-                          : 'text-slate-500 dark:text-slate-400'
+                          ? 'text-primary-foreground/70' 
+                          : 'text-muted-foreground'
                       }`}>
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
@@ -262,21 +274,28 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8"
               >
                 {quickActions.map((action, index) => (
-                  <Card 
+                  <motion.div
                     key={index}
-                    className={`cursor-pointer hover:shadow-md transition-all duration-200 ${action.color} border`}
-                    onClick={action.action}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-3">
-                        <action.icon className="h-6 w-6" />
-                        <div>
-                          <h3 className="font-semibold text-sm">{action.label}</h3>
-                          <p className="text-xs opacity-80">{action.description}</p>
+                    <Card 
+                      className={`modern-card cursor-pointer ${action.color} border-0`}
+                      onClick={action.action}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <action.icon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-sm mb-1">{action.label}</h3>
+                            <p className="text-xs opacity-80 leading-relaxed">{action.description}</p>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 ))}
               </motion.div>
             )}
@@ -285,43 +304,45 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
           </div>
 
           {/* Input Area */}
-          <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex items-end space-x-3">
-              <div className="flex space-x-2">
-                <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
-                  <Paperclip className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
-                  <Mic className="h-4 w-4" />
+          <div className="p-6 bg-card/50 backdrop-blur-sm border-t border-border">
+            <div className="modern-surface p-4">
+              <div className="flex items-end space-x-3">
+                <div className="flex space-x-2">
+                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground">
+                    <Paperclip className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground">
+                    <Mic className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="flex-1 relative">
+                  <Textarea
+                    ref={textareaRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Ask me to analyze documents, generate notes, or perform clustering analysis..."
+                    className="input-modern min-h-[44px] max-h-32 resize-none"
+                    disabled={isProcessing}
+                  />
+                </div>
+                
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim() || isProcessing}
+                  className="btn-modern-primary rounded-xl p-3"
+                >
+                  <Send className="h-4 w-4" />
                 </Button>
               </div>
               
-              <div className="flex-1 relative">
-                <Textarea
-                  ref={textareaRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Ask me to analyze documents, generate notes, or perform clustering analysis..."
-                  className="min-h-[44px] max-h-32 resize-none border-slate-300 dark:border-slate-600 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl bg-slate-50 dark:bg-slate-700"
-                  disabled={isProcessing}
-                />
-              </div>
-              
-              <Button
-                onClick={handleSendMessage}
-                disabled={!inputValue.trim() || isProcessing}
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-xl p-3"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between mt-2 text-xs text-slate-500 dark:text-slate-400">
-              <span>Use Shift+Enter for new lines</span>
-              <div className="flex items-center space-x-1">
-                <Sparkles className="h-3 w-3" />
-                <span>Powered by AI</span>
+              <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
+                <span>Use Shift+Enter for new lines</span>
+                <div className="flex items-center space-x-1">
+                  <Sparkles className="h-3 w-3" />
+                  <span>Powered by AI</span>
+                </div>
               </div>
             </div>
           </div>

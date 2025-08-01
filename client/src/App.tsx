@@ -4,6 +4,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
 import AppShell from "@/components/layout/app-shell";
 import Landing from "@/pages/landing";
 import Workspace from "@/pages/workspace";
@@ -74,12 +75,14 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
-          <Toaster />
-          <Router />
-        </div>
-      </TooltipProvider>
+      <ThemeProvider defaultTheme="light" storageKey="brevia-ui-theme">
+        <TooltipProvider>
+          <div className="min-h-screen bg-background text-foreground font-sans antialiased">
+            <Toaster />
+            <Router />
+          </div>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

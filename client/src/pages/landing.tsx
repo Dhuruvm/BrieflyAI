@@ -1,6 +1,20 @@
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { 
+  Brain, 
+  FileText, 
+  Zap, 
+  Share2, 
+  Mic, 
+  Smartphone,
+  Upload,
+  CheckCircle,
+  Sparkles,
+  ArrowRight
+} from "lucide-react";
 import brieflyLogo from "@assets/briefly-logo.png";
 
 export default function Landing() {
@@ -8,40 +22,40 @@ export default function Landing() {
 
   const features = [
     {
-      icon: "fas fa-upload",
+      icon: Upload,
       title: "Multi-Format Input",
       description: "Upload text, PDFs, audio recordings, or video URLs. Our AI handles any format seamlessly.",
-      color: "text-ai-blue"
+      color: "text-blue-600 dark:text-blue-400"
     },
     {
-      icon: "fas fa-list-check",
+      icon: FileText,
       title: "Structured Output",
       description: "Get organized notes with title, summary, key points, action items, and visual cards.",
-      color: "text-ai-green"
+      color: "text-green-600 dark:text-green-400"
     },
     {
-      icon: "fas fa-bolt",
+      icon: Zap,
       title: "Real-time Processing",
       description: "Watch your notes generate in real-time with smooth animations and instant feedback.",
-      color: "text-ai-amber"
+      color: "text-purple-600 dark:text-purple-400"
     },
     {
-      icon: "fas fa-share-nodes",
+      icon: Share2,
       title: "Export & Share",
       description: "Export as PDF or share via URL. Perfect for collaboration and documentation.",
-      color: "text-ai-blue"
+      color: "text-blue-600 dark:text-blue-400"
     },
     {
-      icon: "fas fa-microphone",
+      icon: Mic,
       title: "Voice Recording",
       description: "Record directly in the app and get instant transcription and note generation.",
-      color: "text-ai-green"
+      color: "text-green-600 dark:text-green-400"
     },
     {
-      icon: "fas fa-mobile-alt",
+      icon: Smartphone,
       title: "Mobile Optimized",
       description: "Fully responsive design with touch-friendly controls for seamless mobile experience.",
-      color: "text-ai-amber"
+      color: "text-purple-600 dark:text-purple-400"
     }
   ];
 
@@ -50,78 +64,93 @@ export default function Landing() {
       number: 1,
       title: "Upload Content",
       description: "Drag and drop or select your file. Supports text, PDFs, audio, and video URLs.",
-      image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300",
-      color: "bg-ai-blue"
+      icon: Upload,
+      color: "bg-blue-500"
     },
     {
       number: 2,
       title: "AI Processing",
       description: "Our AI analyzes your content and extracts key information with advanced NLP.",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300",
-      color: "bg-ai-green"
+      icon: Brain,
+      color: "bg-green-500"
     },
     {
       number: 3,
       title: "Get Structured Notes",
       description: "Receive beautifully formatted notes with summaries, key points, and action items.",
-      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&h=300",
-      color: "bg-ai-amber"
+      icon: CheckCircle,
+      color: "bg-purple-500"
     }
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-ai-black/80 backdrop-blur-lg border-b border-ai-border z-50">
+      <nav className="header-modern fixed top-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-3">
               <img 
                 src={brieflyLogo} 
-                alt="Briefly.AI" 
-                className="h-14 w-auto"
+                alt="Brevia AI" 
+                className="h-10 w-auto"
               />
+              <div>
+                <h1 className="text-lg font-bold text-foreground">Brevia</h1>
+              </div>
             </div>
-            <div className="hidden md:flex space-x-8">
-              <a href="#features" className="text-ai-text-secondary hover:text-ai-text transition-colors">Features</a>
-              <a href="#how-it-works" className="text-ai-text-secondary hover:text-ai-text transition-colors">How it Works</a>
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">Features</a>
+              <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How it Works</a>
+              <Badge className="status-pill-success">
+                <Sparkles className="h-3 w-3 mr-1" />
+                AI Powered
+              </Badge>
             </div>
             <Button 
               onClick={() => setLocation("/workspace")}
-              className="bg-ai-blue hover:bg-ai-blue-dark px-6 py-2 rounded-full font-medium transition-all duration-300"
+              className="btn-modern-primary"
             >
               Get Started
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 gradient-subtle">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="animate-fadeIn"
+            transition={{ duration: 0.6 }}
+            className="mb-16"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 logo-text">
+            <Badge className="mb-6 status-pill">
+              <Sparkles className="h-3 w-3 mr-1" />
+              Powered by Advanced AI
+            </Badge>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-foreground">
               AI-Powered
-              <span className="text-ai-blue"> Briefing</span>
+              <span className="text-primary"> Research</span>
             </h1>
-            <p className="text-xl md:text-2xl text-ai-text-secondary mb-8 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               Transform any content into structured, actionable notes. Upload text, PDFs, audio, or video and get intelligent summaries in seconds.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 onClick={() => setLocation("/workspace")}
-                className="bg-ai-blue hover:bg-ai-blue-dark px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 animate-glow"
+                className="btn-modern-primary text-lg px-8 py-4"
+                size="lg"
               >
                 Start Creating Notes
+                <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
               <Button
                 variant="outline"
-                className="border-ai-border hover:border-ai-blue px-8 py-4 rounded-full text-lg font-medium transition-all duration-300"
+                className="btn-modern-secondary text-lg px-8 py-4"
+                size="lg"
               >
                 Watch Demo
               </Button>
@@ -131,24 +160,26 @@ export default function Landing() {
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-16"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="relative"
           >
-            <img 
-              src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600"
-              alt="Modern AI interface showing note generation"
-              className="rounded-2xl shadow-2xl mx-auto max-w-4xl w-full border border-ai-border"
-            />
+            <div className="modern-surface p-8 max-w-4xl mx-auto">
+              <img 
+                src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600"
+                alt="Modern AI interface showing note generation"
+                className="rounded-xl w-full"
+              />
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-ai-dark">
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 logo-text">Powerful Features</h2>
-            <p className="text-xl text-ai-text-secondary max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">Powerful Features</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Everything you need to transform any content into structured, actionable insights
             </p>
           </div>
@@ -160,13 +191,17 @@ export default function Landing() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="note-card bg-ai-surface p-8 rounded-2xl border border-ai-border"
+                whileHover={{ scale: 1.02 }}
               >
-                <div className="w-16 h-16 bg-ai-blue/20 rounded-2xl flex items-center justify-center mb-6">
-                  <i className={`${feature.icon} ${feature.color} text-2xl`}></i>
-                </div>
-                <h3 className="text-2xl font-semibold mb-4">{feature.title}</h3>
-                <p className="text-ai-text-secondary">{feature.description}</p>
+                <Card className="modern-card h-full">
+                  <CardContent className="p-8">
+                    <div className="w-14 h-14 bg-muted rounded-2xl flex items-center justify-center mb-6">
+                      <feature.icon className={`h-7 w-7 ${feature.color}`} />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-4 text-foreground">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -174,11 +209,11 @@ export default function Landing() {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8">
+      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 logo-text">How It Works</h2>
-            <p className="text-xl text-ai-text-secondary max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">How It Works</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Three simple steps to transform any content into structured notes
             </p>
           </div>
@@ -192,16 +227,14 @@ export default function Landing() {
                 transition={{ duration: 0.5, delay: index * 0.2 }}
                 className="text-center"
               >
-                <div className={`w-20 h-20 ${step.color} rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold`}>
-                  {step.number}
+                <div className={`w-20 h-20 ${step.color} rounded-2xl flex items-center justify-center mx-auto mb-6 text-white shadow-lg`}>
+                  <step.icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-2xl font-semibold mb-4">{step.title}</h3>
-                <p className="text-ai-text-secondary mb-6">{step.description}</p>
-                <img 
-                  src={step.image}
-                  alt={step.title}
-                  className="rounded-xl mx-auto"
-                />
+                <div className="w-8 h-8 bg-foreground/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-sm font-bold text-foreground">{step.number}</span>
+                </div>
+                <h3 className="text-2xl font-semibold mb-4 text-foreground">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{step.description}</p>
               </motion.div>
             ))}
           </div>
@@ -209,22 +242,24 @@ export default function Landing() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-ai-blue/20 to-ai-green/20">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 gradient-brand">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 logo-text">Ready to Transform Your Content?</h2>
-            <p className="text-xl text-ai-text-secondary mb-8">
-              Join thousands of professionals who use Briefly.AI to create better notes faster.
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Ready to Transform Your Content?</h2>
+            <p className="text-xl text-white/80 mb-8">
+              Join thousands of professionals who use Brevia AI to create better notes faster.
             </p>
             <Button
               onClick={() => setLocation("/workspace")}
-              className="bg-ai-blue hover:bg-ai-blue-dark px-12 py-4 rounded-full text-xl font-semibold transition-all duration-300 animate-glow"
+              className="bg-white text-primary hover:bg-white/90 px-12 py-4 rounded-2xl text-xl font-semibold shadow-xl"
+              size="lg"
             >
               Start Creating Notes Now
+              <ArrowRight className="h-5 w-5 ml-2" />
             </Button>
           </motion.div>
         </div>

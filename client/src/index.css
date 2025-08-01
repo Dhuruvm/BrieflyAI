@@ -104,8 +104,8 @@
   }
 
   .modern-embed {
-    @apply bg-muted/50 border border-border rounded-xl p-4;
-    @apply backdrop-blur-sm;
+    @apply bg-muted border border-border rounded-xl p-4;
+    @apply backdrop-blur-sm opacity-50;
   }
 
   /* Chat Interface Components */
@@ -120,19 +120,19 @@
   }
 
   .chat-bubble-system {
-    @apply bg-muted/50 border border-border rounded-2xl px-4 py-3;
-    @apply shadow-sm backdrop-blur-sm;
+    @apply bg-muted border border-border rounded-2xl px-4 py-3;
+    @apply shadow-sm backdrop-blur-sm opacity-50;
   }
 
   /* Button Variants */
   .btn-modern-primary {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground;
+    @apply bg-primary hover:bg-primary hover:opacity-90 text-primary-foreground;
     @apply rounded-xl px-6 py-3 font-medium;
     @apply shadow-sm hover:shadow-md transition-all duration-200;
   }
 
   .btn-modern-secondary {
-    @apply bg-secondary hover:bg-secondary/80 text-secondary-foreground;
+    @apply bg-secondary hover:bg-secondary hover:opacity-80 text-secondary-foreground;
     @apply rounded-xl px-6 py-3 font-medium;
     @apply border border-border shadow-sm hover:shadow-md transition-all duration-200;
   }
@@ -151,12 +151,12 @@
   }
 
   .status-pill-success {
-    @apply bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300;
+    @apply bg-green-50 dark:bg-green-900 dark:bg-opacity-20 text-green-700 dark:text-green-300;
     @apply border-green-200 dark:border-green-700;
   }
 
   .status-pill-processing {
-    @apply bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300;
+    @apply bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 text-blue-700 dark:text-blue-300;
     @apply border-blue-200 dark:border-blue-700;
   }
 
@@ -167,7 +167,7 @@
   }
 
   .header-modern {
-    @apply bg-background/80 backdrop-blur-md border-b border-border;
+    @apply bg-background bg-opacity-80 backdrop-blur-md border-b border-border;
     @apply sticky top-0 z-50;
   }
 
@@ -282,7 +282,7 @@
 }
 
 .recharts-tooltip-wrapper {
-  @apply rounded-lg border border-zinc-700/50 !important;
+  @apply rounded-lg border border-zinc-700 border-opacity-50 !important;
   background: rgb(39 39 42 / 0.95) !important;
   backdrop-filter: blur(8px) !important;
 }

@@ -170,22 +170,22 @@ export function ClusteringWorkbench() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-10">
+      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 onClick={() => window.history.back()}
-                className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2"
+                className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white animate-fade-in">Document Clustering</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400 animate-fade-in-delay hidden sm:block">AI-powered content analysis</p>
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white animate-fade-in">Document Clustering</h1>
+                <p className="text-sm text-slate-600 dark:text-slate-400 animate-fade-in-delay hidden sm:block">AI-powered content analysis</p>
               </div>
             </div>
             
@@ -204,9 +204,9 @@ export function ClusteringWorkbench() {
       <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
         {/* Search Section */}
         <div className="mb-8 animate-slide-up">
-          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <CardContent className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Research Query</h2>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Research Query</h2>
               
               {/* Search Input */}
               <div className="flex flex-col sm:flex-row gap-4">
@@ -257,10 +257,10 @@ export function ClusteringWorkbench() {
 
         {/* Configuration Panel - Mobile Collapsible */}
         <div className="mb-8 animate-slide-up-delay">
-          <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+          <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Configuration</CardTitle>
+                <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Configuration</CardTitle>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -275,9 +275,9 @@ export function ClusteringWorkbench() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Data Source */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Data Source</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Data Source</label>
                   <Select value={dataSource} onValueChange={setDataSource}>
-                    <SelectTrigger className="border-gray-300 dark:border-gray-600">
+                    <SelectTrigger className="border-slate-300 dark:border-slate-600">
                       <SelectValue placeholder="Select source" />
                     </SelectTrigger>
                     <SelectContent>
@@ -295,9 +295,9 @@ export function ClusteringWorkbench() {
 
                 {/* Algorithm */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Algorithm</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Algorithm</label>
                   <Select value={algorithm} onValueChange={setAlgorithm}>
-                    <SelectTrigger className="border-gray-300 dark:border-gray-600">
+                    <SelectTrigger className="border-slate-300 dark:border-slate-600">
                       <SelectValue placeholder="Select algorithm" />
                     </SelectTrigger>
                     <SelectContent>
@@ -311,7 +311,7 @@ export function ClusteringWorkbench() {
                 {/* Max Results */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Max Results</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Max Results</label>
                     <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">{resultCount}</span>
                   </div>
                   <Slider
@@ -322,7 +322,7 @@ export function ClusteringWorkbench() {
                     step={10}
                     className="mt-2"
                   />
-                  <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
                     <span>10</span>
                     <span>500</span>
                   </div>
@@ -330,9 +330,9 @@ export function ClusteringWorkbench() {
 
                 {/* Visualization */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Visualization</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Visualization</label>
                   <Select value={visualization} onValueChange={setVisualization}>
-                    <SelectTrigger className="border-gray-300 dark:border-gray-600">
+                    <SelectTrigger className="border-slate-300 dark:border-slate-600">
                       <SelectValue placeholder="Select view" />
                     </SelectTrigger>
                     <SelectContent>

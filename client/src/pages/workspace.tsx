@@ -174,33 +174,36 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Modern Header */}
-      <div className="bg-card/50 backdrop-blur-xl border-b border-border/20 sticky top-0 z-50 flex items-center justify-between p-6">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
-            <Brain className="h-6 w-6 text-white" />
+      {/* Mobile-First Header */}
+      <div className="bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-50">
+        <div className="flex items-center justify-between p-4 sm:p-6">
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
+              <Brain className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl font-semibold text-foreground truncate">Brevia Assistant</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Powered by advanced AI models</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-semibold text-foreground">Brevia Research Assistant</h1>
-            <p className="text-sm text-muted-foreground">Powered by advanced AI models</p>
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <Badge className="status-pill-success text-xs px-2 py-1 sm:px-3 sm:py-1">
+              <Zap className="h-3 w-3 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Online</span>
+              <span className="sm:hidden">●</span>
+            </Badge>
+            <Button variant="ghost" size="sm" className="rounded-2xl h-8 w-8 sm:h-10 sm:w-10 p-0 hover:bg-muted hover:opacity-50">
+              <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+            </Button>
           </div>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Badge className="status-pill-success">
-            <Zap className="h-3 w-3 mr-2" />
-            Online
-          </Badge>
-          <Button variant="ghost" size="sm" className="rounded-2xl h-10 w-10 p-0 hover:bg-muted/50">
-            <Settings className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 
-      {/* Chat Area */}
+      {/* Mobile-Optimized Chat Container */}
       <div className="flex-1 overflow-hidden flex">
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto py-4 sm:py-6 lg:py-8 px-4 sm:px-6 space-y-4 sm:space-y-6">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -208,58 +211,56 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-4xl ${message.type === 'user' ? 'ml-12' : 'mr-12'}`}>
-                    <div className={`${
-                      message.type === 'user' 
-                        ? 'chat-bubble-user' 
-                        : message.type === 'system'
-                        ? 'chat-bubble-system'
-                        : 'chat-bubble-assistant'
-                    }`}>
+                  <div className={`${
+                    message.type === 'user' 
+                      ? 'chat-bubble-user' 
+                      : message.type === 'system'
+                      ? 'chat-bubble-system'
+                      : 'chat-bubble-assistant'
+                  }`}>
                       {message.processing && (
-                        <div className="flex items-center space-x-2 mb-3">
+                        <div className="flex items-center space-x-2 sm:space-x-3 mb-3 p-2 sm:p-3 bg-muted opacity-20 rounded-xl sm:rounded-2xl">
                           <div className="flex space-x-1">
                             <motion.div
                               animate={{ scale: [1, 1.2, 1] }}
                               transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                              className="w-2 h-2 bg-primary rounded-full"
+                              className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full"
                             />
                             <motion.div
                               animate={{ scale: [1, 1.2, 1] }}
                               transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                              className="w-2 h-2 bg-primary rounded-full"
+                              className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full"
                             />
                             <motion.div
                               animate={{ scale: [1, 1.2, 1] }}
                               transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                              className="w-2 h-2 bg-primary rounded-full"
+                              className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full"
                             />
                           </div>
-                          <span className="text-sm text-muted-foreground">AI is thinking...</span>
+                          <span className="text-xs sm:text-sm text-muted-foreground font-medium">AI is thinking...</span>
                         </div>
                       )}
                       <div className={`${
                         message.type === 'user' 
                           ? 'text-primary-foreground' 
                           : 'text-card-foreground'
-                      }`}>
+                      } text-sm sm:text-base leading-relaxed whitespace-pre-wrap break-words`}>
                         {message.content.split('\n').map((line, index) => (
                           <div key={index} className={line.startsWith('**') ? 'font-semibold mt-2' : ''}>
                             {line.replace(/\*\*/g, '')}
                           </div>
                         ))}
                       </div>
-                      <div className={`text-xs mt-3 ${
+                      <div className={`text-xs mt-2 sm:mt-3 ${
                         message.type === 'user' 
-                          ? 'text-primary-foreground/70' 
+                          ? 'text-primary-foreground opacity-70' 
                           : 'text-muted-foreground'
                       }`}>
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
-                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -285,7 +286,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                     >
                       <CardContent className="p-5">
                         <div className="flex items-start space-x-4">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-xl bg-white opacity-10 flex items-center justify-center">
                             <action.icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1">
@@ -303,16 +304,16 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
-          <div className="p-6 bg-card/50 backdrop-blur-sm border-t border-border">
-            <div className="modern-surface p-4">
-              <div className="flex items-end space-x-3">
-                <div className="flex space-x-2">
-                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground">
-                    <Paperclip className="h-4 w-4" />
+          {/* Mobile-Optimized Input Area */}
+          <div className="p-4 sm:p-6 bg-card backdrop-blur-sm border-t border-border">
+            <div className="modern-surface">
+              <div className="flex items-end space-x-2 sm:space-x-3">
+                <div className="flex space-x-1 sm:space-x-2">
+                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground h-8 w-8 sm:h-10 sm:w-10 p-0">
+                    <Paperclip className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground">
-                    <Mic className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" className="rounded-xl text-muted-foreground hover:text-foreground h-8 w-8 sm:h-10 sm:w-10 p-0">
+                    <Mic className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
                 
@@ -322,8 +323,8 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ask me to analyze documents, generate notes, or perform clustering analysis..."
-                    className="input-modern min-h-[44px] max-h-32 resize-none"
+                    placeholder="Ask me anything..."
+                    className="input-modern min-h-[40px] sm:min-h-[44px] max-h-24 sm:max-h-32 resize-none text-sm sm:text-base"
                     disabled={isProcessing}
                   />
                 </div>
@@ -331,17 +332,23 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isProcessing}
-                  className="btn-modern-primary rounded-xl p-3"
+                  className="btn-modern-primary rounded-xl p-2 sm:p-3 h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0"
                 >
-                  <Send className="h-4 w-4" />
+                  {isProcessing ? (
+                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent" />
+                  ) : (
+                    <Send className="h-3 w-3 sm:h-4 sm:w-4" />
+                  )}
                 </Button>
               </div>
               
-              <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
-                <span>Use Shift+Enter for new lines</span>
+              <div className="flex items-center justify-between mt-2 sm:mt-3 text-xs text-muted-foreground">
+                <span className="hidden sm:inline">Use Shift+Enter for new lines</span>
+                <span className="sm:hidden">Shift+Enter for lines</span>
                 <div className="flex items-center space-x-1">
                   <Sparkles className="h-3 w-3" />
-                  <span>Powered by AI</span>
+                  <span className="hidden sm:inline">Powered by AI</span>
+                  <span className="sm:hidden">AI</span>
                 </div>
               </div>
             </div>

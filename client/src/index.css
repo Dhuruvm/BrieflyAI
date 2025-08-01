@@ -92,61 +92,69 @@
 
 /* Modern Professional Design System - ChatGPT/Gemini/Delv Inspired */
 @layer components {
-  /* Core Layout Components */
+  /* Core Layout Components - Mobile Responsive */
   .modern-card {
     @apply bg-card border border-border rounded-2xl shadow-sm;
     @apply hover:shadow-lg transition-all duration-300;
-    @apply backdrop-blur-sm;
+    @apply backdrop-blur-sm p-4 sm:p-6 lg:p-8;
   }
 
   .modern-surface {
-    @apply bg-card border border-border rounded-3xl;
-    @apply shadow-lg backdrop-blur-md;
+    @apply bg-card border border-border rounded-2xl sm:rounded-3xl;
+    @apply shadow-md sm:shadow-lg backdrop-blur-md;
+    @apply p-3 sm:p-4 lg:p-6;
   }
 
   .modern-embed {
-    @apply bg-muted border border-border rounded-2xl p-6;
-    @apply backdrop-blur-sm;
+    @apply bg-muted border border-border rounded-xl sm:rounded-2xl;
+    @apply backdrop-blur-sm p-3 sm:p-4 lg:p-6;
+    @apply shadow-sm opacity-30;
   }
 
-  /* Chat Interface Components */
+  /* Chat Interface Components - Mobile First Design */
   .chat-bubble-user {
-    @apply bg-primary text-primary-foreground rounded-3xl px-6 py-4;
-    @apply shadow-md max-w-2xl ml-auto;
+    @apply bg-primary text-primary-foreground rounded-3xl px-4 py-3 sm:px-6 sm:py-4;
+    @apply shadow-lg max-w-[85%] sm:max-w-md md:max-w-lg lg:max-w-2xl ml-auto;
     @apply border border-primary;
   }
 
   .chat-bubble-assistant {
-    @apply bg-card border border-border rounded-3xl px-6 py-4;
-    @apply shadow-md max-w-3xl backdrop-blur-sm;
+    @apply bg-card border border-border rounded-3xl px-4 py-4 sm:px-6 sm:py-5;
+    @apply shadow-lg max-w-[90%] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl;
+    @apply backdrop-blur-sm;
   }
 
   .chat-bubble-system {
-    @apply bg-muted border border-border rounded-2xl px-4 py-3;
-    @apply shadow-sm backdrop-blur-sm text-muted-foreground;
+    @apply bg-muted border border-border rounded-2xl px-3 py-2 sm:px-4 sm:py-3;
+    @apply shadow-sm backdrop-blur-sm text-muted-foreground text-sm opacity-50;
+    @apply max-w-[80%] sm:max-w-md mx-auto;
   }
 
-  /* Button Variants */
+  /* Button Variants - Mobile Optimized */
   .btn-modern-primary {
     @apply bg-primary hover:bg-primary text-primary-foreground;
-    @apply rounded-2xl px-6 py-3 font-medium;
+    @apply rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-3 font-medium;
     @apply shadow-lg hover:shadow-xl transition-all duration-300;
     @apply border border-primary hover:opacity-90;
+    @apply text-sm sm:text-base;
   }
 
   .btn-modern-secondary {
     @apply bg-secondary hover:bg-secondary text-secondary-foreground;
-    @apply rounded-2xl px-6 py-3 font-medium;
+    @apply rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-3 font-medium;
     @apply border border-border shadow-md hover:shadow-lg transition-all duration-300;
     @apply backdrop-blur-sm hover:opacity-80;
+    @apply text-sm sm:text-base;
   }
 
-  /* Input Components */
+  /* Input Components - Mobile Friendly */
   .input-modern {
-    @apply bg-card border border-border rounded-2xl px-6 py-4;
+    @apply bg-card border border-border rounded-xl sm:rounded-2xl;
+    @apply px-4 py-3 sm:px-6 sm:py-4 text-base;
     @apply focus:ring-2 focus:ring-primary focus:border-primary;
     @apply placeholder:text-muted-foreground transition-all duration-300;
     @apply shadow-sm hover:shadow-md backdrop-blur-sm;
+    @apply w-full;
   }
 
   /* Status Pills */

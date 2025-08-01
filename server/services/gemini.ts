@@ -1,8 +1,8 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { type AiNoteResponse, aiNoteResponseSchema } from "@shared/schema";
 
 // Note that the newest Gemini model series is "gemini-2.5-flash" or "gemini-2.5-pro"
-const ai = new GoogleGenAI(process.env.GOOGLE_GEMINI_API_KEY || "");
+const ai = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || "");
 
 export async function processTextContent(content: string, contentType: string): Promise<AiNoteResponse> {
   const systemPrompt = `You are an expert content analyst. Analyze content and provide structured notes in JSON format. Focus on extracting actionable insights and key information.
@@ -72,12 +72,10 @@ export async function transcribeAudio(audioBuffer: Buffer): Promise<string> {
       "Transcribe this audio file and return only the text content.",
     ];
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
-      contents: contents,
-    });
+    const model = ai.getGenerativeModel({ model: "gemini-2.5-pro" });
+    const response = await model.generateContent(contents);
 
-    return response.text || "Failed to transcribe audio";
+    return response.response.text() || "Failed to transcribe audio";
   } catch (error) {
     throw new Error(`Failed to transcribe audio: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }

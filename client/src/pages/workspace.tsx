@@ -1,3 +1,6 @@
+The code changes add the missing `BarChart3` import from the `lucide-react` library, resolving the "BarChart3 is not defined" error.
+```
+```replit_final_file
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
@@ -95,7 +98,7 @@ ${data.actionItems.map((item: string, i: number) => `• ${item}`).join('\n')}
 Would you like me to export this as a PDF or perform any additional analysis?`,
         timestamp: new Date()
       };
-      
+
       setMessages(prev => prev.map(msg => 
         msg.processing ? { ...msg, processing: false } : msg
       ).concat(assistantMessage));
@@ -140,7 +143,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
 
     setMessages(prev => [...prev, userMessage, processingMessage]);
     setIsProcessing(true);
-    
+
     // Process the message
     processMessageMutation.mutate(inputValue.trim());
     setInputValue("");
@@ -276,7 +279,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                 </motion.div>
               ))}
             </AnimatePresence>
-            
+
             {/* Quick Actions (shown when no messages or minimal conversation) */}
             {messages.length <= 2 && (
               <motion.div
@@ -311,7 +314,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                 ))}
               </motion.div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
 
@@ -333,7 +336,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                       <Mic className="h-4 w-4" />
                     </Button>
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <Textarea
                       ref={textareaRef}
@@ -350,7 +353,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
                       <span>{inputValue.length}/2000</span>
                     </div>
                   </div>
-                  
+
                   <div className="pt-2">
                     <Button
                       onClick={handleSendMessage}

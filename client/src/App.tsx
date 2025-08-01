@@ -4,8 +4,10 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import AppShell from "@/components/layout/app-shell";
 import Landing from "@/pages/landing";
 import Workspace from "@/pages/workspace";
+import ClusteringPage from "@/pages/clustering";
 import NotFound from "@/pages/not-found";
 import LoadingPage from "@/components/loading-page";
 
@@ -13,8 +15,42 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Landing} />
-      <Route path="/workspace" component={Workspace} />
-      <Route path="/note/:id" component={Workspace} />
+      <Route path="/clustering">
+        <AppShell>
+          <ClusteringPage />
+        </AppShell>
+      </Route>
+      <Route path="/workspace">
+        <AppShell>
+          <Workspace />
+        </AppShell>
+      </Route>
+      <Route path="/note/:id">
+        <AppShell>
+          <Workspace />
+        </AppShell>
+      </Route>
+      <Route path="/chat">
+        <AppShell>
+          <div className="flex-1 flex items-center justify-center">
+            <h1 className="text-2xl font-bold text-brevia-primary">Chat & Planner Coming Soon</h1>
+          </div>
+        </AppShell>
+      </Route>
+      <Route path="/pdf">
+        <AppShell>
+          <div className="flex-1 flex items-center justify-center">
+            <h1 className="text-2xl font-bold text-brevia-primary">PDF Viewer Coming Soon</h1>
+          </div>
+        </AppShell>
+      </Route>
+      <Route path="/notebook">
+        <AppShell>
+          <div className="flex-1 flex items-center justify-center">
+            <h1 className="text-2xl font-bold text-brevia-primary">Research Notebook Coming Soon</h1>
+          </div>
+        </AppShell>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
@@ -39,7 +75,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="min-h-screen bg-ai-black text-ai-text">
+        <div className="min-h-screen bg-brevia-primary text-brevia-primary">
           <Toaster />
           <Router />
         </div>

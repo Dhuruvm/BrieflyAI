@@ -315,48 +315,62 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
             <div ref={messagesEndRef} />
           </div>
 
-          {/* ChatGPT-Style Input Area */}
-          <div className="p-4 pb-6 border-t border-border bg-background">
+          {/* Professional Mobile-First Input Area */}
+          <div className="p-3 sm:p-4 pb-4 sm:pb-6 border-t border-border bg-background/80 backdrop-blur-xl">
             <div className="max-w-4xl mx-auto">
-              <div className="chat-input-container flex items-end space-x-3">
-                <div className="flex space-x-2">
-                  <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
-                    <Paperclip className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50">
-                    <Mic className="h-4 w-4" />
-                  </Button>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative bg-card border border-border rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 p-3 sm:p-4"
+              >
+                <div className="flex items-start space-x-2 sm:space-x-3">
+                  <div className="flex flex-col space-y-2 pt-2">
+                    <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200">
+                      <Paperclip className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-all duration-200">
+                      <Mic className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <Textarea
+                      ref={textareaRef}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Ask me anything..."
+                      className="min-h-[60px] sm:min-h-[70px] max-h-32 sm:max-h-40 resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm sm:text-base placeholder:text-muted-foreground/70 leading-relaxed p-0"
+                      disabled={isProcessing}
+                    />
+                    <div className="flex items-center justify-between pt-2 text-xs text-muted-foreground">
+                      <span className="hidden sm:inline">Shift+Enter for new lines</span>
+                      <span className="sm:hidden">⇧↵ new line</span>
+                      <span>{inputValue.length}/2000</span>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <Button
+                      onClick={handleSendMessage}
+                      disabled={!inputValue.trim() || isProcessing}
+                      size="sm"
+                      className="p-2 h-8 w-8 sm:h-9 sm:w-9 rounded-xl bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-200"
+                    >
+                      {isProcessing ? (
+                        <motion.div 
+                          animate={{ rotate: 360 }} 
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="rounded-full h-4 w-4 border-2 border-white border-t-transparent" 
+                        />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
-                
-                <div className="flex-1 relative">
-                  <Textarea
-                    ref={textareaRef}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Ask me anything..."
-                    className="resize-none border-0 bg-transparent text-sm min-h-[40px] max-h-32 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                    disabled={isProcessing}
-                  />
-                </div>
-                
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || isProcessing}
-                  size="sm"
-                  className="p-2 h-8 w-8 bg-primary hover:bg-primary/90 text-primary-foreground"
-                >
-                  {isProcessing ? (
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-              
-              <div className="flex items-center justify-center mt-3 text-xs text-muted-foreground">
-                <span>Shift+Enter for new lines</span>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

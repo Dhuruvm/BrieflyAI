@@ -185,20 +185,59 @@ export default function Workspace() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Main Content Container */}
-        <div className="max-w-7xl mx-auto p-6 lg:p-8">
-          <div className="grid lg:grid-cols-2 gap-8 h-full">
+        <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+          {/* Header Section */}
+          <div className="mb-8">
+            <div className="text-center mb-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 animate-fade-in">
+                AI Research Workbench
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-lg animate-fade-in-delay">
+                Advanced clustering and note generation powered by AI
+              </p>
+            </div>
+            
+            {/* Quick Actions Bar */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-8 animate-slide-up">
+              <div className="flex-1">
+                <div 
+                  onClick={() => setLocation('/clustering')}
+                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-300 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 cursor-pointer group"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <i className="fas fa-brain text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">Clustering Analysis</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">AI-powered document clustering</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1">
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-green-300 dark:hover:border-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-200 cursor-pointer group">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <i className="fas fa-file-alt text-green-600 dark:text-green-400"></i>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">Note Generation</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Smart structured notes</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
             
             {/* Input Section */}
-            <div className="flex flex-col">
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 shadow-sm">
-                <h2 className="text-2xl font-semibold mb-8 text-gray-900 dark:text-white text-center">Upload Your Content</h2>
-                
-                {/* Professional Upload Zone */}
-                <UploadZone 
-                  onFileSelect={handleFileUpload}
-                  isUploading={isUploading || processContentMutation.isPending}
-                  className="mb-8"
-                />
+            <div className="flex flex-col order-2 lg:order-1">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 md:p-8 shadow-sm animate-slide-up-delay">
+                <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900 dark:text-white text-center">Create & Analyze</h2>
+
 
                 {/* Clean Input Container */}
                 <div className="space-y-6">
@@ -268,23 +307,23 @@ export default function Workspace() {
                     </div>
                   </div>
 
-                  {/* Quick Actions */}
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* AI Tools Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Button
+                      onClick={() => setLocation('/clustering')}
+                      variant="outline"
+                      className="bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 border-purple-200 dark:border-purple-700 hover:border-purple-300 dark:hover:border-purple-600 p-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
+                    >
+                      <i className="fas fa-project-diagram text-purple-600 dark:text-purple-400 mr-3 group-hover:scale-110 transition-transform"></i>
+                      <span className="text-purple-700 dark:text-purple-300 font-medium">Clustering</span>
+                    </Button>
                     <Button
                       onClick={startRecording}
                       variant="outline"
-                      className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 p-4 rounded-lg transition-colors flex items-center justify-center group"
+                      className="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 border-green-200 dark:border-green-700 hover:border-green-300 dark:hover:border-green-600 p-4 rounded-lg transition-all duration-200 flex items-center justify-center group"
                     >
-                      <i className="fas fa-microphone text-gray-600 dark:text-gray-400 mr-3"></i>
-                      <span className="text-gray-700 dark:text-gray-300">Voice Record</span>
-                    </Button>
-                    <Button
-                      onClick={() => setShowTextInput(!showTextInput)}
-                      variant="outline"
-                      className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 p-4 rounded-lg transition-colors flex items-center justify-center group"
-                    >
-                      <i className="fas fa-keyboard text-gray-600 dark:text-gray-400 mr-3"></i>
-                      <span className="text-gray-700 dark:text-gray-300">Type Text</span>
+                      <i className="fas fa-microphone text-green-600 dark:text-green-400 mr-3 group-hover:scale-110 transition-transform"></i>
+                      <span className="text-green-700 dark:text-green-300 font-medium">Voice Input</span>
                     </Button>
                   </div>
 
@@ -324,11 +363,11 @@ export default function Workspace() {
               </div>
             </div>
 
-            {/* Output Section */}
-            <div className="flex flex-col">
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 shadow-sm h-full">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Generated Notes</h2>
+            {/* Results Section */}
+            <div className="flex flex-col order-1 lg:order-2">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 md:p-8 shadow-sm h-full animate-slide-up">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                  <h2 className="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white">AI Results</h2>
                   {currentNote && (
                     <div className="flex space-x-3">
                       <Button 
@@ -394,15 +433,27 @@ export default function Workspace() {
                       />
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-full min-h-[400px]">
-                      <div className="text-center">
-                        <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                          <i className="fas fa-brain text-gray-600 dark:text-gray-400 text-3xl"></i>
+                    <div className="flex items-center justify-center h-full min-h-[300px] md:min-h-[400px]">
+                      <div className="text-center max-w-md mx-auto">
+                        <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl flex items-center justify-center mb-6 mx-auto animate-pulse-gentle">
+                          <i className="fas fa-brain text-blue-600 dark:text-blue-400 text-2xl md:text-3xl"></i>
                         </div>
-                        <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Ready to Generate Notes</h3>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
-                          Upload files, paste text, or share URLs to get AI-powered structured notes with summaries, key points, and actionable insights.
+                        <h3 className="text-lg md:text-xl font-semibold mb-3 text-gray-900 dark:text-white">AI Workbench Ready</h3>
+                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm md:text-base">
+                          Start with clustering analysis or generate intelligent notes from your content using advanced AI models.
                         </p>
+                        
+                        {/* Feature Highlights */}
+                        <div className="grid grid-cols-2 gap-3 mt-6 text-xs md:text-sm">
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                            <i className="fas fa-sitemap text-purple-600 dark:text-purple-400 mb-1"></i>
+                            <p className="text-gray-700 dark:text-gray-300 font-medium">Smart Clustering</p>
+                          </div>
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                            <i className="fas fa-file-alt text-green-600 dark:text-green-400 mb-1"></i>
+                            <p className="text-gray-700 dark:text-gray-300 font-medium">Auto Notes</p>
+                          </div>
+                        </div>
                         
                         {/* Show NoteGen preview when content is available */}
                         {textContent && (

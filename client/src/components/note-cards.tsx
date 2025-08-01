@@ -146,19 +146,19 @@ export default function NoteCards({ note }: NoteCardsProps) {
           animate="visible"
           variants={cardVariants}
         >
-          <Card className="note-card bg-ai-surface border-ai-border">
+          <Card className="note-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
-                <div className="w-8 h-8 bg-ai-green/20 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-image text-ai-green"></i>
+                <div className="w-8 h-8 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-3">
+                  <i className="fas fa-image text-green-600 dark:text-green-400"></i>
                 </div>
-                <h3 className="text-xl font-semibold">Visual Cards</h3>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Visual Cards</h3>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {note.visualCards.map((card, index) => (
-                  <div key={index} className="bg-ai-dark p-4 rounded-xl border border-ai-border text-center">
+                  <div key={index} className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl border border-gray-200 dark:border-gray-600 text-center">
                     <i className={`${card.icon} ${getColorClass(card.color)} text-2xl mb-2`}></i>
-                    <p className="text-sm text-ai-text-secondary">{card.label}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{card.label}</p>
                     <p className={`text-xl font-bold ${getColorClass(card.color)}`}>{card.value}</p>
                   </div>
                 ))}
@@ -177,7 +177,7 @@ export default function NoteCards({ note }: NoteCardsProps) {
         className="flex flex-col sm:flex-row gap-4"
       >
         <Button 
-          className="flex-1 bg-ai-blue hover:bg-ai-blue-dark px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center"
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center"
           onClick={() => window.open(`/api/notes/${note.id}/download-pdf`, '_blank')}
         >
           <i className="fas fa-download mr-2"></i>
@@ -185,7 +185,7 @@ export default function NoteCards({ note }: NoteCardsProps) {
         </Button>
         <Button 
           variant="outline"
-          className="flex-1 border-ai-border hover:border-ai-blue px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center"
+          className="flex-1 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center"
         >
           <i className="fas fa-share mr-2"></i>
           Share URL

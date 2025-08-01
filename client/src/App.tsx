@@ -16,14 +16,14 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Landing} />
-      <Route path="/clustering">
-        <AppShell>
-          <ClusteringPage />
-        </AppShell>
-      </Route>
       <Route path="/workspace">
         <AppShell>
           <Workspace />
+        </AppShell>
+      </Route>
+      <Route path="/clustering">
+        <AppShell>
+          <ClusteringPage />
         </AppShell>
       </Route>
       <Route path="/note/:id">
@@ -34,21 +34,21 @@ function Router() {
       <Route path="/chat">
         <AppShell>
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Chat & Planner Coming Soon</h1>
+            <h1 className="text-2xl font-bold text-foreground">Chat & Planner Coming Soon</h1>
           </div>
         </AppShell>
       </Route>
       <Route path="/pdf">
         <AppShell>
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">PDF Viewer Coming Soon</h1>
+            <h1 className="text-2xl font-bold text-foreground">PDF Viewer Coming Soon</h1>
           </div>
         </AppShell>
       </Route>
       <Route path="/notebook">
         <AppShell>
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Research Notebook Coming Soon</h1>
+            <h1 className="text-2xl font-bold text-foreground">Research Notebook Coming Soon</h1>
           </div>
         </AppShell>
       </Route>
@@ -70,12 +70,18 @@ function App() {
   }, []);
 
   if (isLoading) {
-    return <LoadingPage />;
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme="dark" storageKey="brevia-ui-theme">
+          <LoadingPage />
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
   }
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="brevia-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="brevia-ui-theme">
         <TooltipProvider>
           <div className="min-h-screen bg-background text-foreground font-sans antialiased">
             <Toaster />

@@ -104,7 +104,7 @@ export function Sidebar() {
 
   if (sidebarCollapsed) {
     return (
-      <div className="w-16 chatgpt-sidebar flex flex-col items-center py-4 space-y-4">
+      <div className="w-16 bg-card border-r border-border flex flex-col items-center py-4 space-y-4">
         <Button
           variant="ghost"
           size="sm"
@@ -139,7 +139,7 @@ export function Sidebar() {
   }
 
   return (
-    <div className="w-80 chatgpt-sidebar flex flex-col">
+    <div className="w-80 bg-card border-r border-border flex flex-col">
       {/* Header */}
       <div className="sidebar-header p-6">
         <div className="flex items-center justify-between mb-6">

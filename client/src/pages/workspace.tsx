@@ -175,10 +175,10 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
-      <div className="header-modern flex items-center justify-between p-4">
+      <div className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50 flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center shadow-sm">
-            <Brain className="h-5 w-5 text-white" />
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+            <Brain className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
             <h1 className="text-lg font-semibold text-foreground">Brevia Research Assistant</h1>
@@ -186,7 +186,7 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <Badge className="status-pill-success">
+          <Badge className="bg-green-100 dark:bg-green-900 dark:bg-opacity-20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700">
             <Zap className="h-3 w-3 mr-1" />
             Online
           </Badge>

@@ -183,46 +183,15 @@ export default function Workspace() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-ai-black/80 backdrop-blur-lg border-b border-ai-border z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Button
-                variant="ghost"
-                onClick={() => setLocation("/")}
-                className="text-ai-text-secondary hover:text-ai-text mr-4 p-2"
-              >
-                <i className="fas fa-arrow-left"></i>
-              </Button>
-              <img 
-                src={brieflyLogo} 
-                alt="Briefly.AI" 
-                className="h-12 w-auto"
-              />
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="text-ai-text-secondary hover:text-ai-text p-2">
-                <i className="fas fa-history"></i>
-              </Button>
-              <Button variant="ghost" className="text-ai-text-secondary hover:text-ai-text p-2">
-                <i className="fas fa-cog"></i>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="pt-16 min-h-screen bg-gradient-to-br from-ai-black via-ai-darker to-ai-black">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         {/* Main Content Container */}
         <div className="max-w-7xl mx-auto p-6 lg:p-8">
           <div className="grid lg:grid-cols-2 gap-8 h-full">
             
             {/* Input Section */}
             <div className="flex flex-col">
-              <div className="bg-ai-surface/50 backdrop-blur-xl border border-ai-border/50 rounded-2xl p-8 shadow-2xl">
-                <h2 className="text-3xl font-bold mb-8 logo-text text-center">Upload Your Content</h2>
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 shadow-sm">
+                <h2 className="text-2xl font-semibold mb-8 text-gray-900 dark:text-white text-center">Upload Your Content</h2>
                 
                 {/* Professional Upload Zone */}
                 <UploadZone 
@@ -231,37 +200,37 @@ export default function Workspace() {
                   className="mb-8"
                 />
 
-                {/* ChatGPT-style Input Container */}
+                {/* Clean Input Container */}
                 <div className="space-y-6">
-                  {/* Text Input with ChatGPT styling */}
+                  {/* Text Input with clean styling */}
                   <div className="relative">
-                    <div className="bg-ai-dark/80 border border-ai-border rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-gray-300 dark:hover:border-gray-500 transition-colors">
                       <Textarea
-                        placeholder="Message Briefly.AI... Describe what you want to analyze or paste your content here"
+                        placeholder="Message Brevia AI... Describe what you want to analyze or paste your content here"
                         value={textContent}
                         onChange={(e) => setTextContent(e.target.value)}
-                        className="w-full min-h-[120px] bg-transparent border-0 text-ai-text placeholder-ai-text-muted resize-none focus:ring-0 focus:outline-none text-lg leading-relaxed"
+                        className="w-full min-h-[120px] bg-transparent border-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none focus:ring-0 focus:outline-none text-base leading-relaxed"
                       />
-                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-ai-border/30">
+                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                         <div className="flex items-center space-x-4">
                           <Button
                             onClick={startRecording}
                             variant="ghost"
                             size="sm"
-                            className="text-ai-text-secondary hover:text-ai-green hover:bg-ai-green/10 p-2 rounded-lg transition-all"
+                            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 p-2 rounded-lg transition-colors"
                           >
                             <i className="fas fa-microphone"></i>
                           </Button>
-                          <span className="text-xs text-ai-text-muted">Press / for commands</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Press / for commands</span>
                         </div>
                         <Button
                           onClick={handleTextProcess}
                           disabled={!textContent.trim() || processContentMutation.isPending}
-                          className="bg-ai-blue hover:bg-ai-blue-dark disabled:bg-ai-border disabled:cursor-not-allowed px-6 py-2 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+                          className="bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-gray-900 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg font-medium transition-colors"
                         >
                           {processContentMutation.isPending ? (
                             <div className="flex items-center">
-                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
                               Processing...
                             </div>
                           ) : (
@@ -277,20 +246,20 @@ export default function Workspace() {
 
                   {/* URL Input */}
                   <div className="relative">
-                    <div className="bg-ai-dark/80 border border-ai-border rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-gray-300 dark:hover:border-gray-500 transition-colors">
                       <Input
                         type="url"
                         placeholder="🔗 Paste YouTube/Vimeo URL here..."
                         value={videoUrl}
                         onChange={(e) => setVideoUrl(e.target.value)}
-                        className="w-full bg-transparent border-0 text-ai-text placeholder-ai-text-muted focus:ring-0 focus:outline-none text-lg"
+                        className="w-full bg-transparent border-0 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-0 focus:outline-none text-base"
                       />
                       {videoUrl && (
-                        <div className="flex justify-end mt-3 pt-3 border-t border-ai-border/30">
+                        <div className="flex justify-end mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                           <Button
                             onClick={handleVideoUrlProcess}
                             disabled={processContentMutation.isPending}
-                            className="bg-ai-green hover:bg-ai-green/80 px-6 py-2 rounded-xl font-medium transition-all duration-300"
+                            className="bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-gray-900 px-6 py-2 rounded-lg font-medium transition-colors"
                           >
                             {processContentMutation.isPending ? "Processing..." : "Process Video"}
                           </Button>
@@ -304,30 +273,30 @@ export default function Workspace() {
                     <Button
                       onClick={startRecording}
                       variant="outline"
-                      className="bg-ai-dark/50 hover:bg-ai-green/10 border-ai-border hover:border-ai-green p-4 rounded-xl transition-all duration-300 flex items-center justify-center group"
+                      className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 p-4 rounded-lg transition-colors flex items-center justify-center group"
                     >
-                      <i className="fas fa-microphone text-ai-green mr-3 group-hover:scale-110 transition-transform"></i>
-                      <span>Voice Record</span>
+                      <i className="fas fa-microphone text-gray-600 dark:text-gray-400 mr-3"></i>
+                      <span className="text-gray-700 dark:text-gray-300">Voice Record</span>
                     </Button>
                     <Button
                       onClick={() => setShowTextInput(!showTextInput)}
                       variant="outline"
-                      className="bg-ai-dark/50 hover:bg-ai-blue/10 border-ai-border hover:border-ai-blue p-4 rounded-xl transition-all duration-300 flex items-center justify-center group"
+                      className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 p-4 rounded-lg transition-colors flex items-center justify-center group"
                     >
-                      <i className="fas fa-keyboard text-ai-blue mr-3 group-hover:scale-110 transition-transform"></i>
-                      <span>Type Text</span>
+                      <i className="fas fa-keyboard text-gray-600 dark:text-gray-400 mr-3"></i>
+                      <span className="text-gray-700 dark:text-gray-300">Type Text</span>
                     </Button>
                   </div>
 
                   {/* Advanced NoteGen Toggle */}
-                  <div className="mt-6 pt-6 border-t border-ai-border/30">
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
                     <Button
                       onClick={() => setShowAdvancedPanel(!showAdvancedPanel)}
                       variant="outline"
-                      className="w-full bg-gradient-to-r from-purple-600/10 to-blue-600/10 hover:from-purple-600/20 hover:to-blue-600/20 border-purple-400/30 hover:border-purple-400/50 p-4 rounded-xl transition-all duration-300 flex items-center justify-center group"
+                      className="w-full bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 border-blue-200 dark:border-blue-700 hover:border-blue-300 dark:hover:border-blue-600 p-4 rounded-lg transition-colors flex items-center justify-center group"
                     >
-                      <i className="fas fa-brain text-purple-400 mr-3 group-hover:scale-110 transition-transform"></i>
-                      <span className="font-medium">
+                      <i className="fas fa-brain text-blue-600 dark:text-blue-400 mr-3"></i>
+                      <span className="font-medium text-blue-700 dark:text-blue-300">
                         {showAdvancedPanel ? 'Hide Advanced NoteGen' : 'Show Advanced NoteGen Engine'}
                       </span>
                     </Button>
@@ -357,15 +326,15 @@ export default function Workspace() {
 
             {/* Output Section */}
             <div className="flex flex-col">
-              <div className="bg-ai-surface/50 backdrop-blur-xl border border-ai-border/50 rounded-2xl p-8 shadow-2xl h-full">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 shadow-sm h-full">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-bold logo-text">Generated Notes</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Generated Notes</h2>
                   {currentNote && (
                     <div className="flex space-x-3">
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="text-ai-text-secondary hover:text-ai-blue hover:bg-ai-blue/10 p-3 rounded-xl transition-all"
+                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition-colors"
                         onClick={() => window.open(`/api/notes/${currentNote.id}/download-pdf`, '_blank')}
                       >
                         <i className="fas fa-download mr-2"></i>
@@ -374,7 +343,7 @@ export default function Workspace() {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="text-ai-text-secondary hover:text-ai-green hover:bg-ai-green/10 p-3 rounded-xl transition-all"
+                        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 p-3 rounded-lg transition-colors"
                       >
                         <i className="fas fa-share mr-2"></i>
                         Share
@@ -386,28 +355,28 @@ export default function Workspace() {
                 {/* AI Status Indicator */}
                 <div className="mb-8">
                   {processContentMutation.isPending ? (
-                    <div className="flex items-center p-4 bg-ai-blue/10 border border-ai-blue/30 rounded-xl">
-                      <div className="w-8 h-8 bg-ai-blue/20 rounded-full flex items-center justify-center mr-3">
-                        <i className="fas fa-robot text-ai-blue animate-pulse"></i>
+                    <div className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-robot text-blue-600 dark:text-blue-400 animate-pulse"></i>
                       </div>
                       <div className="flex-1">
-                        <span className="font-medium text-ai-blue">AI Assistant is thinking</span>
+                        <span className="font-medium text-blue-700 dark:text-blue-300">AI Assistant is thinking</span>
                         <TypingAnimation />
                       </div>
                     </div>
                   ) : currentNote ? (
-                    <div className="flex items-center p-4 bg-ai-green/10 border border-ai-green/30 rounded-xl">
-                      <div className="w-8 h-8 bg-ai-green/20 rounded-full flex items-center justify-center mr-3">
-                        <i className="fas fa-check-circle text-ai-green"></i>
+                    <div className="flex items-center p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+                      <div className="w-8 h-8 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-check-circle text-green-600 dark:text-green-400"></i>
                       </div>
-                      <span className="font-medium text-ai-green">Notes generated successfully!</span>
+                      <span className="font-medium text-green-700 dark:text-green-300">Notes generated successfully!</span>
                     </div>
                   ) : (
-                    <div className="flex items-center p-4 bg-ai-surface/30 border border-ai-border/30 rounded-xl">
-                      <div className="w-8 h-8 bg-ai-border/20 rounded-full flex items-center justify-center mr-3">
-                        <i className="fas fa-robot text-ai-text-muted"></i>
+                    <div className="flex items-center p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
+                      <div className="w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center mr-3">
+                        <i className="fas fa-robot text-gray-600 dark:text-gray-400"></i>
                       </div>
-                      <span className="text-ai-text-muted">Ready to analyze your content</span>
+                      <span className="text-gray-600 dark:text-gray-400">Ready to analyze your content</span>
                     </div>
                   )}
                 </div>
@@ -427,11 +396,11 @@ export default function Workspace() {
                   ) : (
                     <div className="flex items-center justify-center h-full min-h-[400px]">
                       <div className="text-center">
-                        <div className="w-24 h-24 bg-ai-surface/50 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                          <i className="fas fa-brain text-ai-blue text-3xl"></i>
+                        <div className="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                          <i className="fas fa-brain text-gray-600 dark:text-gray-400 text-3xl"></i>
                         </div>
-                        <h3 className="text-2xl font-bold mb-3 text-ai-text-secondary">Ready to Generate Notes</h3>
-                        <p className="text-ai-text-muted max-w-md mx-auto leading-relaxed">
+                        <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Ready to Generate Notes</h3>
+                        <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
                           Upload files, paste text, or share URLs to get AI-powered structured notes with summaries, key points, and actionable insights.
                         </p>
                         
@@ -463,7 +432,6 @@ export default function Workspace() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

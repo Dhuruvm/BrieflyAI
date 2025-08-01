@@ -33,21 +33,21 @@ function Router() {
       <Route path="/chat">
         <AppShell>
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-brevia-primary">Chat & Planner Coming Soon</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Chat & Planner Coming Soon</h1>
           </div>
         </AppShell>
       </Route>
       <Route path="/pdf">
         <AppShell>
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-brevia-primary">PDF Viewer Coming Soon</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">PDF Viewer Coming Soon</h1>
           </div>
         </AppShell>
       </Route>
       <Route path="/notebook">
         <AppShell>
           <div className="flex-1 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-brevia-primary">Research Notebook Coming Soon</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Research Notebook Coming Soon</h1>
           </div>
         </AppShell>
       </Route>
@@ -75,7 +75,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="min-h-screen bg-brevia-primary text-brevia-primary">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
           <Toaster />
           <Router />
         </div>

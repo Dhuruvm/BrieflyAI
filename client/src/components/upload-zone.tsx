@@ -36,8 +36,8 @@ export default function UploadZone({
     <Card
       {...getRootProps()}
       className={cn(
-        "upload-zone bg-ai-surface border-2 border-dashed transition-all duration-300 cursor-pointer mb-6",
-        isDragActive ? "border-ai-blue bg-ai-blue/5" : "border-ai-border hover:border-ai-blue",
+        "upload-zone bg-gray-50 dark:bg-gray-700 border-2 border-dashed transition-all duration-300 cursor-pointer mb-6",
+        isDragActive ? "border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-600" : "border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500",
         isUploading && "opacity-50 cursor-not-allowed",
         className
       )}
@@ -47,16 +47,16 @@ export default function UploadZone({
         <div className="mb-6">
           <i className={cn(
             "text-6xl mb-4",
-            isDragActive ? "fas fa-cloud-download-alt text-ai-blue" : "fas fa-cloud-upload-alt text-ai-blue"
+            isDragActive ? "fas fa-cloud-download-alt text-gray-600 dark:text-gray-400" : "fas fa-cloud-upload-alt text-gray-500 dark:text-gray-400"
           )}></i>
-          <h3 className="text-xl font-semibold mb-2">
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
             {isDragActive ? "Drop your file here" : "Drag & Drop Your Files"}
           </h3>
-          <p className="text-ai-text-secondary">
+          <p className="text-gray-600 dark:text-gray-400">
             {isUploading ? "Processing..." : "or click to browse"}
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-4 text-sm text-ai-text-muted">
+        <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
           <span><i className="fas fa-file-text mr-1"></i>Text</span>
           <span><i className="fas fa-file-pdf mr-1"></i>PDF</span>
           <span><i className="fas fa-microphone mr-1"></i>Audio</span>

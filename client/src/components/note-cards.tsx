@@ -11,21 +11,21 @@ interface NoteCardsProps {
 export default function NoteCards({ note }: NoteCardsProps) {
   const getColorClass = (color: string) => {
     switch (color) {
-      case 'blue': return 'text-ai-blue';
-      case 'green': return 'text-ai-green';
-      case 'amber': return 'text-ai-amber';
-      case 'red': return 'text-ai-red';
-      default: return 'text-ai-blue';
+      case 'blue': return 'text-blue-600 dark:text-blue-400';
+      case 'green': return 'text-green-600 dark:text-green-400';
+      case 'amber': return 'text-amber-600 dark:text-amber-400';
+      case 'red': return 'text-red-600 dark:text-red-400';
+      default: return 'text-blue-600 dark:text-blue-400';
     }
   };
 
   const getBgColorClass = (color: string) => {
     switch (color) {
-      case 'blue': return 'bg-ai-blue/20';
-      case 'green': return 'bg-ai-green/20';
-      case 'amber': return 'bg-ai-amber/20';
-      case 'red': return 'bg-ai-red/20';
-      default: return 'bg-ai-blue/20';
+      case 'blue': return 'bg-blue-50 dark:bg-blue-900/20';
+      case 'green': return 'bg-green-50 dark:bg-green-900/20';
+      case 'amber': return 'bg-amber-50 dark:bg-amber-900/20';
+      case 'red': return 'bg-red-50 dark:bg-red-900/20';
+      default: return 'bg-blue-50 dark:bg-blue-900/20';
     }
   };
 
@@ -51,15 +51,15 @@ export default function NoteCards({ note }: NoteCardsProps) {
         animate="visible"
         variants={cardVariants}
       >
-        <Card className="note-card bg-ai-surface border-ai-border">
+        <Card className="note-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-ai-blue/20 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-heading text-ai-blue"></i>
+              <div className="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mr-3">
+                <i className="fas fa-heading text-blue-600 dark:text-blue-400"></i>
               </div>
-              <h3 className="text-xl font-semibold">Title</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Title</h3>
             </div>
-            <h4 className="text-2xl font-bold text-ai-blue">{note.title}</h4>
+            <h4 className="text-2xl font-bold text-blue-600 dark:text-blue-400">{note.title}</h4>
           </CardContent>
         </Card>
       </motion.div>
@@ -71,15 +71,15 @@ export default function NoteCards({ note }: NoteCardsProps) {
         animate="visible"
         variants={cardVariants}
       >
-        <Card className="note-card bg-ai-surface border-ai-border">
+        <Card className="note-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-ai-green/20 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-file-text text-ai-green"></i>
+              <div className="w-8 h-8 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center mr-3">
+                <i className="fas fa-file-text text-green-600 dark:text-green-400"></i>
               </div>
-              <h3 className="text-xl font-semibold">Summary</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Summary</h3>
             </div>
-            <p className="text-ai-text-secondary leading-relaxed">{note.summary}</p>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{note.summary}</p>
           </CardContent>
         </Card>
       </motion.div>
@@ -91,19 +91,19 @@ export default function NoteCards({ note }: NoteCardsProps) {
         animate="visible"
         variants={cardVariants}
       >
-        <Card className="note-card bg-ai-surface border-ai-border">
+        <Card className="note-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-ai-amber/20 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-list-ul text-ai-amber"></i>
+              <div className="w-8 h-8 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center justify-center mr-3">
+                <i className="fas fa-list-ul text-amber-600 dark:text-amber-400"></i>
               </div>
-              <h3 className="text-xl font-semibold">Key Points</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Key Points</h3>
             </div>
             <ul className="space-y-3">
               {note.keyPoints.map((point, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="w-2 h-2 bg-ai-blue rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  <span className="text-ai-text-secondary">{point}</span>
+                  <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  <span className="text-gray-700 dark:text-gray-300">{point}</span>
                 </li>
               ))}
             </ul>
@@ -118,19 +118,19 @@ export default function NoteCards({ note }: NoteCardsProps) {
         animate="visible"
         variants={cardVariants}
       >
-        <Card className="note-card bg-ai-surface border-ai-border">
+        <Card className="note-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-ai-red/20 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-tasks text-ai-red"></i>
+              <div className="w-8 h-8 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center mr-3">
+                <i className="fas fa-tasks text-red-600 dark:text-red-400"></i>
               </div>
-              <h3 className="text-xl font-semibold">Action Items</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Action Items</h3>
             </div>
             <div className="space-y-3">
               {note.actionItems.map((item, index) => (
                 <div key={index} className="flex items-center">
                   <Checkbox className="mr-3" />
-                  <span className="text-ai-text-secondary">{item}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{item}</span>
                 </div>
               ))}
             </div>

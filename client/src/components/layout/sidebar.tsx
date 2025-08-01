@@ -104,11 +104,11 @@ export function Sidebar() {
 
   if (sidebarCollapsed) {
     return (
-      <div className="w-16 delv-sidebar flex flex-col items-center py-4 space-y-4">
+      <div className="w-16 chatgpt-sidebar flex flex-col items-center py-4 space-y-4">
         <Button
           variant="ghost"
           size="sm"
-          className="w-10 h-10 p-0 text-zinc-400 hover:text-zinc-100"
+          className="w-10 h-10 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
           onClick={() => setSidebarCollapsed(false)}
         >
           <ChevronRight className="h-4 w-4" />
@@ -120,15 +120,15 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`w-10 h-10 p-0 relative ${
+                className={`w-10 h-10 p-0 relative rounded-lg ${
                   location === item.path
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50'
+                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <item.icon className="h-4 w-4" />
                 {item.isNew && (
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" />
                 )}
               </Button>
             </Link>
@@ -139,85 +139,77 @@ export function Sidebar() {
   }
 
   return (
-    <div className="w-80 modern-sidebar flex flex-col">
-      {/* Header with gradient background */}
-      <div className="sidebar-header p-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-blue-600/10 to-teal-600/10 backdrop-blur-3xl"></div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg relative">
-                <Brain className="h-5 w-5 text-white" />
-                <div className="absolute inset-0 bg-white/20 rounded-xl animate-pulse"></div>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400 bg-clip-text text-transparent">Brevia AI</h1>
-                <p className="text-sm text-gray-400 font-medium">Research Platform</p>
-              </div>
+    <div className="w-80 chatgpt-sidebar flex flex-col">
+      {/* Header */}
+      <div className="sidebar-header p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 bg-gray-900 rounded-lg flex items-center justify-center shadow-sm">
+              <Brain className="h-5 w-5 text-white" />
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-8 h-8 p-0 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
-              onClick={() => setSidebarCollapsed(true)}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Brevia AI</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Research Platform</p>
+            </div>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-8 h-8 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            onClick={() => setSidebarCollapsed(true)}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        </div>
 
-          {/* Enhanced Search */}
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-400 transition-colors" />
-            <input
-              type="text"
-              placeholder="Search anything..."
-              className="w-full bg-black/30 backdrop-blur-sm border border-gray-600/30 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-400 focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 focus:outline-none transition-all duration-300 text-sm"
-            />
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/0 via-blue-600/0 to-teal-600/0 group-focus-within:from-purple-600/5 group-focus-within:via-blue-600/5 group-focus-within:to-teal-600/5 transition-all duration-300 pointer-events-none"></div>
-          </div>
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search conversations..."
+            className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg pl-10 pr-4 py-2.5 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-gray-300 dark:focus:border-gray-500 focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-500 focus:outline-none transition-colors text-sm"
+          />
         </div>
       </div>
 
       <ScrollArea className="flex-1 px-4">
         {/* Navigation */}
-        <div className="space-y-3 mb-8">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 px-2">Workspace</h3>
+        <div className="space-y-1 mb-8">
+          <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3 px-3">Workspace</h3>
           {navigationItems.map((item) => (
             <Link key={item.id} href={item.path}>
               <div
-                className={`group relative p-4 rounded-xl transition-all duration-300 cursor-pointer transform hover:scale-[1.02] ${
+                className={`group relative mx-2 px-3 py-2.5 rounded-lg transition-colors cursor-pointer ${
                   location === item.path
-                    ? 'bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-teal-600/20 border border-blue-400/30 shadow-lg shadow-blue-500/10'
-                    : 'hover:bg-gradient-to-r hover:from-gray-800/50 hover:via-gray-700/50 hover:to-gray-800/50 hover:border hover:border-gray-600/30'
+                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                 }`}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
-                <div className="flex items-center space-x-4">
-                  <div className={`p-2 rounded-lg ${location === item.path ? 'bg-blue-500/20' : 'bg-gray-700/50 group-hover:bg-gray-600/50'} transition-all duration-300`}>
-                    <item.icon className={`h-5 w-5 ${location === item.path ? 'text-blue-400' : item.color} group-hover:scale-110 transition-transform duration-300`} />
-                  </div>
+                <div className="flex items-center space-x-3">
+                  <item.icon className={`h-5 w-5 ${location === item.path ? 'text-gray-700 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400'}`} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className={`font-semibold text-sm ${location === item.path ? 'text-white' : 'text-gray-200'} group-hover:text-white transition-colors`}>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium text-sm truncate">
                         {item.label}
                       </span>
                       {item.badge && (
-                        <Badge variant="secondary" className={`text-xs px-2 py-0.5 font-medium ${location === item.path ? 'bg-blue-500/30 text-blue-200 border-blue-400/30' : 'bg-gray-700/50 text-gray-300 border-gray-600/30'}`}>
+                        <Badge variant="secondary" className="text-xs px-1.5 py-0.5 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 border-0">
                           {item.badge}
                         </Badge>
                       )}
                       {item.isNew && (
-                        <div className="flex items-center">
-                          <Sparkles className="h-3 w-3 text-yellow-400 animate-pulse" />
-                          <span className="text-xs bg-yellow-400/20 text-yellow-300 px-1.5 py-0.5 rounded-full ml-1 font-medium">NEW</span>
-                        </div>
+                        <Badge variant="secondary" className="text-xs px-1.5 py-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-0">
+                          NEW
+                        </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors truncate">{item.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">{item.description}</p>
                   </div>
                   {item.comingSoon && (
-                    <Badge variant="outline" className="text-xs border-amber-600/50 text-amber-400 bg-amber-400/10 px-2 py-1 font-medium">
+                    <Badge variant="outline" className="text-xs border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 bg-transparent">
                       Soon
                     </Badge>
                   )}
@@ -225,93 +217,71 @@ export function Sidebar() {
                 
                 {/* Active indicator */}
                 {location === item.path && (
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full shadow-lg" />
-                )}
-                
-                {/* Hover indicator */}
-                {hoveredItem === item.id && location !== item.path && (
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-0.5 h-6 bg-gray-400 rounded-r-full transition-all duration-300" />
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-gray-900 dark:bg-white rounded-r-full" />
                 )}
               </div>
             </Link>
           ))}
         </div>
 
-        <Separator className="bg-zinc-700/50 mb-6" />
+        <Separator className="bg-gray-200 dark:bg-gray-700 mb-6" />
 
         {/* Recent Projects */}
-        <div className="space-y-4 mb-8">
-          <div className="flex items-center justify-between px-2">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Recent Projects</h3>
-            <Button variant="ghost" size="sm" className="w-8 h-8 p-0 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
+        <div className="space-y-3 mb-8">
+          <div className="flex items-center justify-between px-3">
+            <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Recent Projects</h3>
+            <Button variant="ghost" size="sm" className="w-7 h-7 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
               <Plus className="h-4 w-4" />
             </Button>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-1 px-2">
             {recentProjects.map((project) => (
-              <div key={project.id} className="modern-project-card p-4 cursor-pointer group transition-all duration-300 hover:transform hover:scale-[1.02]">
-                <div className="flex items-start justify-between mb-3">
+              <div key={project.id} className="chatgpt-project-card p-3 cursor-pointer group rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-sm text-white truncate group-hover:text-blue-300 transition-colors">
+                    <h4 className="font-medium text-sm text-gray-900 dark:text-white truncate group-hover:text-gray-700 dark:group-hover:text-gray-200">
                       {project.name}
                     </h4>
-                    <p className="text-xs text-gray-400 mt-1 font-medium">{project.type}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{project.type}</p>
                   </div>
-                  <div className={`w-3 h-3 rounded-full mt-0.5 shadow-lg ${
-                    project.status === 'active' ? 'bg-green-400 shadow-green-400/50 animate-pulse' :
-                    project.status === 'completed' ? 'bg-blue-400 shadow-blue-400/50' : 'bg-amber-400 shadow-amber-400/50'
+                  <div className={`w-2 h-2 rounded-full mt-1 ${
+                    project.status === 'active' ? 'bg-green-500' :
+                    project.status === 'completed' ? 'bg-blue-500' : 'bg-amber-500'
                   }`} />
                 </div>
                 
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center space-x-2 text-gray-400 group-hover:text-gray-300 transition-colors">
-                    <div className="flex items-center space-x-1">
-                      <Database className="h-3 w-3" />
-                      <span className="font-medium">{project.papers} papers</span>
-                    </div>
+                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center space-x-1">
+                    <Database className="h-3 w-3" />
+                    <span>{project.papers} papers</span>
                   </div>
-                  <div className="flex items-center space-x-1 text-gray-500 group-hover:text-gray-400 transition-colors">
+                  <div className="flex items-center space-x-1">
                     <Clock className="h-3 w-3" />
-                    <span className="font-medium">{project.lastAccessed}</span>
+                    <span>{project.lastAccessed}</span>
                   </div>
                 </div>
-
-                {/* Progress bar for active projects */}
-                {project.status === 'active' && (
-                  <div className="mt-3 pt-3 border-t border-gray-700/50">
-                    <div className="w-full bg-gray-700/50 rounded-full h-1.5">
-                      <div className="bg-gradient-to-r from-green-400 to-blue-400 h-1.5 rounded-full w-3/4 transition-all duration-500"></div>
-                    </div>
-                  </div>
-                )}
               </div>
             ))}
           </div>
         </div>
 
-        <Separator className="bg-zinc-700/50 mb-6" />
+        <Separator className="bg-gray-200 dark:bg-gray-700 mb-6" />
 
         {/* Quick Actions */}
-        <div className="space-y-4 mb-8">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2">Quick Actions</h3>
-          <div className="space-y-2">
-            <Button variant="ghost" size="sm" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-purple-600/20 hover:to-blue-600/20 border-0 rounded-xl p-3 transition-all duration-300 group">
-              <div className="p-1.5 bg-purple-500/20 rounded-lg mr-3 group-hover:bg-purple-500/30 transition-all duration-300">
-                <Target className="h-4 w-4 text-purple-400" />
-              </div>
+        <div className="space-y-3 mb-8">
+          <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide px-3">Quick Actions</h3>
+          <div className="space-y-1 px-2">
+            <Button variant="ghost" size="sm" className="w-full justify-start text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-0 rounded-lg px-3 py-2.5 transition-colors">
+              <Target className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400" />
               <span className="font-medium">Start New Research</span>
             </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-teal-600/20 border-0 rounded-xl p-3 transition-all duration-300 group">
-              <div className="p-1.5 bg-blue-500/20 rounded-lg mr-3 group-hover:bg-blue-500/30 transition-all duration-300">
-                <Download className="h-4 w-4 text-blue-400" />
-              </div>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-0 rounded-lg px-3 py-2.5 transition-colors">
+              <Download className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400" />
               <span className="font-medium">Import Papers</span>
             </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-teal-600/20 hover:to-green-600/20 border-0 rounded-xl p-3 transition-all duration-300 group">
-              <div className="p-1.5 bg-teal-500/20 rounded-lg mr-3 group-hover:bg-teal-500/30 transition-all duration-300">
-                <GitBranch className="h-4 w-4 text-teal-400" />
-              </div>
+            <Button variant="ghost" size="sm" className="w-full justify-start text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-0 rounded-lg px-3 py-2.5 transition-colors">
+              <GitBranch className="h-4 w-4 mr-3 text-gray-500 dark:text-gray-400" />
               <span className="font-medium">Export Analysis</span>
             </Button>
           </div>
@@ -319,39 +289,32 @@ export function Sidebar() {
       </ScrollArea>
 
       {/* Footer */}
-      <div className="p-6 border-t border-gray-700/30 relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <div className="relative z-10">
-          <div className="flex items-center space-x-4 mb-4">
-            <Avatar className="w-10 h-10 ring-2 ring-blue-400/30">
-              <AvatarImage src="/api/placeholder/32/32" />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm font-semibold">U</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm text-white">Researcher</p>
-              <div className="flex items-center space-x-2">
-                <p className="text-xs text-gray-400">Pro Plan</p>
-                <div className="w-1 h-1 bg-green-400 rounded-full animate-pulse"></div>
-                <p className="text-xs text-green-400 font-medium">Active</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm" className="w-8 h-8 p-0 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
-              <Settings className="h-4 w-4" />
-            </Button>
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center space-x-3 mb-4">
+          <Avatar className="w-9 h-9">
+            <AvatarImage src="/api/placeholder/32/32" />
+            <AvatarFallback className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-semibold">U</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-sm text-gray-900 dark:text-white">Researcher</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Pro Plan</p>
           </div>
-          
-          <div className="modern-stats-card p-4 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-gray-400 font-medium">API Usage</span>
-              <span className="text-blue-400 font-bold">73%</span>
-            </div>
-            <div className="w-full bg-gray-700/50 rounded-full h-2 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-400 via-purple-500 to-teal-400 h-2 rounded-full transition-all duration-500 shadow-lg" style={{ width: '73%' }}></div>
-            </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-              <span>2.1K requests</span>
-              <span>27% remaining</span>
-            </div>
+          <Button variant="ghost" size="sm" className="w-8 h-8 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+            <Settings className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="chatgpt-stats-card p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span className="text-gray-600 dark:text-gray-400 font-medium">API Usage</span>
+            <span className="text-gray-900 dark:text-white font-semibold">73%</span>
+          </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+            <div className="bg-gray-900 dark:bg-white h-1.5 rounded-full transition-all duration-300" style={{ width: '73%' }}></div>
+          </div>
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <span>2.1K requests</span>
+            <span>27% remaining</span>
           </div>
         </div>
       </div>

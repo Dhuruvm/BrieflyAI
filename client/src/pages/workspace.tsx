@@ -24,7 +24,8 @@ import {
   Settings,
   MoreHorizontal,
   Menu,
-  Sidebar
+  Sidebar,
+  BarChart3
 } from "lucide-react";
 
 interface Message {

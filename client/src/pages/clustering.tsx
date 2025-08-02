@@ -184,8 +184,8 @@ export default function ClusteringPage() {
             </div>
 
             {/* Tab Content */}
-            <AnimatePresence mode="wait">
-              <TabsContent value="upload" className="space-y-6 mt-0">
+            <div>
+              <TabsContent key="upload" value="upload" className="space-y-6 mt-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -213,7 +213,7 @@ export default function ClusteringPage() {
                             onChange={handleFileUpload}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                           />
-                          <div className={`modern-embed border-2 border-dashed transition-all duration-300 p-8 sm:p-12 text-center hover:border-primary/50 hover:bg-primary/5 ${uploadedFile ? 'border-primary bg-primary/10' : 'border-muted-foreground/25'}`}>
+                          <div className={`professional-upload-zone border-2 border-dashed transition-all duration-300 p-6 sm:p-8 lg:p-12 text-center hover:border-primary/50 hover:bg-primary/5 ${uploadedFile ? 'border-primary bg-gradient-to-br from-primary/10 to-primary/5' : 'border-muted-foreground/25'}`}>
                             <div className="space-y-4">
                               <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                                 {uploadedFile ? (
@@ -244,17 +244,17 @@ export default function ClusteringPage() {
                         </div>
 
                         {/* Supported Formats */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                           {[
-                            { icon: FileText, name: "CSV", desc: "Comma separated" },
-                            { icon: Database, name: "JSON", desc: "JavaScript object" },
-                            { icon: FileText, name: "Excel", desc: "XLSX/XLS files" },
-                            { icon: Layers, name: "TSV", desc: "Tab separated" }
+                            { icon: FileText, name: "CSV", desc: "Comma separated", color: "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700" },
+                            { icon: Database, name: "JSON", desc: "JavaScript object", color: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700" },
+                            { icon: FileText, name: "Excel", desc: "XLSX/XLS files", color: "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-700" },
+                            { icon: Layers, name: "TSV", desc: "Tab separated", color: "bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-700" }
                           ].map((format, index) => (
-                            <div key={index} className="p-4 border border-border rounded-xl text-center hover:bg-muted/50 transition-colors">
-                              <format.icon className="h-6 w-6 mx-auto mb-2 text-primary" />
-                              <div className="text-sm font-medium text-foreground">{format.name}</div>
-                              <div className="text-xs text-muted-foreground">{format.desc}</div>
+                            <div key={format.name} className={`professional-format-card p-3 sm:p-4 border rounded-xl text-center hover:scale-105 transition-all duration-200 ${format.color}`}>
+                              <format.icon className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2" />
+                              <div className="text-xs sm:text-sm font-medium">{format.name}</div>
+                              <div className="text-xs opacity-75 hidden sm:block">{format.desc}</div>
                             </div>
                           ))}
                         </div>
@@ -281,7 +281,7 @@ export default function ClusteringPage() {
                 </motion.div>
               </TabsContent>
 
-              <TabsContent value="configure" className="space-y-6 mt-0">
+              <TabsContent key="configure" value="configure" className="space-y-6 mt-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -290,7 +290,7 @@ export default function ClusteringPage() {
                   className="space-y-6"
                 >
                   {/* Algorithm Configuration */}
-                  <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
                     <Card className="modern-card">
                       <CardHeader>
                         <CardTitle className="flex items-center">
@@ -375,7 +375,7 @@ export default function ClusteringPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                         <div className="space-y-2">
                           <Label>Distance Metric</Label>
                           <Select defaultValue="euclidean">
@@ -414,28 +414,28 @@ export default function ClusteringPage() {
                   </Card>
 
                   {/* Start Analysis Button */}
-                  <Card className="modern-card border-primary/20 bg-primary/5">
-                    <CardContent className="pt-6">
-                      <div className="text-center space-y-4">
+                  <Card className="professional-cta-card">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="text-center space-y-3 sm:space-y-4">
                         <div className="flex items-center justify-center space-x-2 text-primary">
-                          <Brain className="h-5 w-5" />
-                          <span className="font-medium">Ready to start analysis</span>
+                          <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
+                          <span className="font-medium text-sm sm:text-base">Ready to start analysis</span>
                         </div>
                         <Button 
                           size="lg" 
-                          className="btn-modern-primary px-8"
+                          className="professional-primary-btn w-full sm:w-auto px-6 sm:px-8 py-3"
                           onClick={startClustering}
                           disabled={isProcessing}
                         >
                           {isProcessing ? (
                             <>
-                              <Sparkles className="h-5 w-5 mr-2 animate-pulse" />
-                              Processing...
+                              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 mr-2 animate-pulse" />
+                              <span className="text-sm sm:text-base">Processing...</span>
                             </>
                           ) : (
                             <>
-                              <Play className="h-5 w-5 mr-2" />
-                              Start Bravia Cluster Analysis
+                              <Play className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                              <span className="text-sm sm:text-base">Start Bravia Cluster Analysis</span>
                             </>
                           )}
                         </Button>
@@ -445,7 +445,7 @@ export default function ClusteringPage() {
                 </motion.div>
               </TabsContent>
 
-              <TabsContent value="results" className="space-y-6 mt-0">
+              <TabsContent key="results" value="results" className="space-y-6 mt-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -487,21 +487,23 @@ export default function ClusteringPage() {
                   {!isProcessing && (
                     <>
                       {/* Summary Cards */}
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
                         {[
-                          { label: "Total Clusters", value: "3", icon: GitBranch, color: "text-blue-600" },
-                          { label: "Data Points", value: "5,262", icon: Database, color: "text-green-600" },
-                          { label: "Silhouette Score", value: "0.73", icon: Target, color: "text-purple-600" },
-                          { label: "Processing Time", value: "2.4s", icon: Zap, color: "text-orange-600" }
+                          { label: "Total Clusters", value: "3", icon: GitBranch, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-900/20" },
+                          { label: "Data Points", value: "5,262", icon: Database, color: "text-green-600 dark:text-green-400", bg: "bg-green-50 dark:bg-green-900/20" },
+                          { label: "Silhouette Score", value: "0.73", icon: Target, color: "text-purple-600 dark:text-purple-400", bg: "bg-purple-50 dark:bg-purple-900/20" },
+                          { label: "Processing Time", value: "2.4s", icon: Zap, color: "text-orange-600 dark:text-orange-400", bg: "bg-orange-50 dark:bg-orange-900/20" }
                         ].map((stat, index) => (
-                          <Card key={index} className="modern-surface">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                          <Card key={stat.label} className="professional-metric-card">
+                            <CardContent className="p-3 sm:p-4">
+                              <div className="text-center space-y-2">
+                                <div className={`mx-auto w-10 h-10 sm:w-12 sm:h-12 ${stat.bg} rounded-full flex items-center justify-center`}>
+                                  <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
                                 </div>
-                                <stat.icon className={`h-8 w-8 ${stat.color}`} />
+                                <div>
+                                  <p className="text-lg sm:text-2xl font-bold text-foreground">{stat.value}</p>
+                                  <p className="text-xs sm:text-sm text-muted-foreground">{stat.label}</p>
+                                </div>
                               </div>
                             </CardContent>
                           </Card>
@@ -509,7 +511,7 @@ export default function ClusteringPage() {
                       </div>
 
                       {/* Cluster Results */}
-                      <div className="grid gap-6 lg:grid-cols-2">
+                      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
                         {/* Visualization Panel */}
                         <Card className="modern-card">
                           <CardHeader>
@@ -519,21 +521,24 @@ export default function ClusteringPage() {
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <div className="aspect-square bg-gradient-to-br from-muted to-muted/50 rounded-2xl flex items-center justify-center relative overflow-hidden">
-                              {/* Mock Scatter Plot */}
+                            <div className="aspect-square professional-visualization-area">
+                              {/* Professional Scatter Plot */}
                               <div className="absolute inset-4 flex items-center justify-center">
-                                <div className="grid grid-cols-3 gap-8 text-center">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 text-center w-full">
                                   {mockClusters.map((cluster, index) => (
                                     <div key={cluster.id} className="space-y-2">
-                                      <div className={`w-12 h-12 ${cluster.color} rounded-full mx-auto opacity-80 animate-pulse`} />
-                                      <div className="text-xs font-medium text-foreground">{cluster.name}</div>
-                                      <div className="text-xs text-muted-foreground">{cluster.size} points</div>
+                                      <div className="relative mx-auto">
+                                        <div className={`w-8 h-8 sm:w-12 sm:h-12 ${cluster.color} rounded-full mx-auto opacity-80 animate-pulse`} />
+                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full border-2 border-background"></div>
+                                      </div>
+                                      <div className="text-xs sm:text-sm font-medium text-foreground">{cluster.name}</div>
+                                      <div className="text-xs text-muted-foreground">{cluster.size.toLocaleString()} points</div>
                                     </div>
                                   ))}
                                 </div>
                               </div>
                               <div className="absolute bottom-4 right-4">
-                                <Badge className="status-pill">
+                                <Badge className="professional-badge">
                                   <TrendingUp className="h-3 w-3 mr-1" />
                                   Interactive
                                 </Badge>
@@ -551,30 +556,30 @@ export default function ClusteringPage() {
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
-                            <div className="space-y-4">
+                            <div className="space-y-3 sm:space-y-4">
                               {mockClusters.map((cluster, index) => (
                                 <motion.div
                                   key={cluster.id}
                                   initial={{ opacity: 0, x: -20 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: index * 0.1 }}
-                                  className="p-4 border border-border rounded-xl hover:bg-muted/50 transition-colors"
+                                  className="professional-cluster-card p-3 sm:p-4"
                                 >
                                   <div className="flex items-start justify-between mb-3">
-                                    <div className="flex items-center space-x-3">
-                                      <div className={`w-4 h-4 ${cluster.color} rounded-full`} />
-                                      <div>
-                                        <h4 className="font-semibold text-foreground">{cluster.name}</h4>
-                                        <p className="text-sm text-muted-foreground">{cluster.size} data points</p>
+                                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                                      <div className={`w-3 h-3 sm:w-4 sm:h-4 ${cluster.color} rounded-full flex-shrink-0`} />
+                                      <div className="min-w-0 flex-1">
+                                        <h4 className="font-semibold text-foreground text-sm sm:text-base truncate">{cluster.name}</h4>
+                                        <p className="text-xs sm:text-sm text-muted-foreground">{cluster.size.toLocaleString()} data points</p>
                                       </div>
                                     </div>
-                                    <Button variant="ghost" size="sm">
+                                    <Button variant="ghost" size="sm" className="flex-shrink-0 p-1">
                                       <MoreHorizontal className="h-4 w-4" />
                                     </Button>
                                   </div>
-                                  <div className="space-y-1">
+                                  <div className="flex flex-wrap gap-1 sm:gap-2">
                                     {cluster.characteristics.map((char, charIndex) => (
-                                      <Badge key={charIndex} variant="secondary" className="mr-2 mb-1">
+                                      <Badge key={`${cluster.id}-${charIndex}`} variant="secondary" className="text-xs">
                                         {char}
                                       </Badge>
                                     ))}
@@ -612,7 +617,7 @@ export default function ClusteringPage() {
                 </motion.div>
               </TabsContent>
 
-              <TabsContent value="insights" className="space-y-6 mt-0">
+              <TabsContent key="insights" value="insights" className="space-y-6 mt-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -772,7 +777,7 @@ export default function ClusteringPage() {
                   </Card>
                 </motion.div>
               </TabsContent>
-            </AnimatePresence>
+            </div>
           </Tabs>
         </div>
       </div>

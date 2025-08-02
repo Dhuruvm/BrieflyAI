@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBreviaStore } from "@/lib/store";
+import brieflyLogo from "@assets/briefly-logo.png";
 import { 
   Send, 
   Paperclip, 
@@ -25,7 +26,15 @@ import {
   MoreHorizontal,
   Menu,
   Sidebar,
-  BarChart3
+  BarChart3,
+  User,
+  Bot,
+  Clock,
+  Check,
+  Upload,
+  Image,
+  Cpu,
+  Target
 } from "lucide-react";
 
 interface Message {
@@ -44,7 +53,7 @@ export default function Workspace() {
     {
       id: '1',
       type: 'system',
-      content: 'Welcome to your Research Agent. I can analyze documents, generate insights, perform clustering analysis, and help with complex research tasks. How can I assist you today?',
+      content: 'Welcome to your Bravia AI Research Assistant. I can analyze documents, generate intelligent insights, perform advanced clustering analysis, and help with complex research tasks. How can I assist you today?',
       timestamp: new Date()
     }
   ]);
@@ -157,52 +166,69 @@ Would you like me to export this as a PDF or perform any additional analysis?`,
     {
       icon: Brain,
       label: "Document Analysis",
-      description: "Analyze and extract insights from documents",
+      description: "Analyze and extract insights from documents with Bravia AI",
       color: "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700",
-      action: () => setInputValue("Help me analyze a document and extract key insights")
+      action: () => setInputValue("Help me analyze a document and extract key insights using Bravia AI")
     },
     {
       icon: BarChart3,
-      label: "Clustering Analysis",
-      description: "Perform data clustering and relationship analysis",
+      label: "Cluster Analysis",
+      description: "Perform advanced data clustering with Bravia intelligence",
       color: "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700",
       action: () => setLocation('/clustering')
     },
     {
       icon: Sparkles,
       label: "Research Assistant",
-      description: "Get help with complex research tasks",
+      description: "Get expert help with complex research using Bravia AI",
       color: "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-700",
-      action: () => setInputValue("I need help with a research project. Can you assist me?")
+      action: () => setInputValue("I need help with a research project. Can Bravia AI assist me?")
     }
   ];
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* ChatGPT-Style Header */}
-      <div className="bg-background border-b border-border sticky top-0 z-50">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center space-x-3">
+      {/* Professional Header with Bravia Branding */}
+      <div className="header-modern border-b border-border bg-card sticky top-0 z-50">
+        <div className="flex items-center justify-between p-4 sm:p-6">
+          <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
               size="sm"
-              className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+              className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted md:hidden"
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             >
               <Menu className="h-4 w-4" />
             </Button>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-                <Brain className="h-4 w-4 text-white" />
-              </div>
-              <h1 className="text-lg font-semibold text-foreground">Research Agent</h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src={brieflyLogo} 
+                alt="Bravia AI" 
+                className="h-8 w-auto"
+              />
+              <div className="hidden sm:block w-px h-8 bg-border"></div>
+            </div>
+            <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-2xl shadow-lg">
+              <Brain className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+                Bravia <span className="text-primary">Assistant</span>
+              </h1>
+              <p className="text-sm text-muted-foreground hidden sm:block">
+                Advanced AI research and analysis platform
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Badge className="status-pill status-pill-online">
-              <Zap className="h-3 w-3 mr-1" />
-              Online
+            <Badge className="status-pill-success hidden sm:inline-flex">
+              <Sparkles className="h-3 w-3 mr-1" />
+              AI Active
             </Badge>
+            <Button variant="outline" size="sm" className="hidden md:inline-flex">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analytics
+            </Button>
             <Button variant="ghost" size="sm" className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted">
               <Settings className="h-4 w-4" />
             </Button>

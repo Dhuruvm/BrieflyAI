@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useBreviaStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
+import brieflyLogo from "@assets/briefly-logo.png";
 import {
   Search,
   BarChart3,
@@ -21,14 +22,14 @@ export function Sidebar() {
   const navigationItems = [
     {
       id: 'workspace',
-      label: 'Research Agent',
+      label: 'Bravia Assistant',
       icon: MessageSquare,
       path: '/workspace',
       description: 'AI research assistant'
     },
     {
       id: 'clustering',
-      label: 'Clustering Analysis',
+      label: 'Cluster Analysis',
       icon: BarChart3,
       path: '/clustering',
       description: 'Data clustering & insights'
@@ -73,19 +74,24 @@ export function Sidebar() {
 
   return (
     <div className="w-72 bg-background border-r border-border flex flex-col h-full transition-all duration-300">
-      {/* Sidebar Header */}
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
-              <Brain className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-semibold text-foreground">Brevia</span>
+      {/* Bravia Logo Header */}
+      <div className="p-6 border-b border-border">
+        <div className="flex items-center space-x-3">
+          <img 
+            src={brieflyLogo} 
+            alt="Bravia AI" 
+            className="h-8 w-auto"
+          />
+          <div>
+            <h1 className="text-lg font-bold text-foreground">Bravia AI</h1>
+            <p className="text-xs text-muted-foreground">Research Platform</p>
           </div>
+        </div>
+        <div className="flex items-center justify-between mt-2">
           <Button
             variant="ghost"
             size="sm" 
-            className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted"
+            className="p-2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted ml-auto"
             onClick={() => setSidebarCollapsed(true)}
           >
             <ChevronLeft className="h-4 w-4" />
